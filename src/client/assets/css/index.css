@@ -1,0 +1,97 @@
+/* ===== CSS Reset ===== */
+
+/* Remove default margin, padding, and border */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Set consistent font inheritance */
+html {
+  font-size: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  line-height: 1.5;
+  font-family: sans-serif;
+  background: #fff;
+  color: #000;
+}
+
+/* Remove list styles */
+ul,
+ol {
+  list-style: none;
+}
+
+/* Remove default link styles */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Make images behave consistently */
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* Remove default form element styles */
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  outline: none;
+}
+
+/* ===== Actual Styles ===== */
+
+@font-face {
+  font-family: 'CupheadFelix';
+  src: url('/fonts/CupheadFelix-Regular-merged.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'CupheadVogue';
+  src: url('/fonts/CupheadVogue-Bold-merged.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+
+@font-face {
+  font-family: 'CupheadVogue';
+  src: url('/fonts/CupheadVogue-ExtraBold-merged.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+}
+
+:root {
+  font-family: CupheadFelix, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html,
+body {
+  height: 100%;
+  line-height: 1.5;
+  font-family: CupheadFelix, sans-serif;
+}

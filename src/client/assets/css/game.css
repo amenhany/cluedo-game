@@ -1,0 +1,39 @@
+.game {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#board {
+    position: relative;
+}
+
+#board, #board img {
+    width: 100%;
+    height: auto;
+    max-width: 1200px;
+    max-height: 1200px;
+}
+
+.grid {
+    position: absolute;
+    top: 3.5%;
+    left: 1.2%;
+    width: 94.6%;
+    height: 92.8%;
+    /* background-image:
+        linear-gradient(to right, rgba(0, 255, 0, 1) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 255, 0, 1) 1px, transparent 1px);
+    background-size: calc(100% / 25) calc(100% / 25); */
+}
+.inner-content {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.piece, .piece img {
+    position: absolute;
+    width: 3.2%;
+    transform: translateX(7%);
+}
