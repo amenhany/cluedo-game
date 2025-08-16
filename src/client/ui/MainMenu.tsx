@@ -1,10 +1,61 @@
+import music1 from '../assets/music/menu/menu1.mp3';
+import music2 from '../assets/music/menu/menu2.mp3';
+import music3 from '../assets/music/menu/menu3.mp3';
+import music4 from '../assets/music/menu/menu4.mp3';
+import music5 from '../assets/music/menu/menu5.mp3';
+import cover1 from '../assets/images/albums/menu1.jpeg';
+import cover2 from '../assets/images/albums/menu2.jpeg';
+import cover3 from '../assets/images/albums/menu3.jpeg';
+import cover4 from '../assets/images/albums/menu4.jpeg';
+import cover5 from '../assets/images/albums/menu5.jpg';
+
 import '../assets/css/menu.css';
-// import background from '../assets/images/menu.webp';
+import AudioPlayer from './AudioPlayer';
+import { useState } from 'react';
+import { Settings, DoorOpen, DoorClosed } from 'lucide-react';
+import { motion } from 'motion/react';
+
+const tracks = [
+   {
+      audio: music1,
+      cover: cover1,
+      name: 'Indi Thika Feek',
+      author: 'Fairuz',
+   },
+   {
+      audio: music2,
+      cover: cover2,
+      name: 'Khalleek Be El Bait',
+      author: 'Fairuz',
+   },
+   {
+      audio: music3,
+      cover: cover3,
+      name: 'Albi Ou Meftahou',
+      author: 'Farid al-Atrash',
+   },
+   {
+      audio: music4,
+      cover: cover4,
+      name: "Can't Take My Eyes off You",
+      author: 'Frankie Valli',
+   },
+   {
+      audio: music5,
+      cover: cover5,
+      name: 'Bahlam Maak',
+      author: 'Najaat Al Saghira',
+   },
+];
 
 export default function MainMenu() {
+   const [hoverClose, setHoverClose] = useState(false);
+
    return (
       <div className="menu">
-         {/* <img src={background} alt="Main Menu Background" /> */}
+         <h1>
+            <span>C</span>LUEDO
+         </h1>
          <div className="button-container">
             <button>
                <p>Host Game</p>
@@ -12,7 +63,31 @@ export default function MainMenu() {
             <button>
                <p>Join Game</p>
             </button>
+            <motion.button
+               className="button-icon"
+               variants={{
+                  initial: {
+                     rotate: 0,
+                  },
+                  active: {
+                     rotate: 30,
+                  },
+               }}
+               initial="initial"
+               whileHover="active"
+            >
+               <Settings size={40} />
+            </motion.button>
+            <button
+               onClick={close}
+               className="button-icon"
+               onMouseEnter={() => setHoverClose(true)}
+               onMouseLeave={() => setHoverClose(false)}
+            >
+               {hoverClose ? <DoorOpen size={40} /> : <DoorClosed size={40} />}
+            </button>
          </div>
+         <AudioPlayer tracks={tracks} />
       </div>
    );
 }

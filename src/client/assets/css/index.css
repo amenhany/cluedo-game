@@ -70,11 +70,17 @@ select {
   font-style: normal;
 }
 
-
 @font-face {
   font-family: 'CupheadVogue';
   src: url('/fonts/CupheadVogue-ExtraBold-merged.ttf') format('truetype');
   font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'CupheadHenriette';
+  src: url('/fonts/CupheadHenriette-A-merged.ttf') format('truetype');
+  font-weight: normal;
   font-style: normal;
 }
 

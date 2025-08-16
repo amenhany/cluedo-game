@@ -1,12 +1,17 @@
 
 .menu {
     position: relative;
+    overflow: hidden;
     width: 100vw;
     height: 100vh;
-    background-image: url('/public/images/menu.webp');
+    background-image: url('/images/menu.webp');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
 }
 
 .menu::before {
@@ -17,21 +22,48 @@
   pointer-events: none;
 }
 
+.menu h1 {
+    position: absolute;
+    top: 16%;
+    left: 10%;
+    font-family: CupheadHenriette;
+    font-size: 5.8vw;
+    /* letter-spacing: 0.15rem; */
+    color: white;
+    text-shadow: 4px 2px 0px black, 5px 3px 0px white;
+    pointer-events: none;
+    height: 5.8vw;
+}
+
+.menu h1 span {
+    font-size: 7.5vw;
+    position: relative;
+    top: 10%;
+}
+
 .button-container {
     position: absolute;
     top: 38%;
     right: 18%;
-    display: flex;
-    flex-direction: column;
-    font-size: clamp(15pt, 4vw, 35pt);
+    font-size: 3vw;
     color: white;
     font-family: CupheadVogue;
     font-weight: 800;
+    text-shadow: 4px 2px 0px black;
 }
 
 .button-container button {
     cursor: pointer;
+    display: block;
     margin-bottom: 4.5%;
+    transition: color 0.1s ease-in-out;
+}
+
+.button-container .button-icon {
+    display: inline;
+    margin-top: 2%;
+    margin-right: 8%;
+    filter: drop-shadow(4px 2px 0px black);
 }
 
 .button-container p {
@@ -41,4 +73,120 @@
 
 .button-container button:hover p {
     transform: translateY(5px);
+}
+
+.button-container button:active {
+    color: #ccc;
+}
+
+
+.audioPlayer {
+    position: absolute;
+    bottom: 2rem;
+    left: 3rem;
+    color: white;
+}
+
+.audioPlayer .container {
+    display: flex;
+    padding-right: 5rem;
+    background-color: rgba(0,0,0,0.3);
+    backdrop-filter: blur(1px);
+    border-radius: 20px;
+    border-top-left-radius: 0;
+}
+
+.audioPlayer .show-arrow {
+    width: fit-content;
+    padding: 0.25rem 1.6rem 0.1rem 0.8rem;
+    background-color: rgba(0,0,0,0.3);
+    backdrop-filter: blur(1px);
+    border-radius: 15px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    cursor: pointer;
+    transition: color 0.1s ease-in-out;
+}
+
+
+.audioPlayer .show-arrow svg {
+    transition: transform 0.3s ease-out;
+}
+
+.audioPlayer .show-arrow:active {
+    color: #ccc;
+}
+
+.audioPlayer .show-arrow.down svg {
+    transform: rotate(0);
+}
+
+.audioPlayer .show-arrow.down:hover svg {
+    transform: translateY(4px);
+}
+
+.audioPlayer .show-arrow.up svg {
+    transform: rotate(180deg);
+}
+
+.audioPlayer .show-arrow.up:hover svg {
+    transform: translateY(-4px) rotate(180deg);
+}
+
+
+.audioPlayer img {
+    max-width: 13vw;
+}
+
+.audioPlayer .audioArt {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.audioPlayer .audioArt.playing {
+    animation: rotate 6s linear infinite;
+}
+
+.audioPlayer .albumCover {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    width: 5vw;
+    border-radius: 50%;
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotateZ(0deg);
+    }
+    100% {
+        transform: rotateZ(360deg);
+    }
+}
+
+.audioPlayer .audioInfo {
+    font-family: CupheadVogue;
+    margin-top: 6%;
+}
+
+.audioPlayer .audioInfo button{
+    padding: 5%;
+    padding-left: 0;
+    cursor: pointer !important;
+    transition: padding 0.3s ease-out, color 0.1s ease-in-out;
+}
+
+.audioPlayer .audioInfo button:hover {
+    padding-left: 0.5rem;
+}
+
+.audioPlayer .audioInfo button:active {
+    color: #ccc;
+}
+
+svg {
+    pointer-events: none;
 }
