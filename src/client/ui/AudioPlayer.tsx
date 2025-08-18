@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import record from '../assets/images/record.png';
+import record from '@/assets/images/record.png';
 import { ChevronDown, SkipForward } from 'lucide-react';
 import { backInOut, motion, useAnimationControls } from 'motion/react';
 
@@ -70,7 +70,7 @@ export default function AudioPlayer({ tracks }: { tracks: Track[] }) {
    if (!currentTrack) return <></>;
    return (
       <motion.div
-         className="audioPlayer"
+         className="audio-player"
          variants={{
             open: {
                y: 0,
@@ -95,15 +95,15 @@ export default function AudioPlayer({ tracks }: { tracks: Track[] }) {
             <ChevronDown />
          </div>
          <div className="container">
-            <div className={'audioArt' + (isPlaying ? ' playing' : '')}>
+            <div className={'audio-art' + (isPlaying ? ' playing' : '')}>
                <img src={record} alt="Record" className="record" />
                <img
                   src={currentTrack.cover}
                   alt="Album Cover"
-                  className="albumCover"
+                  className="album-cover"
                />
             </div>
-            <div className="audioInfo">
+            <div className="audio-info">
                <h2>{currentTrack.name}</h2>
                <h3>{currentTrack.author}</h3>
                {tracks.length && (

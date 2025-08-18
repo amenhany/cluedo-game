@@ -1,4 +1,4 @@
-import '../assets/css/game.css';
+import '@/assets/styles/game.scss';
 
 import Board from './Board';
 import Piece from './Piece';

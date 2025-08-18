@@ -16,8 +16,8 @@ html {
 body {
   line-height: 1.5;
   font-family: sans-serif;
-  background: #fff;
-  color: #000;
+  background: #000;
+  color: #fff;
 }
 
 /* Remove list styles */
@@ -80,6 +80,20 @@ select {
 @font-face {
   font-family: 'CupheadHenriette';
   src: url('/fonts/CupheadHenriette-A-merged.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'CupheadMemphis';
+  src: url('/fonts/CupheadMemphis-Medium-merged.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'CupheadPoster';
+  src: url('/fonts/CupheadPoster-Regular(Cyr_Lat_English).ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }

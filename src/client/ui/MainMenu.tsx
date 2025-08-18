@@ -1,19 +1,20 @@
-import music1 from '../assets/music/menu/menu1.mp3';
-import music2 from '../assets/music/menu/menu2.mp3';
-import music3 from '../assets/music/menu/menu3.mp3';
-import music4 from '../assets/music/menu/menu4.mp3';
-import music5 from '../assets/music/menu/menu5.mp3';
-import cover1 from '../assets/images/albums/menu1.jpeg';
-import cover2 from '../assets/images/albums/menu2.jpeg';
-import cover3 from '../assets/images/albums/menu3.jpeg';
-import cover4 from '../assets/images/albums/menu4.jpeg';
-import cover5 from '../assets/images/albums/menu5.jpg';
+import music1 from '@/assets/music/menu/menu1.mp3';
+import music2 from '@/assets/music/menu/menu2.mp3';
+import music3 from '@/assets/music/menu/menu3.mp3';
+import music4 from '@/assets/music/menu/menu4.mp3';
+import music5 from '@/assets/music/menu/menu5.mp3';
+import cover1 from '@/assets/images/albums/menu1.jpeg';
+import cover2 from '@/assets/images/albums/menu2.jpeg';
+import cover3 from '@/assets/images/albums/menu3.jpeg';
+import cover4 from '@/assets/images/albums/menu4.jpeg';
+import cover5 from '@/assets/images/albums/menu5.jpg';
 
-import '../assets/css/menu.css';
+import '@/assets/styles/menu.scss';
 import AudioPlayer from './AudioPlayer';
 import { useState } from 'react';
 import { Settings, DoorOpen, DoorClosed } from 'lucide-react';
-import { motion } from 'motion/react';
+import { AnimatePresence, motion } from 'motion/react';
+import SettingsScreen from './Settings';
 
 const tracks = [
    {
@@ -50,6 +51,7 @@ const tracks = [
 
 export default function MainMenu() {
    const [hoverClose, setHoverClose] = useState(false);
+   const [openSettings, setOpenSettings] = useState(false);
 
    return (
       <div className="menu">
@@ -75,6 +77,7 @@ export default function MainMenu() {
                }}
                initial="initial"
                whileHover="active"
+               onClick={() => setOpenSettings(true)}
             >
                <Settings size={40} />
             </motion.button>
@@ -88,6 +91,11 @@ export default function MainMenu() {
             </button>
          </div>
          <AudioPlayer tracks={tracks} />
+         <AnimatePresence>
+            {openSettings && (
+               <SettingsScreen onClose={() => setOpenSettings(false)} />
+            )}
+         </AnimatePresence>
       </div>
    );
 }

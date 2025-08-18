@@ -1,4 +1,4 @@
-import piece from '../assets/images/ahmed.png';
+import piece from '@/assets/images/ahmed.png';
 
 const BOARD_COLUMNS = 25;
 const BOARD_ROWS = 25;

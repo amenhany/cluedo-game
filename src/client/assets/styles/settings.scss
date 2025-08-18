@@ -1,0 +1,44 @@
+@use './variables' as *;
+@use './mixins' as *;
+
+.backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal {
+    @include no-select();
+
+    width: clamp(50%, 600px, 90%);
+    height: min(70%, 600px);
+
+    background-image: url('/images/modal.png');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    display: flex;
+    flex-direction: column;
+    color: $primary-text;
+
+    h2 {
+        margin-top: 7rem;
+        margin-bottom: 1.8rem;
+        font-size: 2.5rem;
+        text-align: center;
+        font-family: "CupheadPoster";
+    }
+
+    ul {
+        margin-left: 5rem;
+        font-size: 1.3rem;
+        font-family: "CupheadMemphis";
+    }
+}

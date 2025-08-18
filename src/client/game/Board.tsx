@@ -1,5 +1,5 @@
 import type React from 'react';
-import board from '../assets/images/board.png';
+import board from '@/assets/images/board.png';
 
 type BoardProps = {
    children: React.ReactNode;
