@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import record from '@/assets/images/record.png';
 import { ChevronDown, SkipForward } from 'lucide-react';
 import { backInOut, motion, useAnimationControls } from 'motion/react';
+import { AudioManager } from '../lib/AudioManager';
 
 type Track = {
    audio: string;
@@ -14,17 +15,16 @@ export default function AudioPlayer({ tracks }: { tracks: Track[] }) {
    const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
    const [isPlaying, setIsPlaying] = useState(false);
    const [isShown, setIsShown] = useState(false);
-   const audioRef = useRef<HTMLAudioElement | null>(null);
+   const audioManager = AudioManager.getInstance();
    const controls = useAnimationControls();
 
    useEffect(() => {
       const timeout = setTimeout(playTrack, 2000);
-      const interval = setInterval(() => {
-         if (audioRef.current?.ended) playTrack();
-      }, 1000 * 60 * 6);
+      const interval = setInterval(playTrack, 1000 * 60 * 6);
       return () => {
          clearInterval(interval);
          clearTimeout(timeout);
+         audioManager.stopMusic();
       };
    }, []);
 
@@ -43,20 +43,14 @@ export default function AudioPlayer({ tracks }: { tracks: Track[] }) {
       }
    }, [isShown]);
 
-   useEffect(() => {
-      if (audioRef.current?.ended) setIsPlaying(false);
-   }, [audioRef.current?.ended]);
-
    function playTrack() {
-      audioRef.current?.pause();
-      const track = tracks.filter(
-         (track) => track.audio !== currentTrack?.audio
-      )[Math.floor(Math.random() * (tracks.length - 1))];
+      audioManager.stopMusic();
+      const track = tracks.filter((track) => track.audio !== currentTrack?.audio)[
+         Math.floor(Math.random() * (tracks.length - 1))
+      ];
       setCurrentTrack(track);
       setIsPlaying(true);
-      audioRef.current = new Audio(track.audio);
-      audioRef.current.volume = 0.1;
-      audioRef.current.play();
+      audioManager.playMusic(track.audio, false, () => setIsPlaying(false));
    }
 
    function handleShowButton() {
@@ -97,11 +91,7 @@ export default function AudioPlayer({ tracks }: { tracks: Track[] }) {
          <div className="container">
             <div className={'audio-art' + (isPlaying ? ' playing' : '')}>
                <img src={record} alt="Record" className="record" />
-               <img
-                  src={currentTrack.cover}
-                  alt="Album Cover"
-                  className="album-cover"
-               />
+               <img src={currentTrack.cover} alt="Album Cover" className="album-cover" />
             </div>
             <div className="audio-info">
                <h2>{currentTrack.name}</h2>

@@ -49,7 +49,13 @@ const tracks = [
    },
 ];
 
-export default function MainMenu() {
+export default function MainMenu({
+   onHost,
+   onJoin,
+}: {
+   onHost: () => void;
+   onJoin: () => void;
+}) {
    const [hoverClose, setHoverClose] = useState(false);
    const [openSettings, setOpenSettings] = useState(false);
 
@@ -59,10 +65,10 @@ export default function MainMenu() {
             <span>C</span>LUEDO
          </h1>
          <div className="button-container">
-            <button>
+            <button onClick={onHost}>
                <p>Host Game</p>
             </button>
-            <button>
+            <button onClick={onJoin}>
                <p>Join Game</p>
             </button>
             <motion.button
