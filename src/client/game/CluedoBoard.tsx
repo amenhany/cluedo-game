@@ -5,7 +5,7 @@ type BoardProps = {
    children: React.ReactNode;
 };
 
-export default function Board({ children }: BoardProps) {
+export default function CluedoBoard({ children }: BoardProps) {
    return (
       <div id="board">
          <img src={board} alt="Cluedo Board" />

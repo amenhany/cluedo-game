@@ -1,8 +1,8 @@
-import music1 from '@/assets/music/menu/menu1.mp3';
-import music2 from '@/assets/music/menu/menu2.mp3';
-import music3 from '@/assets/music/menu/menu3.mp3';
-import music4 from '@/assets/music/menu/menu4.mp3';
-import music5 from '@/assets/music/menu/menu5.mp3';
+import music1 from '@/assets/audio/music/menu/menu1.mp3';
+import music3 from '@/assets/audio/music/menu/menu3.mp3';
+import music2 from '@/assets/audio/music/menu/menu2.mp3';
+import music4 from '@/assets/audio/music/menu/menu4.mp3';
+import music5 from '@/assets/audio/music/menu/menu5.mp3';
 import cover1 from '@/assets/images/albums/menu1.jpeg';
 import cover2 from '@/assets/images/albums/menu2.jpeg';
 import cover3 from '@/assets/images/albums/menu3.jpeg';
@@ -15,6 +15,7 @@ import { useState } from 'react';
 import { Settings, DoorOpen, DoorClosed } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import SettingsScreen from './Settings';
+import { useSceneTransition } from './SceneTransition';
 
 const tracks = [
    {
@@ -58,6 +59,15 @@ export default function MainMenu({
 }) {
    const [hoverClose, setHoverClose] = useState(false);
    const [openSettings, setOpenSettings] = useState(false);
+   const { triggerTransition } = useSceneTransition();
+
+   function handleHost() {
+      triggerTransition(onHost, 'iris');
+   }
+
+   function handleJoin() {
+      triggerTransition(onJoin, 'fade');
+   }
 
    return (
       <div className="menu">
@@ -65,10 +75,10 @@ export default function MainMenu({
             <span>C</span>LUEDO
          </h1>
          <div className="button-container">
-            <button onClick={onHost}>
+            <button onClick={handleHost}>
                <p>Host Game</p>
             </button>
-            <button onClick={onJoin}>
+            <button onClick={handleJoin}>
                <p>Join Game</p>
             </button>
             <motion.button
@@ -98,9 +108,7 @@ export default function MainMenu({
          </div>
          <AudioPlayer tracks={tracks} />
          <AnimatePresence>
-            {openSettings && (
-               <SettingsScreen onClose={() => setOpenSettings(false)} />
-            )}
+            {openSettings && <SettingsScreen onClose={() => setOpenSettings(false)} />}
          </AnimatePresence>
       </div>
    );

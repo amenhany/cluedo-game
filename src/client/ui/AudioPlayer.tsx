@@ -19,6 +19,7 @@ export default function AudioPlayer({ tracks }: { tracks: Track[] }) {
    const controls = useAnimationControls();
 
    useEffect(() => {
+      audioManager.setMasterVolume(0.1);
       const timeout = setTimeout(playTrack, 2000);
       const interval = setInterval(playTrack, 1000 * 60 * 6);
       return () => {
