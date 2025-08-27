@@ -37,3 +37,14 @@
     width: 3.2%;
     transform: translateX(7%);
 }
+
+.tile {
+    position: absolute;
+    width: 4%;
+    height: 4%;
+
+    &.droppable {
+        background-color: rgba(255, 0, 0, 0.2);
+        cursor: pointer;
+    }
+}
