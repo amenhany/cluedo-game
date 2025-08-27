@@ -33,7 +33,8 @@ export const SceneTransitionProvider: React.FC<{ children: React.ReactNode }> = 
       callback: () => void | Promise<void>,
       type: TransitionType = 'fade'
    ) => {
-      if (variant === 'closed') setTransitionType(type);
+      if (variant === 'closed') return;
+      setTransitionType(type);
       setVariant('closed');
       callbackQueue.current = callback;
       radius.current =
