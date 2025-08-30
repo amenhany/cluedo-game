@@ -1,4 +1,4 @@
-import type { Room, Tile, TileNode } from './boardGraph';
+import type { Room, Tile, TileNode } from '../../types/game';
 
 export function generateTileGraph(grid: (0 | 1 | Room)[][]): Record<Tile, TileNode> {
     const graph: Record<Tile, TileNode> = {};

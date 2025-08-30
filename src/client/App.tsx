@@ -17,7 +17,7 @@ export default function App() {
    return (
       <SceneTransitionProvider>
          {gameStarted ? (
-            <CluedoClient />
+            <CluedoClient playerID="0" />
          ) : (
             <MainMenu onHost={handleHost} onJoin={handleJoin} />
          )}

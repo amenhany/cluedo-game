@@ -1,5 +1,4 @@
-import { useDroppable } from '@dnd-kit/core';
-import type { NodeID } from '../../game/board/boardGraph';
+import type { NodeID } from '../../types/game';
 
 const BOARD_COLUMNS = 25;
 const BOARD_ROWS = 25;
@@ -15,20 +14,22 @@ type TileProps = {
    onClick: () => void;
 };
 
-export default function Tile({ id, x, y, isDroppable, onClick }: TileProps) {
-   const { setNodeRef } = useDroppable({ id, disabled: !isDroppable });
+export default function Tile({ x, y, id, isDroppable, onClick }: TileProps) {
    const gridX = x + OFFSET_X;
    const gridY = y + OFFSET_Y;
 
    return (
       <div
-         ref={setNodeRef}
-         onClick={onClick}
          className={`tile ${isDroppable ? 'droppable' : ''}`}
+         id={id}
+         data-x={x}
+         data-y={y}
          style={{
             top: `${(gridY / BOARD_ROWS) * 100}%`,
             left: `${(gridX / BOARD_COLUMNS) * 100}%`,
          }}
-      ></div>
+      >
+         {isDroppable && <div className={`dot`} onClick={onClick}></div>}
+      </div>
    );
 }

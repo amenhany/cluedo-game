@@ -1,36 +1,5 @@
+import type { Graph, Room } from '../../types/game';
 import { generateTileGraph } from './tileGen';
-
-export type Coordinates = { x: number; y: number };
-
-export type Tile = `${number}-${number}`;
-export type Room =
-    | 'study'
-    | 'hall'
-    | 'lounge'
-    | 'library'
-    | 'billiardRoom'
-    | 'diningRoom'
-    | 'conservatory'
-    | 'ballroom'
-    | 'kitchen';
-
-export type NodeID = Tile | Room;
-export type RoomNode = {
-    type: 'room';
-    id: Room; // e.g. "Kitchen"
-    neighbors: NodeID[];
-};
-
-export type TileNode = {
-    type: 'tile';
-    id: Tile; // e.g. "5-18"
-    coord: Coordinates;
-    neighbors: NodeID[];
-};
-
-export type Node = RoomNode | TileNode;
-
-export type Graph = Record<NodeID, Node>;
 
 /* prettier-ignore */
 const grid: (0 | 1 | Room)[][] = [
@@ -66,46 +35,59 @@ export const cluedoGraph: Graph = {
         type: 'room',
         id: 'study',
         neighbors: ['6-4'],
+        coord: { x: 3, y: 1 },
+        secretPassage: 'kitchen',
     },
     hall: {
         type: 'room',
         id: 'hall',
+        coord: { x: 3, y: 1 },
         neighbors: ['8-4', '11-7', '12-7'],
     },
     lounge: {
         type: 'room',
         id: 'lounge',
+        coord: { x: 3, y: 1 },
         neighbors: ['17-6'],
+        secretPassage: 'conservatory',
     },
     library: {
         type: 'room',
         id: 'library',
+        coord: { x: 3, y: 1 },
         neighbors: ['7-8', '3-11'],
     },
     billiardRoom: {
         type: 'room',
         id: 'billiardRoom',
+        coord: { x: 3, y: 1 },
         neighbors: ['1-11', '6-15'],
     },
     diningRoom: {
         type: 'room',
         id: 'diningRoom',
+        coord: { x: 3, y: 1 },
         neighbors: ['17-8', '15-12'],
     },
     conservatory: {
         type: 'room',
         id: 'conservatory',
+        coord: { x: 3, y: 1 },
         neighbors: ['5-19'],
+        secretPassage: 'lounge',
     },
     ballroom: {
         type: 'room',
         id: 'ballroom',
+        coord: { x: 3, y: 1 },
         neighbors: ['7-19', '9-16', '14-16', '16-19'],
     },
     kitchen: {
         type: 'room',
         id: 'kitchen',
+        coord: { x: 3, y: 1 },
         neighbors: ['19-17'],
+        secretPassage: 'study',
     },
 
     ...generateTileGraph(grid),

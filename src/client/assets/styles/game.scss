@@ -32,9 +32,16 @@
     position: relative;
 }
 
-.piece, .piece img {
+.piece {
     position: absolute;
     width: 3.2%;
+    height: 3.2%;
+    transform: translateX(7%);
+    user-select: none;
+}
+
+.piece img {
+    pointer-events: none;
     transform: translateX(7%);
 }
 
@@ -42,9 +49,21 @@
     position: absolute;
     width: 4%;
     height: 4%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // background-color: rgba(0,0,0,0.2);
 
-    &.droppable {
+    &.droppable .dot {
+        width: 40%;
+        height: 40%;
+        border-radius: 50%;
         background-color: rgba(255, 0, 0, 0.2);
+        transition: background-color 0.2s ease-in;
         cursor: pointer;
+
+        &:hover, &.over {
+            background-color: rgba(255, 0, 0, 0.4);
+        }
     }
 }
