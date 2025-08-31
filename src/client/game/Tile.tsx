@@ -22,8 +22,6 @@ export default function Tile({ x, y, id, isDroppable, onClick }: TileProps) {
       <div
          className={`tile ${isDroppable ? 'droppable' : ''}`}
          id={id}
-         data-x={x}
-         data-y={y}
          style={{
             top: `${(gridY / BOARD_ROWS) * 100}%`,
             left: `${(gridX / BOARD_COLUMNS) * 100}%`,

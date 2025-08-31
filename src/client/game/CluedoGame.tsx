@@ -5,12 +5,13 @@ import Piece from './Piece';
 import Tile from './Tile';
 import { cluedoGraph } from '../../game/board/boardGraph';
 import { useEffect, useState } from 'react';
-import type { Node, Coordinates, GameState, NodeID } from '../../types/game';
+import type { Node, GameState, NodeID, PlayerState } from '../../types/game';
 import type { BoardProps } from 'boardgame.io/react';
 import Dice from './hud/Dice';
+import type { PlayerID } from 'boardgame.io';
 
 export default function CluedoGame({ G, ctx, moves, playerID }: BoardProps<GameState>) {
-   const [playerPos, setPlayerPos] = useState<Coordinates>({ x: 7, y: 0 });
+   const [players, setPlayers] = useState<Record<PlayerID, PlayerState>>();
    const [availableMoves, setAvailableMoves] = useState<Node[]>([]);
    const myTurn = ctx.currentPlayer === playerID;
 
@@ -22,14 +23,26 @@ export default function CluedoGame({ G, ctx, moves, playerID }: BoardProps<GameS
       moves.rollDice();
    }
 
-   function handleMove(newPos: Coordinates, nodeID: NodeID) {
-      setPlayerPos(newPos);
-      moves.movePiece(nodeID);
+   function handleMove(newPos: NodeID) {
+      setPlayers((prev) => {
+         if (!prev || playerID === null) return;
+         const test = {
+            ...prev,
+            [playerID]: {
+               ...prev[playerID],
+               position: newPos,
+            },
+         };
+         console.dir(test);
+         return test;
+      });
+      moves.movePiece(newPos);
    }
 
    useEffect(() => {
       if (!playerID) return;
-      setPlayerPos(cluedoGraph[G.players[playerID!].position].coord);
+      // setPlayerPos(cluedoGraph[G.players[playerID!].position].coord);
+      setPlayers(G.players);
 
       const nodeIds = G.players[playerID].availableMoves ?? [];
       const nodes = Object.values(cluedoGraph).filter((node) =>
@@ -50,13 +63,22 @@ export default function CluedoGame({ G, ctx, moves, playerID }: BoardProps<GameS
                      x={node.coord.x}
                      y={node.coord.y}
                      isDroppable={true}
-                     onClick={() =>
-                        handleMove({ x: node.coord.x, y: node.coord.y }, node.id)
-                     }
+                     onClick={() => handleMove(node.id)}
                   />
                );
             })}
-            <Piece coordinates={playerPos} onSnap={handleMove} />
+
+            {players &&
+               Object.values(players).map((player) => (
+                  <Piece
+                     type="character"
+                     id={player.character}
+                     key={player.id}
+                     coordinates={cluedoGraph[player.position].coord}
+                     isDraggable={player.id === playerID && myTurn}
+                     onSnap={handleMove}
+                  />
+               ))}
          </CluedoBoard>
          <Dice onRoll={handleRoll} disabled={!myTurn} />
       </div>

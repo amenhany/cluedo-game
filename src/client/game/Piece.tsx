@@ -1,7 +1,7 @@
 import piece from '@/assets/images/ahmed.png';
 import { motion, useMotionValue } from 'motion/react';
 import { animate } from 'motion';
-import type { Coordinates, NodeID } from '../../types/game';
+import type { Character, Coordinates, NodeID, Weapon } from '../../types/game';
 
 const BOARD_COLUMNS = 25;
 const BOARD_ROWS = 25;
@@ -9,12 +9,32 @@ const BOARD_ROWS = 25;
 const OFFSET_X = 1;
 const OFFSET_Y = 0;
 
-type PieceProps = {
+type BasePieceProps = {
+   isDraggable: boolean;
    coordinates: Coordinates;
-   onSnap: (coordinates: Coordinates, nodeID: NodeID) => void;
+   onSnap: (newPos: NodeID) => void;
 };
 
-export default function Piece({ coordinates, onSnap }: PieceProps) {
+type PieceProps =
+   | ({ type: 'character'; id: Character } & BasePieceProps)
+   | ({ type: 'weapon'; id: Weapon } & BasePieceProps);
+
+const COLORS: Record<Character, string> = {
+   scarlet: 'red',
+   mustard: 'yellow',
+   white: 'white',
+   green: 'green',
+   peacock: 'lightblue',
+   plum: 'purple',
+};
+
+export default function Piece({
+   id,
+   type,
+   isDraggable,
+   coordinates,
+   onSnap,
+}: PieceProps) {
    const gridX = coordinates.x + OFFSET_X;
    const gridY = coordinates.y + OFFSET_Y;
    const mvX = useMotionValue(0);
@@ -22,10 +42,12 @@ export default function Piece({ coordinates, onSnap }: PieceProps) {
 
    return (
       <motion.div
+         id={id}
          className="piece"
-         drag
+         drag={isDraggable}
          dragMomentum={false}
          style={{
+            backgroundColor: type === 'character' ? COLORS[id] : 'transparent',
             x: mvX,
             y: mvY,
          }}
@@ -44,9 +66,7 @@ export default function Piece({ coordinates, onSnap }: PieceProps) {
                (el) => el.classList.contains('tile') && el.classList.contains('droppable')
             ) as HTMLElement | undefined;
             if (droppable) {
-               const tileX = Number(droppable.dataset.x);
-               const tileY = Number(droppable.dataset.y);
-               onSnap({ x: tileX, y: tileY }, droppable.id as NodeID);
+               onSnap(droppable.id as NodeID);
                requestAnimationFrame(() => {
                   animate(mvX, 0, { type: 'tween', duration: 0.27 });
                   animate(mvY, 0, { type: 'tween', duration: 0.27 });
