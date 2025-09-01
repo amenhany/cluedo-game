@@ -8,6 +8,7 @@ import cover2 from '@/assets/images/albums/menu2.jpeg';
 import cover3 from '@/assets/images/albums/menu3.jpeg';
 import cover4 from '@/assets/images/albums/menu4.jpeg';
 import cover5 from '@/assets/images/albums/menu5.jpg';
+import modalOpen from '@/assets/audio/sfx/modal_open.wav';
 
 import '@/assets/styles/menu.scss';
 import AudioPlayer from './AudioPlayer';
@@ -16,6 +17,7 @@ import { Settings, DoorOpen, DoorClosed } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import SettingsScreen from './Settings';
 import { useSceneTransition } from './SceneTransition';
+import { AudioManager } from '../lib/AudioManager';
 
 const tracks = [
    {
@@ -93,7 +95,10 @@ export default function MainMenu({
                }}
                initial="initial"
                whileHover="active"
-               onClick={() => setOpenSettings(true)}
+               onClick={() => {
+                  setOpenSettings(true);
+                  AudioManager.getInstance().playSfx(modalOpen);
+               }}
             >
                <Settings size={40} />
             </motion.button>

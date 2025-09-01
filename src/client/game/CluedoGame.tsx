@@ -9,6 +9,12 @@ import type { Node, GameState, NodeID, PlayerState } from '../../types/game';
 import type { BoardProps } from 'boardgame.io/react';
 import Dice from './hud/Dice';
 import type { PlayerID } from 'boardgame.io';
+import { AudioManager } from '../lib/AudioManager';
+import step1 from '@/assets/audio/sfx/step1.wav';
+import step2 from '@/assets/audio/sfx/step2.wav';
+import step3 from '@/assets/audio/sfx/step3.wav';
+import step4 from '@/assets/audio/sfx/step4.wav';
+import step5 from '@/assets/audio/sfx/step5.wav';
 
 export default function CluedoGame({ G, ctx, moves, playerID }: BoardProps<GameState>) {
    const [players, setPlayers] = useState<Record<PlayerID, PlayerState>>();
@@ -36,6 +42,7 @@ export default function CluedoGame({ G, ctx, moves, playerID }: BoardProps<GameS
          console.dir(test);
          return test;
       });
+      AudioManager.getInstance().playRandomSfx(step1, step2, step3, step4, step5);
       moves.movePiece(newPos);
    }
 
@@ -74,13 +81,21 @@ export default function CluedoGame({ G, ctx, moves, playerID }: BoardProps<GameS
                      type="character"
                      id={player.character}
                      key={player.id}
-                     coordinates={cluedoGraph[player.position].coord}
+                     position={player.position}
                      isDraggable={player.id === playerID && myTurn}
                      onSnap={handleMove}
                   />
                ))}
          </CluedoBoard>
-         <Dice onRoll={handleRoll} disabled={!myTurn} />
+         <Dice
+            face={
+               playerID && players && G.players[playerID].steps
+                  ? G.players[playerID].steps
+                  : 0
+            }
+            onRoll={handleRoll}
+            disabled={!myTurn}
+         />
       </div>
    );
 }

@@ -1,7 +1,8 @@
 import piece from '@/assets/images/ahmed.png';
 import { motion, useMotionValue } from 'motion/react';
 import { animate } from 'motion';
-import type { Character, Coordinates, NodeID, Weapon } from '../../types/game';
+import type { Character, NodeID, Weapon } from '../../types/game';
+import { cluedoGraph } from '../../game/board/boardGraph';
 
 const BOARD_COLUMNS = 25;
 const BOARD_ROWS = 25;
@@ -11,7 +12,7 @@ const OFFSET_Y = 0;
 
 type BasePieceProps = {
    isDraggable: boolean;
-   coordinates: Coordinates;
+   position: NodeID;
    onSnap: (newPos: NodeID) => void;
 };
 
@@ -28,13 +29,8 @@ const COLORS: Record<Character, string> = {
    plum: 'purple',
 };
 
-export default function Piece({
-   id,
-   type,
-   isDraggable,
-   coordinates,
-   onSnap,
-}: PieceProps) {
+export default function Piece({ id, type, isDraggable, position, onSnap }: PieceProps) {
+   const coordinates = cluedoGraph[position].coord;
    const gridX = coordinates.x + OFFSET_X;
    const gridY = coordinates.y + OFFSET_Y;
    const mvX = useMotionValue(0);
@@ -43,7 +39,8 @@ export default function Piece({
    return (
       <motion.div
          id={id}
-         className="piece"
+         className={`piece ${isDraggable ? 'draggable' : ''}`}
+         whileHover={{ scale: 1.05 }}
          drag={isDraggable}
          dragMomentum={false}
          style={{

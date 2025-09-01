@@ -27,7 +27,7 @@ export default function Tile({ x, y, id, isDroppable, onClick }: TileProps) {
             left: `${(gridX / BOARD_COLUMNS) * 100}%`,
          }}
       >
-         {isDroppable && <div className={`dot`} onClick={onClick}></div>}
+         {isDroppable && <div className={`area`} onClick={onClick}></div>}
       </div>
    );
 }
