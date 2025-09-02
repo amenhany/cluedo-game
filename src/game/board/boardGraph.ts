@@ -85,7 +85,7 @@ export const cluedoGraph: Graph = {
     kitchen: {
         type: 'room',
         id: 'kitchen',
-        coord: { x: 3, y: 1 },
+        coord: { x: 21, y: 21 },
         neighbors: ['19-17'],
         secretPassage: 'study',
     },

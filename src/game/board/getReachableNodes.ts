@@ -18,7 +18,7 @@ export function getReachableNodes(graph: Graph, start: NodeID, steps: number): N
             reachable.push(node);
         }
 
-        if (dist < steps && graph[node].type !== 'room') {
+        if (dist < steps && (graph[node].type !== 'room' || dist === 0)) {
             const neighbors = graph[node].neighbors ?? [];
             for (const neighbor of neighbors) {
                 if (!visited.has(neighbor)) {

@@ -1,5 +1,5 @@
 import type { Ctx } from 'boardgame.io';
-import type { Character, GameState, Room, Tile, Weapon } from '../types/game';
+import type { Character, GameState, NodeID, Room, Tile, Weapon } from '../types/game';
 import type { RandomAPI } from 'boardgame.io/dist/types/src/plugins/random/random';
 
 export const CARDS: {
@@ -31,8 +31,8 @@ const CHARACTERS: Record<number, Character> = {
     5: 'plum',
 };
 
-const START_POSITIONS: Record<number, Tile> = {
-    0: '16-0', // Scarlet
+const START_POSITIONS: Record<number, NodeID> = {
+    0: 'study', // Scarlet '16-0'
     1: '23-7', // Mustard
     2: '14-24', // White
     3: '9-24', // Green
@@ -63,6 +63,7 @@ export const setup = ({ ctx, random }: { ctx: Ctx; random: RandomAPI }): GameSta
             character: CHARACTERS[i],
             position: START_POSITIONS[i],
             hand: [],
+            seenCards: [],
         };
     }
 

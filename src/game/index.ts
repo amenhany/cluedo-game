@@ -1,7 +1,17 @@
-import { moves } from './moves';
 import { setup } from './setup';
+import { ResolveSuggestion, Suggest, TurnAction } from './stages';
 
 export const Cluedo = {
     setup: setup,
-    moves: moves,
+    turn: {
+        stage: 'TurnAction',
+        activePlayers: {
+            currentPlayer: 'TurnAction',
+        },
+        stages: {
+            TurnAction,
+            Suggest,
+            ResolveSuggestion,
+        },
+    },
 };

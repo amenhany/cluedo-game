@@ -1,7 +1,6 @@
 /* ##### Board Graph ##### */
 
 import type { PlayerID } from 'boardgame.io';
-import type { moves } from '../game/moves';
 
 export type Coordinates = { x: number; y: number };
 
@@ -54,6 +53,7 @@ export type PlayerState = {
     character: Character;
     position: NodeID;
     hand: Card[];
+    seenCards: Card[];
 
     steps?: number;
     availableMoves?: NodeID[];
@@ -63,6 +63,10 @@ export type GameState = {
     players: Record<PlayerID, PlayerState>;
     envelope: Card[];
     deck: Card[];
+    pendingSuggestion?: {
+        suggester: PlayerID;
+        cards: Card[];
+    };
 };
 
-export type moves = typeof moves;
+export type Stage = 'TurnAction' | 'Suggest' | 'ResolveSuggestion';
