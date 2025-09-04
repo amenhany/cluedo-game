@@ -8,13 +8,13 @@ import opticalStart from '@/assets/audio/sfx/optical_start.wav';
 import opticalLoop from '@/assets/audio/sfx/optical_loop.wav';
 
 export default function App() {
-   const [gameStarted, setGameStarted] = useState(false);
+   const [gameStarted, setGameStarted] = useState(true);
 
-   useEffect(() => {
-      AudioManager.getInstance().playStatic(opticalStart, false, () =>
-         AudioManager.getInstance().playStatic(opticalLoop)
-      );
-   }, []);
+   // useEffect(() => {
+   //    AudioManager.getInstance().playStatic(opticalStart, false, () =>
+   //       AudioManager.getInstance().playStatic(opticalLoop)
+   //    );
+   // }, []);
 
    function handleHost() {
       setGameStarted(true);
@@ -33,7 +33,7 @@ export default function App() {
                <MainMenu onHost={handleHost} onJoin={handleJoin} />
             )}
          </SceneTransitionProvider>
-         <FilmFilter />
+         {/* <FilmFilter /> */}
       </>
    );
 }

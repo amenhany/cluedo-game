@@ -1,0 +1,71 @@
+#library {
+    .room-name {
+        rotate: -90deg;
+    }
+}
+
+#diningRoom .room-name {
+    margin-top: 43px;
+    margin-left: 55px;
+    font-size: 1.6rem;
+    rotate: 90deg;
+}
+
+#billiardRoom .room-name {
+    margin-left: 20px;
+    rotate: -90deg
+}
+
+#ballroom .room-name {
+    margin-top: 30px;
+}
+
+#conservatory .room-name {
+    font-size: 1.3rem;
+    margin-right: 12px;
+}
+
+.board-1 {
+    rotate: -90deg;
+
+    .piece, .room-name {
+        rotate: 90deg;
+    }
+
+    #library .room-name {
+        rotate: 90deg;
+    }
+
+    #billiardRoom .room-name {
+        rotate: 90deg;
+    }
+
+    #conservatory .room-name {
+        rotate: 180deg;
+    }
+}
+
+
+.board-2, .board-3 {
+    rotate: 180deg;
+
+    .piece, .room-name {
+        rotate: 180deg;
+    }
+}
+
+.board-4, .board-5 {
+    rotate: 90deg;
+
+    .piece, .room-name {
+        rotate: -90deg;
+    }
+
+    #conservatory .room-name {
+        rotate: 180deg;
+    }
+
+    #diningRoom .room-name {
+        rotate: -90deg;
+    }
+}

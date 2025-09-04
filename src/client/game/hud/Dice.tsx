@@ -1,37 +1,32 @@
 import { useEffect, useState } from 'react';
 import { AudioManager } from '../../lib/AudioManager';
-import '@/assets/styles/dice.scss';
 import slap1 from '@/assets/audio/sfx/slap1.wav';
 import slap2 from '@/assets/audio/sfx/slap2.wav';
 
-export default function Dice({
-   face,
-   onRoll,
-   disabled,
-}: {
+export default function Dice(props: {
    face: number;
    onRoll: () => void;
    disabled: boolean;
 }) {
-   const [isDisabled, setIsDisabled] = useState(disabled);
+   const [isDisabled, setIsDisabled] = useState(props.disabled);
    const [dieFace, setDieFace] = useState(1);
 
    useEffect(() => {
-      if (face === 0) return;
+      if (props.face === 0) return;
 
-      if (face === dieFace) {
+      if (props.face === dieFace) {
          setDieFace(1);
-         requestAnimationFrame(() => setDieFace(face));
+         requestAnimationFrame(() => setDieFace(props.face));
       } else {
-         setDieFace(face);
+         setDieFace(props.face);
       }
-   }, [face]);
+   }, [props.face]);
 
-   useEffect(() => setIsDisabled(disabled), [disabled]);
+   useEffect(() => setIsDisabled(props.disabled), [props.disabled]);
 
    function handleRoll() {
       if (isDisabled) return;
-      onRoll();
+      props.onRoll();
       AudioManager.getInstance().playRandomSfx(slap1, slap2);
       setIsDisabled(true);
    }
@@ -39,10 +34,8 @@ export default function Dice({
    return (
       <button
          onClick={handleRoll}
+         className={`dice-button ${isDisabled ? 'disabled' : 'active'}`}
          disabled={isDisabled}
-         style={{
-            cursor: isDisabled ? 'default' : 'pointer',
-         }}
       >
          <div className={`dice show-${dieFace}`}>
             <div id="dice-one-side-one" className="side one">

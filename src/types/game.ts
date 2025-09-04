@@ -21,7 +21,12 @@ export type NodeID = Tile | Room;
 export type RoomNode = {
     type: 'room';
     id: Room; // e.g. "Kitchen"
-    coord: Coordinates;
+    bounds: {
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+    };
     neighbors: NodeID[];
     secretPassage?: Room;
 };

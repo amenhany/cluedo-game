@@ -1,3 +1,5 @@
+@use './alignment.scss';
+
 .game {
     display: flex;
     justify-content: center;
@@ -32,36 +34,87 @@
     position: relative;
 }
 
+// .piece {
+//     position: absolute;
+//     width: 3.2%;
+//     height: 3.2%;
+//     transform: translateX(7%);
+//     user-select: none;
+
+//     &.draggable {
+//         cursor: grab;
+//         z-index: 150;
+//         &:active {
+//             cursor: grabbing;
+//         }
+//     }
+// }
+
 .piece {
     position: absolute;
-    width: 3.2%;
-    height: 3.2%;
-    transform: translateX(7%);
     user-select: none;
+    height: 45px;
+    width: 45px;
+    transition: position 2s ease;
+
+    .nametag {
+        opacity: 0;
+        position: absolute;
+        top: -70%;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: rgba(0, 0, 0, 0.2);
+        transition: opacity 0.5s ease;
+        padding: 0.1rem 0.5rem;
+        padding-top: 0.275rem;
+        border-radius: 5px;
+    }
+
+    &:hover .nametag {
+        opacity: 1;
+    }
 
     &.draggable {
+        position: relative;
+        z-index: 150;
+        transition: scale 0.3s ease;
         cursor: grab;
-        &:active {
-            cursor: grabbing;
+
+        &:hover {
+            scale: 1.08;
         }
+    }
+
+    &.dragging {
+        cursor: grabbing !important;
+        scale: 1.08;
+
+        .nametag {
+            opacity: 0;
+        }
+    }
+
+    img {
+        // width: 100%;
+        // height: 100%;
+        pointer-events: none;
+        // transform: translateX(7%);
     }
 }
 
-.piece img {
-    pointer-events: none;
-    transform: translateX(7%);
-}
-
-.tile {
+.node {
+    transform: none;
     position: absolute;
-    width: 4%;
-    height: 4%;
+    width: 100%;
+    height: 100%;
+    // width: 4%;
+    // height: 4%;
     display: flex;
     justify-content: center;
     align-items: center;
     // background-color: rgba(0,0,0,0.2);
 
-    &.droppable .area {
+    &.tile.droppable .area {
         width: 40%;
         height: 40%;
         border-radius: 50%;
@@ -73,6 +126,61 @@
         &:hover, &.over {
             background-color: rgba(255, 0, 0, 0.4);
             box-shadow: inset 2px 2px rgba(200, 0, 0, 0.4);
+        }
+    }
+
+    .area {
+        position: absolute;
+    }
+
+    &.room {
+        column-gap: 20%;
+        padding: 2rem;
+        flex-wrap: wrap;
+
+        .piece {
+            position: relative;
+        }
+
+        .area {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            .room-name {
+                pointer-events: none;
+                text-transform: uppercase;
+                color: #222;
+                font-size: 1.5rem;
+                transition: scale 0.8s ease;
+                user-select: none;
+                white-space: pre;
+                text-align: center;
+                line-height: 1.8rem;
+                // text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.2);
+            }
+        }
+
+        &.droppable .area {
+            width: 100%;
+            height: 100%;
+            // background-color: rgba(0, 255, 0, 0.2);
+            transition: box-shadow 0.8s ease;
+            cursor: pointer;
+            z-index: 150;
+
+            .room-name {
+                color: hsl(0, 50%, 50%);
+            }
+
+            &:hover, &.over {
+                // background-color: rgba(0, 255, 0, 0.4);
+                // box-shadow: 0px 0px 20px 10px rgba(0, 0, 0, 0.2);
+
+                .room-name {
+                    scale: 1.1
+                }
+            }
         }
     }
 }

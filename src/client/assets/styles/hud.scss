@@ -1,0 +1,18 @@
+@use './variables' as *;
+@use './dice.scss';
+
+.hud {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    margin: 2%;
+    pointer-events: none;
+}
+
+.dice-button {
+    position: absolute;
+    top: 2%;
+    pointer-events: all;
+}

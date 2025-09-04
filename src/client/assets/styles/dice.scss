@@ -1,17 +1,41 @@
+.dice-button.active {
+  cursor: pointer;
+  animation: click-me 0.9s linear infinite;
+
+  &:hover {
+    animation: none;
+  }
+
+  .dice {
+    &:hover {
+      scale: 1.05;
+    }
+
+    &:active {
+      scale: 0.95;
+    }
+  }
+
+  .side {
+    box-shadow: 0 0 10px 2px #f25f5c;
+  }
+}
+
+@keyframes click-me {
+  0%, 100% {
+    scale: 0.98
+  }
+  50% {
+    scale: 1.02
+  }
+}
+
 .dice {
   position: relative;
   width: 100px;
   height: 100px;
   transform-style: preserve-3d;
   transition: transform 1s, scale 0.2s ease-out;
-
-  &:hover {
-    scale: 1.05;
-  }
-
-  &:active {
-    scale: 0.95;
-  }
 }
 
 .dot {
@@ -33,6 +57,7 @@
   border: 1px solid #e5e5e5;
   text-align: center;
   line-height: 2em;
+  transition: box-shadow 0.2s ease-out;
 }
 
 .side:nth-child(1) {
