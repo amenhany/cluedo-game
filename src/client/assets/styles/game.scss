@@ -60,7 +60,8 @@
     .nametag {
         opacity: 0;
         position: absolute;
-        top: -70%;
+        text-align: center;
+        bottom: 100%;
         left: 50%;
         transform: translateX(-50%);
         background-color: rgba(0, 0, 0, 0.2);
@@ -68,6 +69,7 @@
         padding: 0.1rem 0.5rem;
         padding-top: 0.275rem;
         border-radius: 5px;
+        text-wrap: nowrap;
     }
 
     &:hover .nametag {

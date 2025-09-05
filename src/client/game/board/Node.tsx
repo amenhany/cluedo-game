@@ -1,9 +1,10 @@
-import type { PlayerState, Node, TileNode, RoomNode } from '../../../types/game';
+import type { PlayerState, Node, TileNode, RoomNode } from '@/types/game';
 import Piece from './Piece';
 import type { PlayerID } from 'boardgame.io';
-import { AudioManager } from '../../lib/AudioManager';
+import { AudioManager } from '@/lib/AudioManager';
 import appear from '@/assets/audio/sfx/appear.wav';
 import { useDroppable } from '@dnd-kit/core';
+import { t } from '@/lib/lang';
 
 const BOARD_COLUMNS = 25;
 const BOARD_ROWS = 25;
@@ -68,7 +69,9 @@ export default function Node({
                   : () => {}
             }
          >
-            {isRoom && <h2 className="room-name">{room.id.replace('R', '\nR')}</h2>}
+            {isRoom && (
+               <h2 className="room-name">{t(`room.${room.id}`).replace(' ', '\n')}</h2>
+            )}
          </div>
          {players.map((player) => (
             <Piece

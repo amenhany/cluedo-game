@@ -3,11 +3,11 @@ import music3 from '@/assets/audio/music/menu/menu3.mp3';
 import music2 from '@/assets/audio/music/menu/menu2.mp3';
 import music4 from '@/assets/audio/music/menu/menu4.mp3';
 import music5 from '@/assets/audio/music/menu/menu5.mp3';
-import cover1 from '@/assets/images/albums/menu1.jpeg';
-import cover2 from '@/assets/images/albums/menu2.jpeg';
-import cover3 from '@/assets/images/albums/menu3.jpeg';
-import cover4 from '@/assets/images/albums/menu4.jpeg';
-import cover5 from '@/assets/images/albums/menu5.jpg';
+import cover1 from '@/assets/textures/albums/menu1.jpeg';
+import cover2 from '@/assets/textures/albums/menu2.jpeg';
+import cover3 from '@/assets/textures/albums/menu3.jpeg';
+import cover4 from '@/assets/textures/albums/menu4.jpeg';
+import cover5 from '@/assets/textures/albums/menu5.jpg';
 import modalOpen from '@/assets/audio/sfx/modal_open.wav';
 
 import '@/assets/styles/menu.scss';
@@ -17,7 +17,7 @@ import { Settings, DoorOpen, DoorClosed } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import SettingsScreen from './Settings';
 import { useSceneTransition } from './SceneTransition';
-import { AudioManager } from '../lib/AudioManager';
+import { AudioManager } from '@/lib/AudioManager';
 
 const tracks = [
    {

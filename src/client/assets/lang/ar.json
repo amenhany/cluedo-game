@@ -1,0 +1,25 @@
+{
+    "suspect.scarlett": "الفنانة",
+    "suspect.mustard": "الضابط",
+    "suspect.white": "الممرضة",
+    "suspect.green": "الطبيب",
+    "suspect.peacock": "المؤلفة",
+    "suspect.plum": "الأستاذ",
+
+    "weapon.candlestick": "الشمعدان",
+    "weapon.dagger": "الخنجر",
+    "weapon.leadPipe": "ماسورة من الرصاص",
+    "weapon.revolver": "المسدس",
+    "weapon.rope": "الحبل",
+    "weapon.spanner": "مفتاح انجليزي",
+
+    "room.kitchen": "المطبخ",
+    "room.ballroom": "قاعة الرقص",
+    "room.conservatory": "المخزن",
+    "room.diningRoom": "غرفة الطعام",
+    "room.lounge": "الصالون",
+    "room.hall": "المدخل",
+    "room.study": "غرفة النوم",
+    "room.library": "المكتبة",
+    "room.billiardRoom": "غرفة البلياردو"
+}

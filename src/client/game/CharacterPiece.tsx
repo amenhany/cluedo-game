@@ -10,7 +10,7 @@ const CHARACTER_STYLES: Record<
       shape: 'circle' | 'star' | 'hexagon' | 'triangle' | 'diamond' | 'square';
    }
 > = {
-   scarlet: { color: 0xff0000, shape: 'circle' },
+   scarlett: { color: 0xff0000, shape: 'circle' },
    mustard: { color: 0xffff00, shape: 'star' },
    white: { color: 0xffffff, shape: 'diamond' },
    green: { color: 0x008000, shape: 'hexagon' },

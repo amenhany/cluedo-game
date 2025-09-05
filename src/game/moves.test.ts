@@ -12,7 +12,7 @@ function makeMockGame(): GameState {
         players: {
             '0': {
                 id: '0',
-                character: 'scarlet',
+                character: 'scarlett',
                 hand: [],
                 position: '6-4',
                 steps: 0,
@@ -21,8 +21,8 @@ function makeMockGame(): GameState {
             },
             '1': {
                 id: '0',
-                character: 'scarlet',
-                hand: ['knife'],
+                character: 'scarlett',
+                hand: ['dagger'],
                 position: 'study',
                 steps: 0,
                 availableMoves: [],
@@ -31,7 +31,7 @@ function makeMockGame(): GameState {
             '2': {
                 id: '1',
                 character: 'mustard',
-                hand: ['wrench'],
+                hand: ['spanner'],
                 position: 'diningRoom',
                 steps: 0,
                 availableMoves: [],
@@ -176,7 +176,7 @@ describe('suggestions', () => {
         vi.clearAllMocks();
         G.pendingSuggestion = {
             suggester: '1',
-            cards: ['knife', 'wrench', 'study'],
+            cards: ['dagger', 'spanner', 'study'],
         };
     });
 
@@ -190,12 +190,12 @@ describe('suggestions', () => {
                 log: null as unknown as LogAPI,
                 ctx: mockCtx,
             },
-            { suspect: 'scarlet', weapon: 'knife', room: 'study' }
+            { suspect: 'scarlett', weapon: 'dagger', room: 'study' }
         );
 
         expect(G.pendingSuggestion).toEqual({
             suggester: '1',
-            cards: ['scarlet', 'knife', 'study'],
+            cards: ['scarlett', 'dagger', 'study'],
         });
         expect(events.setActivePlayers).toHaveBeenCalled();
     });
@@ -210,17 +210,17 @@ describe('suggestions', () => {
                 log: null as unknown as LogAPI,
                 ctx: mockCtx,
             },
-            'wrench'
+            'spanner'
         );
 
-        expect(G.players['1'].seenCards).toContain('wrench');
+        expect(G.players['1'].seenCards).toContain('spanner');
         expect(events.endTurn).toHaveBeenCalled();
     });
 
     it('skipShow passes if no unseen matching card, advances turn', () => {
         G.pendingSuggestion!.suggester = '0';
-        G.players['1'].hand = ['wrench'];
-        G.players['0'].seenCards = ['wrench'];
+        G.players['1'].hand = ['spanner'];
+        G.players['0'].seenCards = ['spanner'];
 
         moves.noCard({
             G,
@@ -236,7 +236,7 @@ describe('suggestions', () => {
 
     it('skipShow invalid if player has unseen matching card', () => {
         G.pendingSuggestion!.suggester = '0';
-        G.players['1'].hand = ['wrench']; // unseen by suggester
+        G.players['1'].hand = ['spanner']; // unseen by suggester
         G.players['0'].seenCards = [];
 
         const result = moves.noCard({
@@ -252,8 +252,8 @@ describe('suggestions', () => {
     });
 
     it('loops back and reveals from deck if nobody can show', () => {
-        G.players['2'].hand = ['wrench'];
-        G.players['1'].seenCards = ['wrench'];
+        G.players['2'].hand = ['spanner'];
+        G.players['1'].seenCards = ['spanner'];
         G.deck = ['ballroom'];
         moves.noCard({
             G,

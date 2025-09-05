@@ -21,7 +21,18 @@
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+
+
+    "baseUrl": ".",
+    "paths": {
+      "@/game/*": ["src/game/*"],
+      "@/electron/*": ["src/electron/*"],
+      "@/*": ["src/client/*"],
+      "@/types/*": ["src/types/*"]
+    },
+    "esModuleInterop": true,
+    "resolveJsonModule": true
   },
   "include": ["src"],
   "exclude": ["src/electron"]

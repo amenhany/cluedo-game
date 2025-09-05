@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { AudioManager } from '../../lib/AudioManager';
+import { AudioManager } from '@/lib/AudioManager';
 import slap1 from '@/assets/audio/sfx/slap1.wav';
 import slap2 from '@/assets/audio/sfx/slap2.wav';
 

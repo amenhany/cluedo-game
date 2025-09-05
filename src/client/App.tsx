@@ -3,7 +3,7 @@ import MainMenu from './ui/MainMenu';
 import { CluedoClient } from './game/CluedoClient';
 import { SceneTransitionProvider } from './ui/SceneTransition';
 import FilmFilter from './FilmFilter';
-import { AudioManager } from './lib/AudioManager';
+import { AudioManager } from '@/lib/AudioManager';
 import opticalStart from '@/assets/audio/sfx/optical_start.wav';
 import opticalLoop from '@/assets/audio/sfx/optical_loop.wav';
 

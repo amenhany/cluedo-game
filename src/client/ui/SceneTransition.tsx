@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { motion, useAnimationControls } from 'framer-motion';
-import { AudioManager } from '../lib/AudioManager';
+import { AudioManager } from '@/lib/AudioManager';
 import startSfx from '@/assets/audio/sfx/start.wav';
 
 type TransitionType = 'iris' | 'fade';

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import record from '@/assets/images/record.png';
+import record from '@/assets/textures/record.png';
 import { ChevronDown, SkipForward } from 'lucide-react';
 import { backInOut, motion, useAnimationControls } from 'motion/react';
-import { AudioManager } from '../lib/AudioManager';
+import { AudioManager } from '@/lib/AudioManager';
 
 type Track = {
    audio: string;

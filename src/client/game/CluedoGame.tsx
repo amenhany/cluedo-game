@@ -2,7 +2,7 @@ import '@/assets/styles/game.scss';
 
 import CluedoBoard from './board/CluedoBoard';
 import Node from './board/Node';
-import { cluedoGraph } from '../../game/board/boardGraph';
+import { cluedoGraph } from '@/game/board/boardGraph';
 import { useEffect, useState } from 'react';
 import type {
    Node as TNode,
@@ -11,10 +11,10 @@ import type {
    PlayerState,
    Character,
    Weapon,
-} from '../../types/game';
+} from '@/types/game';
 import type { BoardProps } from 'boardgame.io/react';
 import type { PlayerID } from 'boardgame.io';
-import { AudioManager } from '../lib/AudioManager';
+import { AudioManager } from '@/lib/AudioManager';
 import step1 from '@/assets/audio/sfx/step1.wav';
 import step2 from '@/assets/audio/sfx/step2.wav';
 import step3 from '@/assets/audio/sfx/step3.wav';

@@ -7,12 +7,27 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    margin: 2%;
     pointer-events: none;
 }
 
 .dice-button {
     position: absolute;
-    top: 2%;
+    top: 4%;
+    left: 2%;
     pointer-events: all;
+}
+
+.deck {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    pointer-events: all;
+    user-select: none;
+
+    img {
+        pointer-events: none;
+    }
 }

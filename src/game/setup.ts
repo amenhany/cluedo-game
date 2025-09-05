@@ -7,8 +7,8 @@ export const CARDS: {
     weapons: Weapon[];
     rooms: Room[];
 } = {
-    suspects: ['scarlet', 'mustard', 'plum', 'peacock', 'green', 'white'],
-    weapons: ['candlestick', 'knife', 'leadPipe', 'revolver', 'rope', 'wrench'],
+    suspects: ['scarlett', 'mustard', 'plum', 'peacock', 'green', 'white'],
+    weapons: ['candlestick', 'dagger', 'leadPipe', 'revolver', 'rope', 'spanner'],
     rooms: [
         'kitchen',
         'ballroom',
@@ -23,7 +23,7 @@ export const CARDS: {
 };
 
 const CHARACTERS: Record<number, Character> = {
-    0: 'scarlet',
+    0: 'scarlett',
     1: 'mustard',
     2: 'white',
     3: 'green',
@@ -32,7 +32,7 @@ const CHARACTERS: Record<number, Character> = {
 };
 
 const START_POSITIONS: Record<number, Tile> = {
-    0: '16-0', // Scarlet '16-0'
+    0: '16-0', // Scarlett '16-0'
     1: '23-7', // Mustard
     2: '14-24', // White
     3: '9-24', // Green

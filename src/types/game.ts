@@ -44,14 +44,14 @@ export type Graph = Record<NodeID, Node>;
 
 /* ##### Game Setup ##### */
 
-export type Character = 'scarlet' | 'mustard' | 'white' | 'green' | 'peacock' | 'plum';
+export type Character = 'scarlett' | 'mustard' | 'white' | 'green' | 'peacock' | 'plum';
 export type Weapon =
     | 'candlestick'
-    | 'knife'
+    | 'dagger'
     | 'leadPipe'
     | 'revolver'
     | 'rope'
-    | 'wrench';
+    | 'spanner';
 export type Card = Character | Weapon | Room;
 export type PlayerState = {
     id: PlayerID;

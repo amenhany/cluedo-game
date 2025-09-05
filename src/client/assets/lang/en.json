@@ -1,0 +1,25 @@
+{
+    "suspect.scarlett": "Miss Scarlett",
+    "suspect.mustard": "Colonel Mustard",
+    "suspect.white": "Mrs. White",
+    "suspect.green": "Mr. Green",
+    "suspect.peacock": "Mrs. Peacock",
+    "suspect.plum": "Professor Plum",
+
+    "weapon.candlestick": "Candlestick",
+    "weapon.dagger": "Dagger",
+    "weapon.leadPipe": "Lead Pipe",
+    "weapon.revolver": "Revolver",
+    "weapon.rope": "Rope",
+    "weapon.spanner": "Spanner",
+
+    "room.kitchen": "Kitchen",
+    "room.ballroom": "Ballroom",
+    "room.conservatory": "Conservatory",
+    "room.diningRoom": "Dining Room",
+    "room.lounge": "Lounge",
+    "room.hall": "Hall",
+    "room.study": "Study",
+    "room.library": "Library",
+    "room.billiardRoom": "Billiard Room"
+}

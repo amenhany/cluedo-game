@@ -1,7 +1,9 @@
-import piece from '@/assets/images/ahmed.png';
-import type { Character, Weapon } from '../../../types/game';
+import piece from '@/assets/textures/ahmed.png';
+import { t } from '@/lib/lang';
+import type { Character, Weapon } from '@/types/game';
 import { useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
+import { motion } from 'motion/react';
 
 type BasePieceProps = {
    isDraggable?: boolean;
@@ -13,7 +15,7 @@ type PieceProps =
    | ({ type: 'weapon'; id: Weapon } & BasePieceProps);
 
 const COLORS: Record<Character, string> = {
-   scarlet: 'red',
+   scarlett: 'red',
    mustard: 'yellow',
    white: 'white',
    green: 'green',
@@ -39,7 +41,6 @@ export default function Piece({
          ref={setNodeRef}
          {...attributes}
          {...listeners}
-         // id={id}
          className={`piece ${isDraggable ? 'draggable' : ''} ${
             decorative ? 'dragging' : ''
          }`}
@@ -49,8 +50,13 @@ export default function Piece({
             backgroundColor: type === 'suspect' ? COLORS[id] : 'transparent',
          }}
       >
-         <div className="nametag">{id}</div>
-         <img src={piece} alt="Piece" />
+         <div className="nametag">{t(`${type}.${id}`)}</div>
+         <motion.img
+            src={piece}
+            alt="Piece"
+            layoutId={id}
+            transition={{ opacity: { duration: 0 } }}
+         />
       </div>
    );
 }
