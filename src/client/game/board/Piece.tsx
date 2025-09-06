@@ -55,7 +55,10 @@ export default function Piece({
             src={piece}
             alt="Piece"
             layoutId={id}
-            transition={{ opacity: { duration: 0 } }}
+            transition={{
+               opacity: { duration: 0 },
+               layout: { ease: 'easeOut' },
+            }}
          />
       </div>
    );

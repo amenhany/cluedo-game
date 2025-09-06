@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { useSettings } from './contexts/SettingsContext';
 
 interface Scratch {
    x: number;
@@ -9,6 +10,7 @@ interface Scratch {
 }
 
 export default function VintageFilmFilter() {
+   const { settings } = useSettings();
    const canvasRef = useRef<HTMLCanvasElement>(null);
    const proceduralScratchesRef = useRef<Scratch[]>([]);
    const textureScratchesRef = useRef<Scratch[]>([]);
@@ -137,6 +139,12 @@ export default function VintageFilmFilter() {
             if (s.lifetime <= 0) textureScratchesRef.current.splice(i, 1);
          });
 
+         // --- Sepia overlay ---
+         if (settings?.filter === 'none') {
+            ctx.fillStyle = 'rgba(112, 66, 20, 0.2)'; // increased from 0.08 to 0.2
+            ctx.fillRect(0, 0, width, height);
+         }
+
          // --- Vignette ---
          const gradient = ctx.createRadialGradient(
             width / 2,
@@ -147,15 +155,11 @@ export default function VintageFilmFilter() {
             width / 2
          );
          gradient.addColorStop(0, 'rgba(0,0,0,0)');
-         gradient.addColorStop(1, 'rgba(0,0,0,0.5)'); // increased from 0.2 to 0.35
+         gradient.addColorStop(1, 'rgba(0,0,0,0.35)'); // increased from 0.2 to 0.35
          ctx.fillStyle = gradient;
          ctx.filter = 'blur(24px)';
          ctx.fillRect(0, 0, width, height);
          ctx.filter = 'none';
-
-         // --- Sepia overlay ---
-         ctx.fillStyle = 'rgba(112, 66, 20, 0.2)'; // increased from 0.08 to 0.12
-         ctx.fillRect(0, 0, width, height);
 
          frameId = requestAnimationFrame(render);
       }
@@ -172,7 +176,7 @@ export default function VintageFilmFilter() {
          cancelAnimationFrame(frameId);
          window.removeEventListener('resize', resize);
       };
-   }, []);
+   }, [settings?.filter]);
 
    return (
       <canvas

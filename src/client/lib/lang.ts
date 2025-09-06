@@ -1,8 +1,6 @@
 import en from '@/assets/lang/en.json';
 import ar from '@/assets/lang/ar.json';
 
-export type Lang = 'en' | 'ar';
-
 // builtin language packs
 const LANGS: Record<Lang, Record<string, string>> = { en, ar };
 

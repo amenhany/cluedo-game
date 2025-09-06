@@ -4,6 +4,7 @@ import { motion } from 'motion/react';
 import Dice from './Dice';
 import Card from './Card';
 import '@/assets/styles/hud.scss';
+import { useSettings } from '@/contexts/SettingsContext';
 
 type HudProps = {
    players?: Record<PlayerID, PlayerState>;
@@ -13,8 +14,12 @@ type HudProps = {
 };
 
 export default function CluedoHud({ players, playerID, moves, active }: HudProps) {
+   const { settings } = useSettings();
    return (
-      <div className="hud">
+      <div
+         className="hud"
+         style={{ filter: settings?.filter === 'b&w' ? 'grayscale(100%)' : 'none' }}
+      >
          <Dice
             face={
                playerID && players && players[playerID].steps

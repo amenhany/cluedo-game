@@ -53,7 +53,7 @@ function mockRandom() {
 
 function makeEvents() {
     return {
-        endStage: vi.fn(),
+        setStage: vi.fn(),
         endTurn: vi.fn(),
         setActivePlayers: vi.fn(),
     } as unknown as EventsAPI;
@@ -121,6 +121,7 @@ describe('moves', () => {
         );
         expect(G.players['0'].position).toBe('6-4'); // unchanged
         expect(events.endTurn).not.toHaveBeenCalled();
+        expect(events.setStage).not.toHaveBeenCalled();
     });
 
     it('movePiece updates position if node allowed', () => {
@@ -140,6 +141,27 @@ describe('moves', () => {
         expect(G.players['0'].steps).toEqual(0);
         expect(G.players['0'].availableMoves).toEqual([]);
         expect(events.endTurn).toHaveBeenCalled();
+        expect(events.setStage).not.toHaveBeenCalled();
+    });
+
+    it('movePiece changes stage to Suggest if entered a room', () => {
+        G.players['0'].availableMoves = ['kitchen'];
+        moves.movePiece(
+            {
+                G,
+                playerID: '0',
+                events,
+                random: mockRandom() as unknown as RandomAPI,
+                log: null as unknown as LogAPI,
+                ctx: null as unknown as Ctx,
+            },
+            'kitchen'
+        );
+        expect(G.players['0'].position).toBe('kitchen');
+        expect(G.players['0'].steps).toEqual(0);
+        expect(G.players['0'].availableMoves).toEqual([]);
+        expect(events.endTurn).not.toHaveBeenCalled();
+        expect(events.setStage).toHaveBeenCalledWith('Suggest');
     });
 
     it('useSecretRoom moves player if secret passage exists', () => {
@@ -163,6 +185,7 @@ describe('moves', () => {
         });
         expect(result).toBe(INVALID_MOVE);
         expect(G.players['2'].position).toBe('diningRoom');
+        expect(events.setStage).toHaveBeenCalledWith('Suggest');
     });
 });
 

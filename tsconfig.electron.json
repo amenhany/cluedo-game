@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "@/game/*": ["src/game/*"],
+            "@/electron/*": ["src/electron/*"],
+            "@/*": ["src/client/*"],
+            "@/types/*": ["src/types/*"]
+        },
+        "strict": true,
+        "target": "esnext",
+        "module": "nodenext",
+        "noEmit": false,
+        "outDir": "dist-electron",
+        "skipLibCheck": true,
+        "typeRoots": ["src/types/electron", "src/types/global"]
+    },
+    "include": ["src/electron", "src/types/global.d.ts"]
+}

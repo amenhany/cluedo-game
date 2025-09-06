@@ -25,8 +25,10 @@ import CluedoHud from './hud/CluedoHud';
 import { DndContext, DragOverlay, type DragEndEvent } from '@dnd-kit/core';
 import Piece from './board/Piece';
 import { snapCenterToCursor } from '@dnd-kit/modifiers';
+import { useSettings } from '@/contexts/SettingsContext';
 
 export default function CluedoGame({ G, ctx, moves, playerID }: BoardProps<GameState>) {
+   const { settings } = useSettings();
    const [players, setPlayers] = useState<Record<PlayerID, PlayerState>>();
    const [availableMoves, setAvailableMoves] = useState<TNode[]>([]);
    const [dragging, setDragging] = useState<{
@@ -77,55 +79,65 @@ export default function CluedoGame({ G, ctx, moves, playerID }: BoardProps<GameS
    }, [G, playerID]);
 
    return (
-      <div className="game">
-         <DndContext
-            modifiers={[snapCenterToCursor]}
-            onDragEnd={handleDragEnd}
-            onDragStart={(event) =>
-               setDragging({
-                  id: event.active.id as Character | Weapon,
-                  type: event.active.data.current!.type,
-               })
-            }
+      <>
+         <div
+            className="game"
+            style={{ filter: settings?.filter === 'b&w' ? 'grayscale(100%)' : 'none' }}
          >
-            <CluedoBoard id={playerID || '0'}>
-               {Object.values(cluedoGraph).map((node) => {
-                  const residents = Object.values(G.players).filter((player) => {
-                     return player.position === node.id;
-                  });
-                  return (
-                     <Node
-                        key={node.id}
-                        node={node}
-                        players={residents}
-                        playerID={playerID !== null ? playerID : ''}
-                        myTurn={myTurn}
-                        isDroppable={availableMoves.includes(node)}
-                        onClick={() => handleMove(node.id)}
-                     />
-                  );
-               })}
-            </CluedoBoard>
-            {dragging && (
-               <DragOverlay>
-                  {dragging.type === 'suspect' ? (
-                     <Piece
-                        id={dragging.id as Character}
-                        type="suspect"
-                        decorative={true}
-                     />
-                  ) : (
-                     <Piece id={dragging.id as Weapon} type="weapon" decorative={true} />
-                  )}
-               </DragOverlay>
-            )}
-         </DndContext>
+            <DndContext
+               modifiers={[snapCenterToCursor]}
+               onDragEnd={handleDragEnd}
+               onDragStart={(event) =>
+                  setDragging({
+                     id: event.active.id as Character | Weapon,
+                     type: event.active.data.current!.type,
+                  })
+               }
+            >
+               <CluedoBoard id={playerID || '0'}>
+                  {Object.values(cluedoGraph).map((node) => {
+                     const residents = Object.values(G.players).filter((player) => {
+                        return player.position === node.id;
+                     });
+                     return (
+                        <Node
+                           key={node.id}
+                           node={node}
+                           players={residents}
+                           playerID={playerID !== null ? playerID : ''}
+                           myTurn={myTurn}
+                           isDroppable={availableMoves.includes(node)}
+                           onClick={() => handleMove(node.id)}
+                        />
+                     );
+                  })}
+               </CluedoBoard>
+               {dragging && (
+                  <DragOverlay>
+                     {dragging.type === 'suspect' ? (
+                        <Piece
+                           id={dragging.id as Character}
+                           type="suspect"
+                           decorative={true}
+                        />
+                     ) : (
+                        <Piece
+                           id={dragging.id as Weapon}
+                           type="weapon"
+                           decorative={true}
+                        />
+                     )}
+                  </DragOverlay>
+               )}
+            </DndContext>
+         </div>
+
          <CluedoHud
             playerID={playerID === null ? undefined : playerID}
             players={players}
             moves={hudMoves}
             active={myTurn}
          />
-      </div>
+      </>
    );
 }

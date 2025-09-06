@@ -1,15 +1,25 @@
 import { motion } from 'motion/react';
 import Backdrop from './Backdrop';
 import { useEffect } from 'react';
+import board from '@/assets/textures/board_modal.png';
+
+type Texture = 'board' | 'sheet';
+
+const TEXTURE_MAPPING: Record<Texture, string> = {
+   board,
+   sheet: '',
+};
 
 export default function Modal({
    onClose,
    title,
+   texture,
    children,
 }: {
    onClose: () => void;
    title: string;
    children: React.ReactNode;
+   texture: Texture;
 }) {
    useEffect(() => {
       const handleEscape = (event: KeyboardEvent) => {
@@ -34,7 +44,8 @@ export default function Modal({
             exit="hidden"
             transition={{ duration: 0.8, type: 'spring' }}
          >
-            <h2 className="modalTitle">{title}</h2>
+            <img src={TEXTURE_MAPPING[texture]} className="modal-bg" />
+            <h2 className="modal-title">{title}</h2>
             {children}
          </motion.div>
       </Backdrop>

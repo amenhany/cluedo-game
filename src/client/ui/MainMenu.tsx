@@ -16,8 +16,9 @@ import { useState } from 'react';
 import { Settings, DoorOpen, DoorClosed } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import SettingsScreen from './Settings';
-import { useSceneTransition } from './SceneTransition';
+import { useSceneTransition } from '../contexts/SceneTransitionContext';
 import { AudioManager } from '@/lib/AudioManager';
+import { useSettings } from '@/contexts/SettingsContext';
 
 const tracks = [
    {
@@ -62,6 +63,7 @@ export default function MainMenu({
    const [hoverClose, setHoverClose] = useState(false);
    const [openSettings, setOpenSettings] = useState(false);
    const { triggerTransition } = useSceneTransition();
+   const { settings } = useSettings();
 
    function handleHost() {
       triggerTransition(onHost, 'iris');
@@ -72,7 +74,10 @@ export default function MainMenu({
    }
 
    return (
-      <div className="menu">
+      <div
+         className="menu"
+         style={{ filter: settings?.filter === 'b&w' ? 'grayscale(100%)' : 'none' }}
+      >
          <h1>
             <span>C</span>LUEDO
          </h1>

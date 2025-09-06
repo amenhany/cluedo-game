@@ -5,6 +5,7 @@ import { AudioManager } from '@/lib/AudioManager';
 import appear from '@/assets/audio/sfx/appear.wav';
 import { useDroppable } from '@dnd-kit/core';
 import { t } from '@/lib/lang';
+import { useEffect } from 'react';
 
 const BOARD_COLUMNS = 25;
 const BOARD_ROWS = 25;
@@ -53,21 +54,27 @@ export default function Node({
            height: `${(1 / BOARD_ROWS) * 100}%`,
         };
 
+   useEffect(() => {
+      if (isRoom && isOver) {
+         AudioManager.getInstance().playSfx(appear);
+      }
+   }, [isOver]);
+
    return (
       <div
          className={`node ${node.type} ${isDroppable ? 'droppable' : ''}`}
          ref={setNodeRef}
          id={node.id}
          style={style}
+         onMouseEnter={
+            isRoom && isDroppable && !isOver
+               ? () => AudioManager.getInstance().playSfx(appear)
+               : () => {}
+         }
       >
          <div
             className={`area ${isOver ? 'over' : ''}`}
             onClick={isDroppable ? onClick : () => {}}
-            onMouseEnter={
-               isRoom && isDroppable
-                  ? () => AudioManager.getInstance().playSfx(appear)
-                  : () => {}
-            }
          >
             {isRoom && (
                <h2 className="room-name">{t(`room.${room.id}`).replace(' ', '\n')}</h2>
