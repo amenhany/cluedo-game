@@ -3,6 +3,7 @@
 
 .menu {
     @include no-select();
+    @include darken-bg(0.2);
 
     position: relative;
     overflow: hidden;
@@ -13,14 +14,6 @@
     background-position: center;
     background-repeat: no-repeat;
 
-    &::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.2);
-        pointer-events: none;
-    }
-
     h1 {
         position: absolute;
         top: 16%;
@@ -28,8 +21,8 @@
         font-family: CupheadHenriette;
         font-size: 5.8vw;
         /* letter-spacing: 0.15rem; */
-        color: white;
-        text-shadow: 4px 2px 0px black, 5px 3px 0px white;
+        color: $primary-text;
+        text-shadow: 4px 2px 0px black, 5px 3px 0px $primary-text;
         pointer-events: none;
         height: 5.8vw;
     }
@@ -46,7 +39,7 @@
     top: 38%;
     right: 18%;
     font-size: 3vw;
-    color: white;
+    color: $primary-text;
     font-family: CupheadVogue;
     font-weight: 800;
     text-shadow: 4px 2px 0px black;
@@ -84,22 +77,20 @@
     position: absolute;
     bottom: 2rem;
     left: 3rem;
-    color: white;
+    color: $primary-text;
 
     .container {
+        @include overlay(0.3, true, 1px);
         display: flex;
         padding-right: 5rem;
-        background-color: rgba(0,0,0,0.3);
-        backdrop-filter: blur(1px);
         border-radius: 20px;
         border-top-left-radius: 0;
     }
 
     .show-arrow {
+        @include overlay(0.3, true, 1px);
         width: fit-content;
         padding: 0.25rem 1.6rem 0.1rem 0.8rem;
-        background-color: rgba(0,0,0,0.3);
-        backdrop-filter: blur(1px);
         border-radius: 15px;
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;

@@ -47,6 +47,17 @@ export default function Settings({ onClose }: { onClose: () => void }) {
                />
             </li>
             <li>
+               <label>Fullscreen</label>
+               <button
+                  onClick={() => {
+                     update({ fullscreen: !settings?.fullscreen });
+                     AudioManager.getInstance().playSfx(buttonSfx);
+                  }}
+               >
+                  {settings && settings.fullscreen ? 'ON' : 'OFF'}
+               </button>
+            </li>
+            <li>
                <label>Language</label>
                <button
                   onClick={() =>

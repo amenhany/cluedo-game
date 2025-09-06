@@ -8,6 +8,7 @@ let currentLang: Lang = 'en';
 
 export function setLang(lang: Lang) {
     currentLang = lang;
+    document.documentElement.lang = lang;
 }
 
 export function t(id: string): string {

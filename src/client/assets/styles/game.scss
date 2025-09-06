@@ -1,3 +1,5 @@
+@use './variables' as *;
+@use './mixins' as *;
 @use './alignment.scss';
 
 .game {
@@ -58,13 +60,13 @@
     transition: position 2s ease;
 
     .nametag {
+        @include overlay(0.2);
         opacity: 0;
         position: absolute;
         text-align: center;
         bottom: 100%;
         left: 50%;
         transform: translateX(-50%);
-        background-color: rgba(0, 0, 0, 0.2);
         transition: opacity 0.5s ease;
         padding: 0.1rem 0.5rem;
         padding-top: 0.275rem;
@@ -120,14 +122,14 @@
         width: 40%;
         height: 40%;
         border-radius: 50%;
-        background-color: rgba(255, 0, 0, 0.2);
+        background-color: $highlight-translucent;
         transition: background-color 0.2s ease-in;
-        box-shadow: inset 2px 2px rgba(200, 0, 0, 0.2);
+        box-shadow: inset 2px 2px $highlight-translucent;
         cursor: pointer;
 
         &:hover, &.over {
-            background-color: rgba(255, 0, 0, 0.4);
-            box-shadow: inset 2px 2px rgba(200, 0, 0, 0.4);
+            background-color: $highlight-translucent-emphasis;
+            box-shadow: inset 2px 2px $highlight-translucent-emphasis;
         }
     }
 
@@ -152,7 +154,7 @@
             .room-name {
                 pointer-events: none;
                 text-transform: uppercase;
-                color: #222;
+                color: $board-text;
                 font-size: 1.5rem;
                 transition: scale 0.8s ease;
                 user-select: none;
@@ -172,7 +174,7 @@
             z-index: 150;
 
             .room-name {
-                color: hsl(0, 50%, 50%);
+                color: $board-text-emphasis;
             }
 
             &:hover, &.over {

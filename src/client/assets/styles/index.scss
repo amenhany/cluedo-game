@@ -98,8 +98,14 @@ select {
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'SultanRuqah';
+  src: url('/fonts/Sultan-Ruqah-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
 :root {
-  font-family: CupheadFelix, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -113,7 +119,13 @@ html,
 body {
   height: 100%;
   line-height: 1.5;
-  font-family: CupheadFelix, sans-serif;
+  font-family: 'CupheadFelix', sans-serif;
+}
+
+html:lang(ar) {
+  body {
+    font-family: 'SultanRuqah', sans-serif;
+  }
 }
 
 ::-webkit-scrollbar {

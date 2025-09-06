@@ -3,3 +3,21 @@
     -webkit-user-select: none;
     -ms-user-select: none;
 }
+
+@mixin darken-bg($amount) {
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, $amount);
+        pointer-events: none;
+    }
+}
+
+@mixin overlay($darkenAmount, $blur: false, $blurAmount: 1px) {
+  background-color: rgba(0, 0, 0, $darkenAmount);
+
+  @if $blur {
+    backdrop-filter: blur($blurAmount);
+  }
+}

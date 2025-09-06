@@ -21,7 +21,11 @@ app.on('ready', () => {
     mainWindow.on('leave-full-screen', () => saveSettings({ fullscreen: false }));
 
     ipcMainHandle('settings:get', () => getAllSettings());
-    ipcMainOn('settings:save', (settings) => saveSettings(settings));
+    ipcMainOn('settings:save', (settings) => {
+        saveSettings(settings);
+        if (settings.fullscreen !== undefined)
+            mainWindow.setFullScreen(settings.fullscreen);
+    });
 
     if (isDev()) {
         mainWindow.loadURL('http://localhost:5123');

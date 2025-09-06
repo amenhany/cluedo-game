@@ -1,3 +1,5 @@
+@use './variables' as *;
+
 .dice-button.active {
   cursor: pointer;
   animation: click-me 0.9s linear infinite;
@@ -17,7 +19,7 @@
   }
 
   .side {
-    box-shadow: 0 0 10px 2px #f25f5c;
+    box-shadow: 0 0 10px 2px $highlight;
   }
 }
 
@@ -44,8 +46,8 @@
   height: 20px;
   margin: -10px 5px 5px -10px;
   border-radius: 20px;
-  background-color: #f25f5c;
-  box-shadow: inset 2px 2px #d90429;
+  background-color: $highlight;
+  box-shadow: inset 2px 2px $highlight-emphasis;
 }
 
 .side {
