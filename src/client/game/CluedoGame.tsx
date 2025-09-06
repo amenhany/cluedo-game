@@ -2,7 +2,7 @@ import '@/assets/styles/game.scss';
 
 import CluedoBoard from './board/CluedoBoard';
 import Node from './board/Node';
-import { cluedoGraph } from '@/game/board/boardGraph';
+import { cluedoGraph, secretPassages } from '@/game/board/boardGraph';
 import { useEffect, useState } from 'react';
 import type {
    Node as TNode,
@@ -11,6 +11,7 @@ import type {
    PlayerState,
    Character,
    Weapon,
+   RoomNode,
 } from '@/types/game';
 import type { BoardProps } from 'boardgame.io/react';
 import type { PlayerID } from 'boardgame.io';
@@ -26,10 +27,13 @@ import { DndContext, DragOverlay, type DragEndEvent } from '@dnd-kit/core';
 import Piece from './board/Piece';
 import { snapCenterToCursor } from '@dnd-kit/modifiers';
 import { useSettings } from '@/contexts/SettingsContext';
+import SecretPassage from './board/SecretPassage';
 
 export default function CluedoGame({ G, ctx, moves, playerID }: BoardProps<GameState>) {
    const { settings } = useSettings();
    const [players, setPlayers] = useState<Record<PlayerID, PlayerState>>();
+   let playerNode: TNode | null = null;
+   if (players && playerID) playerNode = cluedoGraph[players[playerID].position];
    const [availableMoves, setAvailableMoves] = useState<TNode[]>([]);
    const [dragging, setDragging] = useState<{
       id: Character | Weapon;
@@ -64,6 +68,11 @@ export default function CluedoGame({ G, ctx, moves, playerID }: BoardProps<GameS
    function handleDragEnd(result: DragEndEvent) {
       const destination = result.over?.id as NodeID;
       if (destination) handleMove(destination);
+   }
+
+   function handleSecretPassage() {
+      moves.useSecretPassage();
+      AudioManager.getInstance().playSfx(doorSound);
    }
 
    useEffect(() => {
@@ -111,6 +120,20 @@ export default function CluedoGame({ G, ctx, moves, playerID }: BoardProps<GameS
                         />
                      );
                   })}
+                  {Object.entries(secretPassages).map(([room, coord]) => (
+                     <SecretPassage
+                        coordinates={coord}
+                        active={
+                           myTurn &&
+                           playerNode?.type === 'room' &&
+                           (playerNode as RoomNode).secretPassage !== undefined &&
+                           playerNode.id === room &&
+                           ctx.activePlayers !== null &&
+                           ctx.activePlayers[playerID] === 'TurnAction'
+                        }
+                        onClick={handleSecretPassage}
+                     />
+                  ))}
                </CluedoBoard>
                {dragging && (
                   <DragOverlay>

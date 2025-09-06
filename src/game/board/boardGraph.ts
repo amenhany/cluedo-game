@@ -1,4 +1,4 @@
-import type { Graph, Room } from '../../types/game';
+import type { Coordinates, Graph, Room } from '../../types/game';
 import { generateTileGraph } from './tileGen';
 
 /* prettier-ignore */
@@ -91,4 +91,11 @@ export const cluedoGraph: Graph = {
     },
 
     ...generateTileGraph(grid),
+};
+
+export const secretPassages: Partial<Record<Room, Coordinates>> = {
+    study: { x: -0.12, y: 2.75 },
+    lounge: { x: 23.1, y: 4.83 },
+    conservatory: { x: 0.95, y: 19.25 },
+    kitchen: { x: 18.2, y: 23.2 },
 };

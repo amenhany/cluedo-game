@@ -9,7 +9,7 @@ import opticalLoop from '@/assets/audio/sfx/optical_loop.wav';
 import { SettingsProvider } from './contexts/SettingsContext';
 
 export default function App() {
-   const [gameStarted, setGameStarted] = useState(false);
+   const [gameStarted, setGameStarted] = useState(true);
 
    useEffect(() => {
       // AudioManager.getInstance().playStatic(opticalStart, false, () =>
