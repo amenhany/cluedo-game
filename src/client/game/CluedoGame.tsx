@@ -12,6 +12,8 @@ import type {
    Character,
    Weapon,
    RoomNode,
+   Room,
+   Stage,
 } from '@/types/game';
 import type { BoardProps } from 'boardgame.io/react';
 import type { PlayerID } from 'boardgame.io';
@@ -125,11 +127,13 @@ export default function CluedoGame({ G, ctx, moves, playerID }: BoardProps<GameS
                         coordinates={coord}
                         active={
                            myTurn &&
-                           playerNode?.type === 'room' &&
+                           playerNode?.id === room &&
                            (playerNode as RoomNode).secretPassage !== undefined &&
-                           playerNode.id === room &&
                            ctx.activePlayers !== null &&
                            ctx.activePlayers[playerID] === 'TurnAction'
+                        }
+                        destination={
+                           (cluedoGraph[room as Room] as RoomNode).secretPassage!
                         }
                         onClick={handleSecretPassage}
                      />
@@ -160,6 +164,12 @@ export default function CluedoGame({ G, ctx, moves, playerID }: BoardProps<GameS
             players={players}
             moves={hudMoves}
             active={myTurn}
+            stage={
+               (playerID &&
+                  ctx.activePlayers !== null &&
+                  (ctx.activePlayers[playerID] as Stage)) ||
+               null
+            }
          />
       </>
    );

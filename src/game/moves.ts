@@ -48,6 +48,8 @@ export const useSecretPassage: MoveFn<GameState> = ({ G, playerID, events }) => 
     if (cluedoGraph[player.position].type !== 'room' || room.secretPassage === undefined)
         return INVALID_MOVE;
     player.position = room.secretPassage;
+    player.steps = 0;
+    player.availableMoves = [];
     events.setStage('Suggest');
 };
 

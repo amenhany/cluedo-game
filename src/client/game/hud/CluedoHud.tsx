@@ -1,5 +1,5 @@
 import type { PlayerID } from 'boardgame.io';
-import type { PlayerState } from '@/types/game';
+import type { PlayerState, Stage } from '@/types/game';
 import { motion } from 'motion/react';
 import Dice from './Dice';
 import Card from './Card';
@@ -11,9 +11,10 @@ type HudProps = {
    playerID?: PlayerID;
    moves: Record<string, (...args: any[]) => void>;
    active: boolean;
+   stage: Stage | null;
 };
 
-export default function CluedoHud({ players, playerID, moves, active }: HudProps) {
+export default function CluedoHud({ players, playerID, moves, active, stage }: HudProps) {
    const { settings } = useSettings();
    return (
       <div
@@ -27,12 +28,12 @@ export default function CluedoHud({ players, playerID, moves, active }: HudProps
                   : 0
             }
             onRoll={moves.handleRoll}
-            disabled={!active}
+            disabled={!(active && stage === 'TurnAction')}
          />
          <motion.div
             className="deck"
-            initial={{ bottom: '-20vh' }}
-            whileHover={{ bottom: '20vh' }}
+            initial={{ bottom: '-50vh' }}
+            whileHover={{ bottom: '50vh' }}
             transition={{ type: 'spring', stiffness: 200, damping: 20 }}
          >
             {playerID &&

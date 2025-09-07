@@ -1,4 +1,7 @@
-import type { Coordinates } from '@/types/game';
+import { AudioManager } from '@/lib/AudioManager';
+import { t } from '@/lib/lang';
+import type { Coordinates, Room } from '@/types/game';
+import appear from '@/assets/audio/sfx/appear.wav';
 
 const BOARD_COLUMNS = 25;
 const BOARD_ROWS = 25;
@@ -8,10 +11,12 @@ const OFFSET_Y = 0;
 export default function SecretPassage({
    coordinates,
    active,
+   destination,
    onClick,
 }: {
    coordinates: Coordinates;
    active: boolean;
+   destination: Room;
    onClick: () => void;
 }) {
    return (
@@ -25,6 +30,11 @@ export default function SecretPassage({
             width: `${(1 / BOARD_COLUMNS) * 100}%`,
             height: `${(1 / BOARD_ROWS) * 100}%`,
          }}
-      ></button>
+         onMouseEnter={
+            active ? () => AudioManager.getInstance().playSfx(appear) : () => {}
+         }
+      >
+         {active && <div className="nametag">Go to {t(`room.${destination}`)}</div>}
+      </button>
    );
 }
