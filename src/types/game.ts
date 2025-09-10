@@ -53,6 +53,14 @@ export type Weapon =
     | 'rope'
     | 'spanner';
 export type Card = Character | Weapon | Room;
+export type Suggestion = {
+    suspect: Character;
+    weapon: Weapon;
+    room: Room;
+};
+export type NullableSuggestion = {
+    [K in keyof Suggestion]: Suggestion[K] | null;
+};
 export type PlayerState = {
     id: PlayerID;
     character: Character;
@@ -66,12 +74,13 @@ export type PlayerState = {
 
 export type GameState = {
     players: Record<PlayerID, PlayerState>;
+    weapons: Record<Weapon, Room>;
     envelope: Card[];
     deck: Card[];
-    pendingSuggestion?: {
+    pendingSuggestion?: NullableSuggestion & {
         suggester: PlayerID;
-        cards: Card[];
+        suspectOrigin: NodeID | null;
     };
 };
 
-export type Stage = 'TurnAction' | 'Suggest' | 'ResolveSuggestion';
+export type Stage = 'TurnAction' | 'RoomAction' | 'Suggest' | 'ResolveSuggestion';

@@ -1,28 +1,37 @@
 import {
     endTurn,
+    setSuggestion,
     makeSuggestion,
-    movePiece,
+    movePlayer,
     noCard,
     rollDice,
     showCard,
     useSecretPassage,
+    startSuggestion,
 } from './moves';
 
 export const TurnAction = {
     moves: {
         rollDice,
-        movePiece,
+        movePlayer,
         useSecretPassage,
-        makeSuggestion,
+        startSuggestion,
     },
+};
+
+export const RoomAction = {
+    moves: {
+        startSuggestion,
+        endTurn,
+    },
+    next: 'TurnAction',
 };
 
 export const Suggest = {
     moves: {
+        setSuggestion,
         makeSuggestion,
-        endTurn,
     },
-    next: 'TurnAction',
 };
 
 export const ResolveSuggestion = {

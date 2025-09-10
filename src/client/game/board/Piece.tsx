@@ -1,11 +1,15 @@
 import piece from '@/assets/textures/ahmed.png';
+import revolver from '@/assets/textures/weapons/revolver.png';
+import { useSuggestion } from '@/contexts/SuggestionContext';
 import { t } from '@/lib/lang';
 import type { Character, Weapon } from '@/types/game';
 import { useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
-import { motion } from 'motion/react';
+import type { PlayerID } from 'boardgame.io';
+// import { motion } from 'motion/react';
 
 type BasePieceProps = {
+   playerID: PlayerID | null;
    isDraggable?: boolean;
    decorative?: boolean;
 };
@@ -23,12 +27,18 @@ const COLORS: Record<Character, string> = {
    plum: 'purple',
 };
 
+// const TEXTURE_MAPPING: Record<Character | Weapon, string> = {
+//    revolver,
+// };
+
 export default function Piece({
    id,
    type,
+   playerID,
    isDraggable = false,
    decorative = false,
 }: PieceProps) {
+   const { isHighlighted, setHighlighted, suggestion } = useSuggestion();
    const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
       id,
       data: { type },
@@ -41,24 +51,30 @@ export default function Piece({
          ref={setNodeRef}
          {...attributes}
          {...listeners}
-         className={`piece ${isDraggable ? 'draggable' : ''} ${
+         id={id}
+         className={`piece ${type} ${isDraggable && !suggestion ? 'draggable' : ''} ${
             decorative ? 'dragging' : ''
-         }`}
+         } ${suggestion ? 'suggesting' : ''} ${isHighlighted(id) ? 'highlighted' : ''}`}
          style={{
             ...style,
             opacity: isDragging ? 0 : 1,
             backgroundColor: type === 'suspect' ? COLORS[id] : 'transparent',
          }}
+         onClick={
+            playerID && suggestion?.suggester === playerID
+               ? () => setHighlighted(type, id)
+               : () => {}
+         }
       >
          <div className="nametag">{t(`${type}.${id}`)}</div>
-         <motion.img
-            src={piece}
+         <img
+            src={type === 'suspect' ? piece : revolver}
             alt="Piece"
-            layoutId={id}
-            transition={{
-               opacity: { duration: 0 },
-               layout: { ease: 'easeOut' },
-            }}
+            // layoutId={id}
+            // transition={{
+            //    opacity: { duration: 0 },
+            //    layout: { ease: 'easeOut' },
+            // }}
          />
       </div>
    );

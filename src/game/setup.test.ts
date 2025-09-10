@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, it } from 'vitest';
-import { CARDS } from './setup';
+import { CARDS } from './constants';
 import { InitializeGame } from 'boardgame.io/internal';
 import { Cluedo } from '.';
 import type { GameState } from '../types/game';

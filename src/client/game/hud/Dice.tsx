@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { AudioManager } from '@/lib/AudioManager';
+import { motion } from 'motion/react';
 import slap1 from '@/assets/audio/sfx/slap1.wav';
 import slap2 from '@/assets/audio/sfx/slap2.wav';
 
@@ -32,9 +33,11 @@ export default function Dice(props: {
    }
 
    return (
-      <button
+      <motion.button
          onClick={handleRoll}
          className={`dice-button ${isDisabled ? 'disabled' : 'active'}`}
+         exit={{ x: -200 }}
+         transition={{ duration: 0.2 }}
          disabled={isDisabled}
       >
          <div className={`dice show-${dieFace}`}>
@@ -72,6 +75,6 @@ export default function Dice(props: {
                <div className="dot six-6"></div>
             </div>
          </div>
-      </button>
+      </motion.button>
    );
 }

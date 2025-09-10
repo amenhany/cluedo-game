@@ -1,21 +1,19 @@
-import type { PlayerState, Node, TileNode, RoomNode } from '@/types/game';
+import type { PlayerState, Node, TileNode, RoomNode, Weapon } from '@/types/game';
 import Piece from './Piece';
 import type { PlayerID } from 'boardgame.io';
 import { AudioManager } from '@/lib/AudioManager';
 import appear from '@/assets/audio/sfx/appear.wav';
-import { useDroppable } from '@dnd-kit/core';
+import { useDndContext, useDroppable } from '@dnd-kit/core';
 import { t } from '@/lib/lang';
 import { useEffect } from 'react';
-
-const BOARD_COLUMNS = 25;
-const BOARD_ROWS = 25;
-const OFFSET_X = 1;
-const OFFSET_Y = 0;
+import { useSuggestion } from '@/contexts/SuggestionContext';
+import { BOARD_COLUMNS, BOARD_ROWS, OFFSET_X, OFFSET_Y } from '@/game/constants';
 
 type NodeProps = {
    node: Node;
    players: PlayerState[];
-   playerID: PlayerID;
+   playerID: PlayerID | null;
+   weapon: Weapon | null;
    myTurn: boolean;
    isDroppable?: boolean;
    onClick?: () => void;
@@ -25,10 +23,12 @@ export default function Node({
    node,
    players,
    playerID,
+   weapon,
    myTurn,
    isDroppable = false,
    onClick = () => {},
 }: NodeProps) {
+   const { suggestion } = useSuggestion();
    const { isOver, setNodeRef } = useDroppable({
       id: node.id,
       data: {
@@ -36,6 +36,7 @@ export default function Node({
       },
       disabled: !isDroppable,
    });
+   const { active } = useDndContext();
    const tile = node as TileNode;
    const room = node as RoomNode;
    const isRoom = node.type === 'room';
@@ -62,19 +63,21 @@ export default function Node({
 
    return (
       <div
-         className={`node ${node.type} ${isDroppable ? 'droppable' : ''}`}
+         className={`node ${node.type} ${isDroppable ? 'droppable' : ''} ${
+            suggestion ? 'suggesting' : ''
+         } ${active ? 'dragging' : ''}`}
          ref={setNodeRef}
          id={node.id}
          style={style}
          onMouseEnter={
-            isRoom && isDroppable && !isOver
+            isRoom && isDroppable && !isOver && !suggestion
                ? () => AudioManager.getInstance().playSfx(appear)
                : () => {}
          }
       >
          <div
             className={`area ${isOver ? 'over' : ''}`}
-            onClick={isDroppable ? onClick : () => {}}
+            onClick={isDroppable && !suggestion ? onClick : () => {}}
          >
             {isRoom && (
                <h2 className="room-name">{t(`room.${room.id}`).replace(' ', '\n')}</h2>
@@ -84,10 +87,21 @@ export default function Node({
             <Piece
                key={player.id}
                id={player.character}
+               playerID={playerID}
                type="suspect"
-               isDraggable={player.id === playerID && myTurn}
+               isDraggable={
+                  (player.id === playerID && myTurn) || suggestion?.suggester === playerID
+               }
             />
          ))}
+         {weapon && (
+            <Piece
+               id={weapon}
+               type="weapon"
+               playerID={playerID}
+               isDraggable={suggestion?.suggester === playerID}
+            />
+         )}
       </div>
    );
 }

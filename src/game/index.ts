@@ -1,5 +1,5 @@
 import { setup } from './setup';
-import { ResolveSuggestion, Suggest, TurnAction } from './stages';
+import { ResolveSuggestion, RoomAction, Suggest, TurnAction } from './stages';
 
 export const Cluedo = {
     setup: setup,
@@ -10,6 +10,7 @@ export const Cluedo = {
         },
         stages: {
             TurnAction,
+            RoomAction,
             Suggest,
             ResolveSuggestion,
         },

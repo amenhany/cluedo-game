@@ -1,4 +1,5 @@
 @use './variables' as *;
+@use './mixins' as *;
 @use './dice.scss';
 
 .hud {
@@ -12,9 +13,68 @@
 
 .dice-button {
     position: absolute;
-    top: 4%;
-    left: 2%;
+    top: 10.5%;
+    left: 6.4%;
     pointer-events: all;
+}
+
+.turn-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    h1 {
+        margin: 1.75rem 3.5rem;
+        font-family: 'CupheadMemphis';
+        text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.8);
+    }
+}
+
+.suggest-container {
+    position: absolute;
+    display: flex;
+    gap: 2rem;
+    top: 2.3rem;
+    left: 50%;
+    transform: translateX(-50%);
+    button {
+        pointer-events: all;
+        cursor: pointer;
+        padding: 1.2rem;
+        font-size: 2rem;
+        border-radius: 10px;
+        transition: scale 0.3s ease;
+        text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.8);
+
+        &:hover {
+            scale: 1.05;
+        }
+    }
+    h1 {
+        margin: 2.3rem auto;
+        text-align: center;
+    }
+}
+
+.suggestion {
+    @include overlay(0.4, true, 1px);
+    position: absolute;
+    padding: 1rem 2rem;
+    margin: 6.5rem 2rem;
+    border-radius: 10px;
+    z-index: 300;
+    h2 {
+        margin: 0.5rem 1rem;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+    ul {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    li {
+        margin: 0.5rem;
+    }
 }
 
 .deck {

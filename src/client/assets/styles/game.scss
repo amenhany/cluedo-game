@@ -1,11 +1,16 @@
 @use './variables' as *;
 @use './mixins' as *;
-@use './alignment.scss';
+@use './board_alignment.scss';
+@use './piece_alignment.scss';
 
 .game {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.alignment {
+    position: relative;
 }
 
 #board {
@@ -55,12 +60,25 @@
 .piece {
     position: absolute;
     user-select: none;
-    height: 45px;
-    width: 45px;
-    transition: position 2s ease;
+    transition: scale 0.3s ease;
+
+    &.suspect {
+        height: 45px;
+        width: 45px;
+    }
+
+    &.weapon {
+        width: 70px;
+        height: 70px;
+    }
+
+    &:hover {
+        z-index: 150;
+    }
 
     .nametag {
         @include overlay(0.2);
+        pointer-events: none;
         opacity: 0;
         position: absolute;
         text-align: center;
@@ -72,6 +90,7 @@
         padding-top: 0.275rem;
         border-radius: 5px;
         text-wrap: nowrap;
+        z-index: 300;
     }
 
     &:hover .nametag {
@@ -79,9 +98,7 @@
     }
 
     &.draggable {
-        position: relative;
         z-index: 150;
-        transition: scale 0.3s ease;
         cursor: grab;
 
         &:hover {
@@ -95,6 +112,19 @@
 
         .nametag {
             opacity: 0;
+        }
+    }
+
+    &.suggesting {
+        cursor: pointer;
+        &:hover {
+            scale: 1.08;
+        }
+
+        &.highlighted {
+            filter: drop-shadow(0 0 5px gold);
+            scale: 1.1;
+            // z-index: 200;
         }
     }
 
@@ -179,10 +209,6 @@
         padding: 2rem;
         flex-wrap: wrap;
 
-        .piece {
-            position: relative;
-        }
-
         .area {
             display: flex;
             justify-content: center;
@@ -202,7 +228,7 @@
             }
         }
 
-        &.droppable .area {
+        &.droppable:not(.suggesting) .area, &.droppable.dragging .area {
             width: 100%;
             height: 100%;
             // background-color: rgba(0, 255, 0, 0.2);
@@ -224,4 +250,12 @@
             }
         }
     }
+}
+
+/* spotlight-overlay.scss */
+.spotlight-overlay {
+    @include overlay(0.7);
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
 }

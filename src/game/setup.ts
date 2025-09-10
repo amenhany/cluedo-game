@@ -1,44 +1,7 @@
 import type { Ctx } from 'boardgame.io';
-import type { Character, GameState, Room, Tile, Weapon } from '../types/game';
+import type { GameState, Room, Weapon } from '../types/game';
 import type { RandomAPI } from 'boardgame.io/dist/types/src/plugins/random/random';
-
-export const CARDS: {
-    suspects: Character[];
-    weapons: Weapon[];
-    rooms: Room[];
-} = {
-    suspects: ['scarlett', 'mustard', 'plum', 'peacock', 'green', 'white'],
-    weapons: ['candlestick', 'dagger', 'leadPipe', 'revolver', 'rope', 'spanner'],
-    rooms: [
-        'kitchen',
-        'ballroom',
-        'conservatory',
-        'diningRoom',
-        'lounge',
-        'hall',
-        'study',
-        'library',
-        'billiardRoom',
-    ],
-};
-
-const CHARACTERS: Record<number, Character> = {
-    0: 'scarlett',
-    1: 'mustard',
-    2: 'white',
-    3: 'green',
-    4: 'peacock',
-    5: 'plum',
-};
-
-const START_POSITIONS: Record<number, Tile> = {
-    0: '16-0', // Scarlett '16-0'
-    1: '23-7', // Mustard
-    2: '14-24', // White
-    3: '9-24', // Green
-    4: '0-18', // Peacock
-    5: '0-5', // Plum
-};
+import { CARDS, CHARACTERS, SUSPECT_POSITIONS } from './constants';
 
 export const setup = ({ ctx, random }: { ctx: Ctx; random: RandomAPI }): GameState => {
     const envelope: GameState['envelope'] = [
@@ -61,7 +24,7 @@ export const setup = ({ ctx, random }: { ctx: Ctx; random: RandomAPI }): GameSta
         players[i] = {
             id: i.toString(),
             character: CHARACTERS[i],
-            position: START_POSITIONS[i],
+            position: SUSPECT_POSITIONS[CHARACTERS[i]],
             hand: [],
             seenCards: [],
         };
@@ -74,9 +37,26 @@ export const setup = ({ ctx, random }: { ctx: Ctx; random: RandomAPI }): GameSta
     if (rem) deck = deck.slice(-1 * rem);
     else deck = [];
 
+    const weapons = generateWeaponPositions(random);
+
     return {
         players,
+        weapons,
         envelope,
         deck,
     };
 };
+
+function generateWeaponPositions(random: RandomAPI): Record<Weapon, Room> {
+    const shuffledRooms = random.Shuffle([...CARDS.rooms]);
+    const shuffledWeapons = random.Shuffle([...CARDS.weapons]);
+
+    const mapping: Record<Weapon, Room> = {} as Record<Weapon, Room>;
+
+    for (let i = 0; i < shuffledWeapons.length; i++) {
+        const weapon = shuffledWeapons[i];
+        mapping[weapon] = shuffledRooms[i];
+    }
+
+    return mapping;
+}

@@ -6,5 +6,5 @@ export const CluedoClient = Client({
    game: Cluedo,
    board: CluedoGame,
    debug: true,
-   numPlayers: 3,
+   numPlayers: 6,
 });

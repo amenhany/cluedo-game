@@ -38,6 +38,14 @@ function makeMockGame(): GameState {
                 seenCards: [],
             },
         },
+        weapons: {
+            candlestick: 'hall',
+            dagger: 'study',
+            leadPipe: 'kitchen',
+            revolver: 'library',
+            rope: 'ballroom',
+            spanner: 'diningRoom',
+        },
         envelope: [],
         deck: [],
     };
@@ -106,9 +114,9 @@ describe('moves', () => {
         expect(G.players['0'].steps).toEqual(steps);
     });
 
-    it('movePiece does nothing if node not allowed', () => {
+    it('movePlayer does nothing if node not allowed', () => {
         G.players['0'].availableMoves = ['7-4'];
-        moves.movePiece(
+        moves.movePlayer(
             {
                 G,
                 playerID: '0',
@@ -124,9 +132,9 @@ describe('moves', () => {
         expect(events.setStage).not.toHaveBeenCalled();
     });
 
-    it('movePiece updates position if node allowed', () => {
+    it('movePlayer updates position if node allowed', () => {
         G.players['0'].availableMoves = ['7-4'];
-        moves.movePiece(
+        moves.movePlayer(
             {
                 G,
                 playerID: '0',
@@ -144,9 +152,9 @@ describe('moves', () => {
         expect(events.setStage).not.toHaveBeenCalled();
     });
 
-    it('movePiece changes stage to Suggest if entered a room', () => {
+    it('movePlayer changes stage to Suggest if entered a room', () => {
         G.players['0'].availableMoves = ['kitchen'];
-        moves.movePiece(
+        moves.movePlayer(
             {
                 G,
                 playerID: '0',
@@ -161,7 +169,7 @@ describe('moves', () => {
         expect(G.players['0'].steps).toEqual(0);
         expect(G.players['0'].availableMoves).toEqual([]);
         expect(events.endTurn).not.toHaveBeenCalled();
-        expect(events.setStage).toHaveBeenCalledWith('Suggest');
+        expect(events.setStage).toHaveBeenCalledWith('RoomAction');
     });
 
     it('useSecretRoom moves player if secret passage exists', () => {
@@ -185,11 +193,336 @@ describe('moves', () => {
         });
         expect(result).toBe(INVALID_MOVE);
         expect(G.players['2'].position).toBe('diningRoom');
-        expect(events.setStage).toHaveBeenCalledWith('Suggest');
+        expect(events.setStage).toHaveBeenCalledWith('RoomAction');
     });
 });
 
-describe('suggestions', () => {
+describe('startSuggestion', () => {
+    let G: GameState;
+    let events: EventsAPI;
+
+    beforeEach(() => {
+        G = makeMockGame();
+        events = makeEvents();
+        vi.clearAllMocks();
+    });
+
+    it('creates a fresh pendingSuggestion when in a room', () => {
+        expect(G.pendingSuggestion).toBeUndefined(); // nothing before
+
+        const result = moves.startSuggestion({
+            G,
+            playerID: '1',
+            ctx: mockCtx,
+            events,
+            random: mockRandom() as unknown as RandomAPI,
+            log: null as unknown as LogAPI,
+        });
+
+        expect(result).toBeUndefined(); // valid move returns nothing
+        expect(G.pendingSuggestion).toEqual({
+            suggester: '1',
+            suspect: null,
+            weapon: null,
+            room: 'study',
+            suspectOrigin: null,
+        });
+        expect(events.setStage).toHaveBeenCalledWith('Suggest');
+    });
+
+    it('returns INVALID_MOVE if player not in a room', () => {
+        expect(G.pendingSuggestion).toBeUndefined();
+
+        const result = moves.startSuggestion({
+            G,
+            playerID: '0', // "6-4" is hallway
+            ctx: mockCtx,
+            events,
+            random: mockRandom() as unknown as RandomAPI,
+            log: null as unknown as LogAPI,
+        });
+
+        expect(result).toBe(INVALID_MOVE);
+        expect(G.pendingSuggestion).toBeUndefined();
+        expect(events.setStage).not.toHaveBeenCalled();
+    });
+
+    it('overwrites any previous suggestion with a fresh one', () => {
+        G.pendingSuggestion = {
+            suggester: '0',
+            suspect: 'scarlett',
+            weapon: 'rope',
+            room: 'kitchen',
+            suspectOrigin: null,
+        };
+
+        moves.startSuggestion({
+            G,
+            playerID: '1',
+            ctx: mockCtx,
+            events,
+            random: mockRandom() as unknown as RandomAPI,
+            log: null as unknown as LogAPI,
+        });
+
+        expect(G.pendingSuggestion).toEqual({
+            suggester: '1',
+            suspect: null,
+            weapon: null,
+            room: 'study',
+            suspectOrigin: null,
+        });
+    });
+});
+
+describe('setSuggestion', () => {
+    let G: GameState;
+    let events: EventsAPI;
+
+    beforeEach(() => {
+        G = makeMockGame();
+        events = makeEvents();
+        vi.clearAllMocks();
+        G.players['0'].position = 'kitchen';
+    });
+
+    it('sets a suspect in pendingSuggestion with their old position then changes their position', () => {
+        const move = moves.setSuggestion(
+            {
+                G,
+                playerID: '0',
+                ctx: mockCtx,
+                events,
+                random: mockRandom() as unknown as RandomAPI,
+                log: null as unknown as LogAPI,
+            },
+            'suspect',
+            'mustard'
+        );
+
+        expect(move).toBeUndefined(); // successful moves return nothing
+        expect(G.pendingSuggestion).toMatchObject({
+            suggester: '0',
+            suspect: 'mustard',
+            weapon: null,
+            room: 'kitchen',
+            suspectOrigin: 'diningRoom',
+        });
+        expect(G.players['2'].position).toBe('kitchen');
+    });
+
+    it('returns INVALID_MOVE if not in a room', () => {
+        G.players['0'].position = '7-4';
+        const result = moves.setSuggestion(
+            {
+                G,
+                playerID: '0',
+                ctx: mockCtx,
+                events,
+                random: mockRandom() as unknown as RandomAPI,
+                log: null as unknown as LogAPI,
+            },
+            'weapon',
+            'dagger'
+        );
+
+        expect(result).toBe(INVALID_MOVE);
+        expect(G.pendingSuggestion).toBeUndefined();
+    });
+
+    it('preserves previously set fields', () => {
+        G.pendingSuggestion = {
+            suggester: '0',
+            suspect: 'scarlett',
+            weapon: null,
+            room: 'kitchen',
+            suspectOrigin: null,
+        };
+
+        moves.setSuggestion(
+            {
+                G,
+                playerID: '0',
+                ctx: mockCtx,
+                events,
+                random: mockRandom() as unknown as RandomAPI,
+                log: null as unknown as LogAPI,
+            },
+            'weapon',
+            'candlestick'
+        );
+
+        expect(G.pendingSuggestion).toMatchObject({
+            suggester: '0',
+            suspect: 'scarlett',
+            weapon: 'candlestick',
+            room: 'kitchen',
+        });
+    });
+});
+
+describe('setSuggestion - weapon handling', () => {
+    let G: GameState;
+    let events: EventsAPI;
+
+    beforeEach(() => {
+        G = makeMockGame();
+        events = makeEvents();
+        vi.clearAllMocks();
+        G.players['0'].position = 'kitchen';
+        G.pendingSuggestion = {
+            suggester: '0',
+            suspect: 'scarlett',
+            weapon: 'dagger', // original weapon
+            room: 'kitchen',
+            suspectOrigin: '6-4',
+        };
+    });
+
+    it('moves the new weapon into the suggestion room', () => {
+        moves.setSuggestion(
+            {
+                G,
+                playerID: '0',
+                ctx: mockCtx,
+                events,
+                random: mockRandom(),
+                log: null as unknown as LogAPI,
+            },
+            'weapon',
+            'rope'
+        );
+
+        expect(G.pendingSuggestion?.weapon).toBe('rope');
+        expect(G.weapons['rope']).toBe('kitchen');
+    });
+
+    it('swaps position of weapons between rooms', () => {
+        moves.setSuggestion(
+            {
+                G,
+                playerID: '0',
+                ctx: mockCtx,
+                events,
+                random: mockRandom(),
+                log: null as unknown as LogAPI,
+            },
+            'weapon',
+            'rope'
+        );
+
+        expect(G.weapons['dagger']).toBe('ballroom');
+        expect(G.weapons['rope']).toBe('kitchen');
+    });
+
+    it('does nothing special if first weapon is being set', () => {
+        G.pendingSuggestion!.weapon = null; // reset
+        moves.setSuggestion(
+            {
+                G,
+                playerID: '0',
+                ctx: mockCtx,
+                events,
+                random: mockRandom(),
+                log: null as unknown as LogAPI,
+            },
+            'weapon',
+            'candlestick'
+        );
+
+        expect(G.weapons['candlestick']).toBe('kitchen');
+        // nothing to "restore" since no original weapon
+    });
+});
+
+describe('makeSuggestion', () => {
+    let G: GameState;
+    let events: EventsAPI;
+
+    beforeEach(() => {
+        G = makeMockGame();
+        events = makeEvents();
+        vi.clearAllMocks();
+    });
+
+    it('returns INVALID_MOVE if no pendingSuggestion', () => {
+        const result = moves.makeSuggestion({
+            G,
+            playerID: '0',
+            ctx: mockCtx,
+            events,
+            random: mockRandom() as unknown as RandomAPI,
+            log: null as unknown as LogAPI,
+        });
+        expect(result).toBe(INVALID_MOVE);
+    });
+
+    it('returns INVALID_MOVE if suggestion has null fields', () => {
+        G.pendingSuggestion = {
+            suggester: '0',
+            suspect: null,
+            weapon: 'dagger',
+            room: 'kitchen',
+            suspectOrigin: null,
+        };
+
+        const result = moves.makeSuggestion({
+            G,
+            playerID: '0',
+            ctx: mockCtx,
+            events,
+            random: mockRandom() as unknown as RandomAPI,
+            log: null as unknown as LogAPI,
+        });
+        expect(result).toBe(INVALID_MOVE);
+    });
+
+    it('returns INVALID_MOVE if suggester moved out of the room', () => {
+        G.pendingSuggestion = {
+            suggester: '0',
+            suspect: 'mustard',
+            weapon: 'dagger',
+            room: 'kitchen',
+            suspectOrigin: null,
+        };
+        G.players['0'].position = 'ballroom'; // not same room
+
+        const result = moves.makeSuggestion({
+            G,
+            playerID: '0',
+            ctx: mockCtx,
+            events,
+            random: mockRandom() as unknown as RandomAPI,
+            log: null as unknown as LogAPI,
+        });
+        expect(result).toBe(INVALID_MOVE);
+    });
+
+    it('advances game if suggestion is complete and valid', () => {
+        G.players['0'].position = 'kitchen';
+        G.pendingSuggestion = {
+            suggester: '0',
+            suspect: 'mustard',
+            weapon: 'dagger',
+            room: 'kitchen',
+            suspectOrigin: 'diningRoom',
+        };
+
+        const result = moves.makeSuggestion({
+            G,
+            playerID: '0',
+            ctx: mockCtx,
+            events,
+            random: mockRandom() as unknown as RandomAPI,
+            log: null as unknown as LogAPI,
+        });
+
+        expect(result).not.toEqual(INVALID_MOVE);
+        expect(events.setActivePlayers).toHaveBeenCalled();
+    });
+});
+
+describe('resolve suggestions', () => {
     let G: GameState;
     let events: EventsAPI;
 
@@ -199,31 +532,15 @@ describe('suggestions', () => {
         vi.clearAllMocks();
         G.pendingSuggestion = {
             suggester: '1',
-            cards: ['dagger', 'spanner', 'study'],
+            suspect: 'scarlett',
+            weapon: 'spanner',
+            room: 'study',
+            suspectOrigin: '6-4',
         };
     });
 
-    it('makeSuggestion sets pendingSuggestion and advances turn', () => {
-        moves.makeSuggestion(
-            {
-                G,
-                playerID: '1',
-                events,
-                random: mockRandom() as unknown as RandomAPI,
-                log: null as unknown as LogAPI,
-                ctx: mockCtx,
-            },
-            { suspect: 'scarlett', weapon: 'dagger', room: 'study' }
-        );
-
-        expect(G.pendingSuggestion).toEqual({
-            suggester: '1',
-            cards: ['scarlett', 'dagger', 'study'],
-        });
-        expect(events.setActivePlayers).toHaveBeenCalled();
-    });
-
-    it('showCard adds card to suggester seenCards and ends stage', () => {
+    it('showCard adds card to suggester seenCards and ends turn and resets suspect position', () => {
+        G.players['0'].position = 'study';
         moves.showCard(
             {
                 G,
@@ -238,6 +555,8 @@ describe('suggestions', () => {
 
         expect(G.players['1'].seenCards).toContain('spanner');
         expect(events.endTurn).toHaveBeenCalled();
+        expect(G.pendingSuggestion).toBeUndefined();
+        expect(G.players['0'].position).toBe('6-4');
     });
 
     it('skipShow passes if no unseen matching card, advances turn', () => {
@@ -275,6 +594,7 @@ describe('suggestions', () => {
     });
 
     it('loops back and reveals from deck if nobody can show', () => {
+        G.players['0'].position = 'study';
         G.players['2'].hand = ['spanner'];
         G.players['1'].seenCards = ['spanner'];
         G.deck = ['ballroom'];
@@ -287,6 +607,8 @@ describe('suggestions', () => {
             ctx: mockCtx,
         });
         expect(G.players['1'].seenCards).toContain('ballroom');
+        expect(G.players['0'].position).toBe('6-4');
+        expect(G.pendingSuggestion).toBeUndefined();
         expect(events.endTurn).toHaveBeenCalled();
     });
 });

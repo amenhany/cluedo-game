@@ -1,15 +1,13 @@
 import type React from 'react';
 import board from '@/assets/textures/board.png';
-import type { PlayerID } from 'boardgame.io';
 
 type BoardProps = {
-   id: PlayerID;
    children: React.ReactNode;
 };
 
-export default function CluedoBoard({ id, children }: BoardProps) {
+export default function CluedoBoard({ children }: BoardProps) {
    return (
-      <div id="board" className={`board-${id}`}>
+      <div id="board">
          <img src={board} alt="Cluedo Board" />
          <div className="grid">
             <div className="inner-content">{children}</div>
