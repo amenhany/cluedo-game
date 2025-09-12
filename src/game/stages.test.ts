@@ -18,6 +18,7 @@ function makeMockGame(): GameState {
                 steps: 0,
                 availableMoves: [],
                 seenCards: [],
+                isEliminated: false,
             },
             '1': {
                 id: '1',
@@ -27,6 +28,7 @@ function makeMockGame(): GameState {
                 steps: 0,
                 availableMoves: [],
                 seenCards: [],
+                isEliminated: false,
             },
         },
         weapons: {

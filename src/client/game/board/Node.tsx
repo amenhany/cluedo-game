@@ -41,19 +41,20 @@ export default function Node({
    const room = node as RoomNode;
    const isRoom = node.type === 'room';
 
-   const style = isRoom
-      ? {
-           top: `${((room.bounds.y + OFFSET_Y) / BOARD_ROWS) * 100}%`,
-           left: `${((room.bounds.x + OFFSET_X) / BOARD_COLUMNS) * 100}%`,
-           width: `${(room.bounds.width / BOARD_COLUMNS) * 100}%`,
-           height: `${(room.bounds.height / BOARD_ROWS) * 100}%`,
-        }
-      : {
-           top: `${((tile.coord.y + OFFSET_Y) / BOARD_ROWS) * 100}%`,
-           left: `${((tile.coord.x + OFFSET_X) / BOARD_COLUMNS) * 100}%`,
-           width: `${(1 / BOARD_COLUMNS) * 100}%`,
-           height: `${(1 / BOARD_ROWS) * 100}%`,
-        };
+   const style =
+      isRoom || node.type === 'end'
+         ? {
+              top: `${((room.bounds.y + OFFSET_Y) / BOARD_ROWS) * 100}%`,
+              left: `${((room.bounds.x + OFFSET_X) / BOARD_COLUMNS) * 100}%`,
+              width: `${(room.bounds.width / BOARD_COLUMNS) * 100}%`,
+              height: `${(room.bounds.height / BOARD_ROWS) * 100}%`,
+           }
+         : {
+              top: `${((tile.coord.y + OFFSET_Y) / BOARD_ROWS) * 100}%`,
+              left: `${((tile.coord.x + OFFSET_X) / BOARD_COLUMNS) * 100}%`,
+              width: `${(1 / BOARD_COLUMNS) * 100}%`,
+              height: `${(1 / BOARD_ROWS) * 100}%`,
+           };
 
    useEffect(() => {
       if (isRoom && isOver) {

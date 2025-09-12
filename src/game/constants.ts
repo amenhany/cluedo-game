@@ -29,23 +29,23 @@ export const CHARACTERS: Record<number, Character> = {
     5: 'plum',
 };
 
-// export const SUSPECT_POSITIONS: Record<Character, NodeID> = {
-//     scarlett: '16-0',
-//     mustard: '23-7',
-//     white: '14-24',
-//     green: '9-24',
-//     peacock: '0-18',
-//     plum: '0-5',
-// };
-
 export const SUSPECT_POSITIONS: Record<Character, NodeID> = {
-    scarlett: 'conservatory',
-    mustard: 'conservatory',
-    white: 'conservatory',
-    green: 'conservatory',
-    peacock: 'conservatory',
-    plum: 'conservatory',
+    scarlett: '16-0',
+    mustard: '23-7',
+    white: '14-24',
+    green: '9-24',
+    peacock: '0-18',
+    plum: '0-5',
 };
+
+// export const SUSPECT_POSITIONS: Record<Character, NodeID> = {
+//     scarlett: 'conservatory',
+//     mustard: 'conservatory',
+//     white: 'conservatory',
+//     green: 'conservatory',
+//     peacock: 'conservatory',
+//     plum: 'conservatory',
+// };
 
 export const BOARD_COLUMNS = 25;
 export const BOARD_ROWS = 25;

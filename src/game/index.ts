@@ -1,18 +1,20 @@
+import type { Game } from 'boardgame.io';
+import { reset } from './moves';
 import { setup } from './setup';
-import { ResolveSuggestion, RoomAction, Suggest, TurnAction } from './stages';
+import * as stages from './stages';
+import type { GameState } from '@/types/game';
+import { SkipEliminated } from './cycle';
 
-export const Cluedo = {
-    setup: setup,
+export const Cluedo: Game<GameState> = {
+    setup,
     turn: {
-        stage: 'TurnAction',
+        order: SkipEliminated,
         activePlayers: {
             currentPlayer: 'TurnAction',
         },
-        stages: {
-            TurnAction,
-            RoomAction,
-            Suggest,
-            ResolveSuggestion,
-        },
+        stages,
+        minMoves: 1,
+        onEnd: reset,
     },
+    disableUndo: true,
 };

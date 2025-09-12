@@ -1,3 +1,4 @@
+import type { StageConfig } from 'boardgame.io';
 import {
     endTurn,
     setSuggestion,
@@ -8,18 +9,22 @@ import {
     showCard,
     useSecretPassage,
     startSuggestion,
+    makeAccusation,
 } from './moves';
 
-export const TurnAction = {
+export const TurnAction: StageConfig = {
     moves: {
-        rollDice,
+        rollDice: {
+            move: rollDice,
+            noLimit: true,
+        },
         movePlayer,
         useSecretPassage,
         startSuggestion,
     },
 };
 
-export const RoomAction = {
+export const RoomAction: StageConfig = {
     moves: {
         startSuggestion,
         endTurn,
@@ -27,17 +32,27 @@ export const RoomAction = {
     next: 'TurnAction',
 };
 
-export const Suggest = {
+export const Suggest: StageConfig = {
     moves: {
-        setSuggestion,
+        setSuggestion: {
+            move: setSuggestion,
+            noLimit: true,
+        },
         makeSuggestion,
     },
 };
 
-export const ResolveSuggestion = {
+export const ResolveSuggestion: StageConfig = {
     moves: {
         showCard,
         noCard,
+    },
+    next: 'TurnAction',
+};
+
+export const Endgame: StageConfig = {
+    moves: {
+        makeAccusation,
     },
     next: 'TurnAction',
 };

@@ -18,6 +18,7 @@ function makeMockGame(): GameState {
                 steps: 0,
                 availableMoves: [],
                 seenCards: [],
+                isEliminated: false,
             },
             '1': {
                 id: '0',
@@ -27,6 +28,7 @@ function makeMockGame(): GameState {
                 steps: 0,
                 availableMoves: [],
                 seenCards: [],
+                isEliminated: false,
             },
             '2': {
                 id: '1',
@@ -36,6 +38,7 @@ function makeMockGame(): GameState {
                 steps: 0,
                 availableMoves: [],
                 seenCards: [],
+                isEliminated: false,
             },
         },
         weapons: {
@@ -610,5 +613,91 @@ describe('resolve suggestions', () => {
         expect(G.players['0'].position).toBe('6-4');
         expect(G.pendingSuggestion).toBeUndefined();
         expect(events.endTurn).toHaveBeenCalled();
+    });
+});
+
+describe('makeAccusation & suggestion turn order', () => {
+    let G: GameState;
+    let events: EventsAPI;
+    const mockEndGame = vi.fn();
+
+    beforeEach(() => {
+        G = makeMockGame();
+        events = { ...makeEvents(), endGame: mockEndGame };
+        vi.clearAllMocks();
+
+        // Put some cards into the envelope
+        G.envelope = ['scarlett', 'dagger', 'study'];
+    });
+
+    it('eliminates a player if accusation is wrong', () => {
+        moves.makeAccusation(
+            {
+                G,
+                playerID: '0',
+                ctx: mockCtx,
+                events,
+                random: mockRandom(),
+                log: null as any,
+            },
+            {
+                suspect: 'mustard',
+                weapon: 'spanner',
+                room: 'diningRoom',
+            }
+        );
+
+        expect(G.players['0'].isEliminated).toBe(true);
+        expect(mockEndGame).not.toHaveBeenCalled();
+    });
+
+    it('ends game with winner if accusation is correct', () => {
+        moves.makeAccusation(
+            {
+                G,
+                playerID: '1',
+                ctx: mockCtx,
+                events,
+                random: mockRandom(),
+                log: null as any,
+            },
+            {
+                suspect: 'scarlett',
+                weapon: 'dagger',
+                room: 'study',
+            }
+        );
+
+        expect(G.players['1'].isEliminated).toBe(false);
+        expect(mockEndGame).toHaveBeenCalledWith({ winner: '1' });
+    });
+
+    it('skips eliminated players when resolving suggestion', () => {
+        // Simulate: player 2 is eliminated
+        G.players['1'].isEliminated = true;
+
+        // Player 0 makes a valid suggestion
+        G.players['0'].position = 'study';
+        G.pendingSuggestion = {
+            suggester: '0',
+            suspect: 'scarlett',
+            weapon: 'dagger',
+            room: 'study',
+            suspectOrigin: '6-4',
+        };
+
+        moves.makeSuggestion({
+            G,
+            playerID: '0',
+            ctx: { ...mockCtx, currentPlayer: '0' } as Ctx,
+            events,
+            random: mockRandom(),
+            log: null as any,
+        });
+
+        // Should skip player 2 (eliminated) and set active players to 1
+        expect(events.setActivePlayers).toHaveBeenCalledWith({
+            value: { '2': 'ResolveSuggestion' },
+        });
     });
 });

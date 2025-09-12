@@ -3,6 +3,7 @@ import type {
     Card,
     GameState,
     NodeID,
+    PlayerState,
     RoomNode,
     Stage,
     Suggestion,
@@ -40,8 +41,18 @@ export const movePlayer: MoveFn<GameState> = (
     player.steps = 0;
     player.availableMoves = [];
 
-    if (cluedoGraph[nodeID].type === 'tile') events.endTurn();
-    else events.setStage('RoomAction');
+    const nodeType = cluedoGraph[nodeID].type;
+    switch (nodeType) {
+        case 'tile':
+            events.endTurn();
+            break;
+        case 'room':
+            events.setStage('RoomAction');
+            break;
+        case 'end':
+            events.setStage('Endgame');
+            break;
+    }
 };
 
 export const useSecretPassage: MoveFn<GameState> = ({ G, playerID, events }) => {
@@ -63,13 +74,16 @@ function nextPlayer(
     currentPlayer: PlayerID,
     ctx: Ctx,
     events: EventsAPI,
-    stageName: Stage
+    stageName: Stage,
+    players: Record<PlayerID, PlayerState>
 ) {
-    const nextPlayer = ((Number(currentPlayer) + 1) % ctx.numPlayers).toString();
-    if (nextPlayer === ctx.currentPlayer) return true;
+    const next = ((Number(currentPlayer) + 1) % ctx.numPlayers).toString();
+    if (players[next].isEliminated)
+        return nextPlayer(next, ctx, events, stageName, players);
+    if (next === ctx.currentPlayer) return true;
     events.setActivePlayers({
         value: {
-            [nextPlayer]: stageName,
+            [next]: stageName,
         },
     });
     return false;
@@ -112,6 +126,10 @@ export const setSuggestion: MoveFn<GameState> = <K extends keyof Suggestion>(
     };
 
     if (type === 'weapon') {
+        if (card === originalWeapon) {
+            G.pendingSuggestion.weapon = null;
+            return;
+        }
         if (!originalWeapon)
             originalWeapon = (Object.keys(G.weapons) as Weapon[]).find(
                 (w) => G.weapons[w] === room.id
@@ -147,7 +165,7 @@ export const makeSuggestion: MoveFn<GameState> = ({ G, playerID, ctx, events }) 
     if (!suggestion || room.type !== 'room' || suggester.position !== suggestion.room)
         return INVALID_MOVE;
     if (Object.values(suggestion).some((value) => value === null)) return INVALID_MOVE;
-    nextPlayer(playerID, ctx, events, 'ResolveSuggestion');
+    nextPlayer(playerID, ctx, events, 'ResolveSuggestion', G.players);
 };
 
 export const showCard: MoveFn<GameState> = ({ G, playerID, events }, card: Card) => {
@@ -191,7 +209,7 @@ export const noCard: MoveFn<GameState> = ({ G, playerID, ctx, events }) => {
     );
     if (hasUnseenCard) return INVALID_MOVE;
 
-    const loop = nextPlayer(playerID, ctx, events, 'ResolveSuggestion');
+    const loop = nextPlayer(playerID, ctx, events, 'ResolveSuggestion', G.players);
     if (loop) {
         const unseenDeck = G.deck.filter((card) => !suggesterSeen.includes(card));
         if (unseenDeck.length) {
@@ -205,4 +223,21 @@ export const noCard: MoveFn<GameState> = ({ G, playerID, ctx, events }) => {
         G.pendingSuggestion = undefined;
         events.endTurn();
     }
+};
+
+export const makeAccusation: MoveFn<GameState> = (
+    { G, playerID, events },
+    accusation: Suggestion
+) => {
+    const correct = Object.values(accusation).every((card) => G.envelope.includes(card));
+    if (correct) events.endGame({ winner: playerID });
+    else G.players[playerID].isEliminated = true;
+};
+
+export const reset = ({ G }: { G: GameState }) => {
+    G.pendingSuggestion = undefined;
+    Object.values(G.players).forEach((player) => {
+        player.steps = 0;
+        player.availableMoves = [];
+    });
 };

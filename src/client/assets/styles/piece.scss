@@ -1,0 +1,81 @@
+@use './variables' as *;
+@use './mixins' as *;
+
+.piece {
+    position: absolute;
+    user-select: none;
+    transition: scale 0.3s ease;
+
+    &.suspect {
+        height: 45px;
+        width: 45px;
+    }
+
+    &.weapon {
+        width: 70px;
+        height: 70px;
+    }
+
+    &:hover {
+        z-index: 150;
+    }
+
+    .nametag {
+        @include overlay(0.2);
+        pointer-events: none;
+        opacity: 0;
+        position: absolute;
+        text-align: center;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        transition: opacity 0.5s ease;
+        padding: 0.1rem 0.5rem;
+        padding-top: 0.275rem;
+        border-radius: 5px;
+        text-wrap: nowrap;
+        z-index: 300;
+    }
+
+    &:hover .nametag {
+        opacity: 1;
+    }
+
+    &.draggable {
+        z-index: 150;
+        cursor: grab;
+
+        &:hover {
+            scale: 1.08;
+        }
+    }
+
+    &.dragging {
+        cursor: grabbing !important;
+        scale: 1.08;
+
+        .nametag {
+            opacity: 0;
+        }
+    }
+
+    &.suggesting {
+        cursor: pointer;
+        &:hover {
+            scale: 1.08;
+        }
+
+        &.highlighted {
+            filter: drop-shadow(0 0 5px gold);
+            scale: 1.1;
+            // z-index: 200;
+        }
+    }
+
+    img {
+        // width: 100%;
+        // height: 100%;
+        pointer-events: none;
+        // transform: translateX(7%);
+    }
+}

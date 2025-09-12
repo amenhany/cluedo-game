@@ -17,18 +17,26 @@ export type Room =
     | 'ballroom'
     | 'kitchen';
 
-export type NodeID = Tile | Room;
+export type NodeID = Tile | Room | 'end';
 export type RoomNode = {
     type: 'room';
     id: Room; // e.g. "Kitchen"
-    bounds: {
-        x: number;
-        y: number;
+    bounds: Coordinates & {
         width: number;
         height: number;
     };
     neighbors: NodeID[];
     secretPassage?: Room;
+};
+
+export type EndNode = {
+    type: 'end';
+    id: 'end';
+    bounds: Coordinates & {
+        width: number;
+        height: number;
+    };
+    neighbors: NodeID[];
 };
 
 export type TileNode = {
@@ -38,7 +46,7 @@ export type TileNode = {
     neighbors: NodeID[];
 };
 
-export type Node = RoomNode | TileNode;
+export type Node = RoomNode | TileNode | EndNode;
 
 export type Graph = Record<NodeID, Node>;
 
@@ -67,6 +75,7 @@ export type PlayerState = {
     position: NodeID;
     hand: Card[];
     seenCards: Card[];
+    isEliminated: boolean;
 
     steps?: number;
     availableMoves?: NodeID[];
@@ -83,4 +92,9 @@ export type GameState = {
     };
 };
 
-export type Stage = 'TurnAction' | 'RoomAction' | 'Suggest' | 'ResolveSuggestion';
+export type Stage =
+    | 'TurnAction'
+    | 'RoomAction'
+    | 'Suggest'
+    | 'ResolveSuggestion'
+    | 'Endgame';

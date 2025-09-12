@@ -38,8 +38,6 @@ export default function CluedoHud({
       moves.makeSuggestion();
    }
 
-   console.log(roomNode?.id, suggestion, canSuggest);
-
    return (
       <div
          className="hud"

@@ -3,6 +3,7 @@ import type { Suggestion, Card, Room, PlayerState, GameState } from '@/types/gam
 import React, { createContext, useContext } from 'react';
 import spotlightSfx from '@/assets/audio/sfx/spotlight.m4a';
 import doorSound from '@/assets/audio/sfx/door.wav';
+import suggestionMusic from '@/assets/audio/music/game/suggestion.wav';
 
 type SuggestionContextType = {
    canSuggest: boolean;
@@ -48,6 +49,7 @@ export function SuggestionContextProvider({
       if (canSuggest) {
          moves.startSuggestion();
          AudioManager.getInstance().playSfx(spotlightSfx);
+         setTimeout(() => AudioManager.getInstance().playMusic(suggestionMusic), 1500);
       }
    };
 
@@ -59,8 +61,7 @@ export function SuggestionContextProvider({
 
    const setHighlighted: SuggestionContextType['setHighlighted'] = (type, s) => {
       if (!resolver) {
-         if (!(type === 'weapon' && s === suggestion?.weapon))
-            AudioManager.getInstance().playSfx(doorSound);
+         AudioManager.getInstance().playSfx(doorSound);
          moves.setSuggestion(type, s);
       }
    };

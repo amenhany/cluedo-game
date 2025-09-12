@@ -27,6 +27,7 @@ export const setup = ({ ctx, random }: { ctx: Ctx; random: RandomAPI }): GameSta
             position: SUSPECT_POSITIONS[CHARACTERS[i]],
             hand: [],
             seenCards: [],
+            isEliminated: false,
         };
     }
 

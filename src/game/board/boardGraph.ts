@@ -30,6 +30,8 @@ const grid: (0 | 1 | Room)[][] = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 ];
 
+const baseGraph = generateTileGraph(grid);
+
 export const cluedoGraph: Graph = {
     study: {
         type: 'room',
@@ -89,8 +91,17 @@ export const cluedoGraph: Graph = {
         neighbors: ['19-17'],
         secretPassage: 'study',
     },
-
-    ...generateTileGraph(grid),
+    end: {
+        type: 'end',
+        id: 'end',
+        bounds: { x: 9, y: 8, width: 5, height: 7 },
+        neighbors: ['11-7'],
+    },
+    ...baseGraph,
+    '11-7': {
+        ...baseGraph['11-7'],
+        neighbors: [...baseGraph['11-7'].neighbors, 'end'],
+    },
 };
 
 export const secretPassages: Partial<Record<Room, Coordinates>> = {
