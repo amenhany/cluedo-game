@@ -1,7 +1,7 @@
 import { useSuggestion } from '@/contexts/SuggestionContext';
 import { useTooltip } from '@/contexts/TooltipContext';
 import { cluedoGraph } from '@/game/board/boardGraph';
-import type { PlayerState, Stage } from '@/types/game';
+import type { Card, PlayerState, Stage } from '@/types/game';
 import type { PlayerID } from 'boardgame.io';
 import { useEffect, useRef } from 'react';
 
@@ -23,15 +23,20 @@ export default function SuggestionTooltip({
    const { setTooltip } = useTooltip();
    const { canSuggest, completeSuggestion, resolver, suggestion, startSuggestion } =
       useSuggestion();
+   const seenCards = (players && playerID && players[playerID].seenCards) || [];
+   const prevSeenCards = useRef<Card[]>([]);
 
    function handleSuggest() {
       moves.makeSuggestion();
    }
 
    useEffect(() => {
-      if (prevSuggester.current === playerID && !suggestion) {
-         console.log('test');
-         setTooltip({ label: 'No card to show' });
+      if (
+         prevSuggester.current === playerID &&
+         !suggestion &&
+         prevSeenCards.current.length === seenCards.length
+      ) {
+         setTooltip({ label: 'No card was shown' });
          setTimeout(() => {
             prevSuggester.current = null;
             setTooltip(null);
@@ -39,6 +44,7 @@ export default function SuggestionTooltip({
          return;
       } else {
          setTooltip(null);
+         prevSeenCards.current = seenCards;
       }
 
       if (suggestion) prevSuggester.current = suggestion.suggester;
@@ -87,9 +93,15 @@ export default function SuggestionTooltip({
       }
 
       if (resolver && resolver.id === playerID) {
-         const suggestionCards = [suggestion.suspect, suggestion.weapon, suggestion.room];
-         const hasPlayableCard = resolver.hand.some((card) =>
-            suggestionCards.includes(card)
+         const suggestionCards = [
+            suggestion.suspect,
+            suggestion.weapon,
+            suggestion.room,
+         ] as Card[];
+         const hasPlayableCard = resolver.hand.some(
+            (card) =>
+               suggestionCards.includes(card) &&
+               !players[suggestion.suggester].seenCards.includes(card)
          );
          if (!hasPlayableCard) {
             setTooltip({

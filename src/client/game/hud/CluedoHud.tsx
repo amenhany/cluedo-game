@@ -54,7 +54,7 @@ export default function CluedoHud(props: HudProps) {
    const prevResolver = useRef<PlayerState | null>(null);
 
    useEffect(() => {
-      if (prevSeenCards.current.length !== seenCards.length) {
+      if (prevSeenCards.current.length !== seenCards.length && seenCards.length) {
          const card = seenCards[seenCards.length - 1];
          const type = getCardType(card);
          const name = deck.includes(card) ? 'The deck' : prevResolver.current?.character;

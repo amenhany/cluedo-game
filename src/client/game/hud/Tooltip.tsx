@@ -15,9 +15,7 @@ export default function Tooltip({
    return (
       <div className="tooltip-container">
          {onClick ? (
-            <div className="tooltip-container">
-               <button onClick={onClick}>{label}</button>
-            </div>
+            <button onClick={onClick}>{label}</button>
          ) : (
             <motion.h1
                initial={{ opacity: 0 }}
