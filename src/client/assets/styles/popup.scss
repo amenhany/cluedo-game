@@ -1,0 +1,46 @@
+@use './variables' as *;
+@use './mixins' as *;
+
+.hud .backdrop {
+  @include overlay(0.7, true, 2px);
+  z-index: 9999;
+  pointer-events: all;
+  user-select: none;
+}
+
+.letterbox-bar {
+  pointer-events: none;
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 15%; // adjust as needed
+  background: black;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $primary-text;
+  font-size: 1.1rem;
+}
+
+.letterbox-bar.top-bar {
+  top: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+}
+
+.letterbox-bar.bottom-bar {
+  bottom: 0;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.8);
+  font-size: 2rem;
+  font-family: 'CupheadMemphis';
+}
+
+.letterbox-content {
+  position: relative;
+  z-index: 2; // ensure above bars
+  max-width: 80%;
+  max-height: calc(100% - 120px); // prevent overlap with bars
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

@@ -1,17 +1,32 @@
 import type { PlayerID } from 'boardgame.io';
-import type { PlayerState, Stage } from '@/types/game';
-import { AnimatePresence, motion } from 'motion/react';
+import type {
+   Card as TCard,
+   Character,
+   PlayerState,
+   Room,
+   Stage,
+   Weapon,
+   Suggestion,
+   GameState,
+} from '@/types/game';
+import { AnimatePresence } from 'motion/react';
 import Dice from './Dice';
-import Card from './Card';
 import '@/assets/styles/hud.scss';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useSuggestion } from '@/contexts/SuggestionContext';
-import { cluedoGraph } from '@/game/board/boardGraph';
-import { useEffect, useState } from 'react';
 import { t } from '@/lib/lang';
+import { TooltipProvider } from '@/contexts/TooltipContext';
+import SuggestionTooltip from './SuggestionTooltip';
+import Hand from './Hand';
+import Card from './Card';
+import { CARDS } from '@/game/constants';
+import Popup from './Popup';
+import { useEffect, useRef, useState } from 'react';
+import type { PopupConfig } from '@/types/client';
 
 type HudProps = {
    players?: Record<PlayerID, PlayerState>;
+   deck: GameState['deck'];
    currentPlayer: PlayerID;
    playerID?: PlayerID;
    moves: Record<string, (...args: any[]) => void>;
@@ -19,153 +34,128 @@ type HudProps = {
    stage: Stage | null;
 };
 
-export default function CluedoHud({
-   players,
-   currentPlayer,
-   playerID,
-   moves,
-   active,
-   stage,
-}: HudProps) {
+export default function CluedoHud(props: HudProps) {
+   const { players, currentPlayer, playerID, moves, active, stage, deck } = props;
    const { settings } = useSettings();
-   const playerNode =
-      (players && playerID && cluedoGraph[players[playerID].position]) || null;
-   const roomNode = (playerNode?.type === 'room' && playerNode) || null;
-   const { canSuggest, completeSuggestion, resolver, suggestion, startSuggestion } =
-      useSuggestion();
+   const { resolver, suggestion } = useSuggestion();
+   const suggestionCards = suggestion
+      ? [suggestion.suspect, suggestion.weapon, suggestion.room]
+      : [];
 
-   function handleSuggest() {
-      moves.makeSuggestion();
-   }
+   const [popupConfig, setPopupConfig] = useState<PopupConfig & { visible: boolean }>({
+      children: <></>,
+      onClick: () => {
+         setPopupConfig((prev) => ({ ...prev, visible: false }));
+      },
+      visible: false,
+   });
+   const seenCards = (players && playerID && players[playerID].seenCards) || [];
+   const prevSeenCards = useRef<TCard[]>([]);
+   const prevResolver = useRef<PlayerState | null>(null);
+
+   useEffect(() => {
+      if (prevSeenCards.current.length !== seenCards.length) {
+         const card = seenCards[seenCards.length - 1];
+         const type = getCardType(card);
+         const name = deck.includes(card) ? 'The deck' : prevResolver.current?.character;
+         setPopupConfig((prev) => ({
+            ...prev,
+            visible: true,
+            children: <Card id={card} playable={false} type={type!}></Card>,
+            bottomText: `${name} has ${t(`${type}.${card}`)}!`,
+         }));
+         setTimeout(() => {
+            setPopupConfig((prev) => ({ ...prev, visible: false }));
+         }, 4000);
+         prevSeenCards.current = seenCards;
+      }
+
+      if (resolver) prevResolver.current = resolver;
+   }, [resolver, seenCards]);
 
    return (
       <div
          className="hud"
          style={{ filter: settings?.filter === 'b&w' ? 'grayscale(100%)' : 'none' }}
       >
-         <AnimatePresence>
-            {active && !suggestion && (
-               <Dice
-                  key="dice"
-                  face={
-                     playerID && players && players[playerID].steps
-                        ? players[playerID].steps
-                        : 0
-                  }
-                  onRoll={moves.handleRoll}
-                  disabled={!(active && stage === 'TurnAction')}
-               />
-            )}
-         </AnimatePresence>
+         <TooltipProvider>
+            <AnimatePresence>
+               {active && !suggestion && (
+                  <Dice
+                     key="dice"
+                     face={
+                        playerID && players && players[playerID].steps
+                           ? players[playerID].steps
+                           : 0
+                     }
+                     onRoll={moves.handleRoll}
+                     disabled={!(active && stage === 'TurnAction')}
+                  />
+               )}
+            </AnimatePresence>
 
-         <div className="turn-container">
-            <h1>
-               {players &&
-                  (currentPlayer !== playerID
-                     ? `${players[currentPlayer].character}'s Turn`
-                     : 'Your Turn')}
-            </h1>
-         </div>
-
-         {suggestion && (
-            <div className="suggestion">
-               <h2>Suggestion</h2>
-               <ul>
-                  <li>
-                     Suspect :{' '}
-                     {suggestion.suspect ? t(`suspect.${suggestion.suspect}`) : 'NONE'}
-                  </li>
-                  <li>
-                     Weapon :{' '}
-                     {suggestion.weapon ? t(`weapon.${suggestion.weapon}`) : 'NONE'}
-                  </li>
-                  <li>
-                     Room : {suggestion.room ? t(`room.${suggestion.room}`) : 'NONE'}
-                  </li>
-               </ul>
+            <div className="turn-container">
+               <h1>
+                  {players &&
+                     (currentPlayer !== playerID
+                        ? `${players[currentPlayer].character}'s Turn`
+                        : 'Your Turn')}
+               </h1>
             </div>
-         )}
 
-         {(canSuggest || (suggestion?.suggester === playerID && !resolver)) &&
-            roomNode !== null && (
-               <div className="suggest-container">
-                  {!suggestion ? (
-                     <>
-                        <button onClick={() => startSuggestion(roomNode.id)}>
-                           Make a Suggestion
-                        </button>
-                        {stage === 'RoomAction' && (
-                           <button onClick={moves.endTurn}>End Turn</button>
-                        )}
-                     </>
-                  ) : !completeSuggestion ? (
-                     <motion.h1
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{
-                           duration: 0.2,
-                           delay: 1.35,
-                           ease: 'easeIn',
-                        }}
-                     >
-                        Please select a
-                        {suggestion.suspect === null
-                           ? ' Suspect'
-                           : suggestion.weapon === null && ' Weapon'}
-                     </motion.h1>
-                  ) : (
-                     <button onClick={handleSuggest}>Suggest</button>
-                  )}
+            {suggestion && (
+               <div className="suggestion">
+                  <h2>Suggestion</h2>
+                  <ul>
+                     <li>
+                        Suspect :{' '}
+                        {suggestion.suspect ? t(`suspect.${suggestion.suspect}`) : 'NONE'}
+                     </li>
+                     <li>
+                        Weapon :{' '}
+                        {suggestion.weapon ? t(`weapon.${suggestion.weapon}`) : 'NONE'}
+                     </li>
+                     <li>
+                        Room : {suggestion.room ? t(`room.${suggestion.room}`) : 'NONE'}
+                     </li>
+                  </ul>
                </div>
             )}
 
-         {suggestion && players && suggestion.suggester !== playerID && !resolver && (
-            <div className="suggest-container">
-               <h1>
-                  Waiting for {players[suggestion.suggester].character}
-                  <WaitingDots />
-               </h1>
-            </div>
-         )}
+            <SuggestionTooltip {...props} />
+            {players && playerID && (
+               <Hand
+                  deck={players[playerID].hand.map((card) => ({
+                     type: getCardType(card) as keyof Suggestion,
+                     card,
+                     playable:
+                        (suggestion &&
+                           resolver?.id === playerID &&
+                           !players[suggestion.suggester].seenCards.includes(card) &&
+                           suggestionCards.includes(card)) ||
+                        false,
+                  }))}
+                  moves={{ showCard: moves.showCard }}
+               />
+            )}
 
-         {resolver && resolver.id !== playerID && (
-            <div className="suggest-container">
-               <h1>
-                  Waiting for {resolver?.character}
-                  <WaitingDots />
-               </h1>
-            </div>
-         )}
-
-         <motion.div
-            className="deck"
-            initial={{ bottom: '-50vh' }}
-            whileHover={{ bottom: '50vh' }}
-            transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-         >
-            {playerID &&
-               players &&
-               players[playerID].hand.map((card) => <Card key={card} id={card} />)}
-         </motion.div>
+            <AnimatePresence>
+               {popupConfig.visible && (
+                  <Popup
+                     onClick={popupConfig.onClick}
+                     bottomText={popupConfig.bottomText}
+                  >
+                     {popupConfig.children}
+                  </Popup>
+               )}
+            </AnimatePresence>
+         </TooltipProvider>
       </div>
    );
 }
 
-function WaitingDots({ duration = 700 }: { duration?: number }) {
-   const [active, setActive] = useState(0);
-
-   useEffect(() => {
-      const interval = setInterval(() => {
-         setActive((prev) => (prev + 1) % 4); // cycle 0–3
-      }, duration);
-      return () => clearInterval(interval);
-   }, []);
-
-   return (
-      <span style={{ display: 'inline-block', width: '1.5em', textAlign: 'left' }}>
-         <span style={{ visibility: active >= 1 ? 'visible' : 'hidden' }}>.</span>
-         <span style={{ visibility: active >= 2 ? 'visible' : 'hidden' }}>.</span>
-         <span style={{ visibility: active >= 3 ? 'visible' : 'hidden' }}>.</span>
-      </span>
-   );
+function getCardType(card: TCard) {
+   if (CARDS.suspects.includes(card as Character)) return 'suspect';
+   else if (CARDS.weapons.includes(card as Weapon)) return 'weapon';
+   else if (CARDS.rooms.includes(card as Room)) return 'room';
 }

@@ -13,11 +13,38 @@ const TEXTURE_MAPPING: Record<Card, string> = {
    green,
    peacock,
    plum,
+
+   candlestick: plum,
+   dagger: plum,
+   spanner: plum,
+   leadPipe: plum,
+   revolver: plum,
+   rope: plum,
+
+   kitchen: plum,
+   ballroom: plum,
+   conservatory: plum,
+   diningRoom: plum,
+   lounge: plum,
+   hall: plum,
+   study: plum,
+   library: plum,
+   billiardRoom: plum,
 };
 
-export default function Card({ id }: { id: Card }) {
+export default function Card({
+   id,
+   playable,
+   type,
+   onClick,
+}: {
+   id: Card;
+   playable: boolean;
+   type: 'suspect' | 'weapon' | 'room';
+   onClick?: () => void;
+}) {
    return (
-      <div className="card">
+      <div className={`card ${playable ? 'playable' : ''}`} onClick={onClick}>
          <img src={TEXTURE_MAPPING[id]} alt={id} />
       </div>
    );

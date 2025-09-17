@@ -89,6 +89,8 @@ export default function CluedoGame({ G, ctx, moves, playerID }: BoardProps<GameS
       endTurn: moves.endTurn,
       makeSuggestion: moves.makeSuggestion,
       startSuggestion: moves.startSuggestion,
+      showCard: moves.showCard,
+      noCard: moves.noCard,
    };
 
    function handleMove(newPos: NodeID) {
@@ -230,6 +232,7 @@ export default function CluedoGame({ G, ctx, moves, playerID }: BoardProps<GameS
             moves={hudMoves}
             active={myTurn}
             stage={stage}
+            deck={G.deck}
          />
       </SuggestionContextProvider>
    );

@@ -30,7 +30,7 @@ export const CHARACTERS: Record<number, Character> = {
 };
 
 export const SUSPECT_POSITIONS: Record<Character, NodeID> = {
-    scarlett: '16-0',
+    scarlett: 'lounge', // 16-0
     mustard: '23-7',
     white: '14-24',
     green: '9-24',

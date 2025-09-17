@@ -49,7 +49,7 @@ export function SuggestionContextProvider({
       if (canSuggest) {
          moves.startSuggestion();
          AudioManager.getInstance().playSfx(spotlightSfx);
-         setTimeout(() => AudioManager.getInstance().playMusic(suggestionMusic), 1500);
+         // setTimeout(() => AudioManager.getInstance().playMusic(suggestionMusic), 1500);
       }
    };
 
