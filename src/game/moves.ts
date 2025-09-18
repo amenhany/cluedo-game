@@ -231,7 +231,10 @@ export const makeAccusation: MoveFn<GameState> = (
 ) => {
     const correct = Object.values(accusation).every((card) => G.envelope.includes(card));
     if (correct) events.endGame({ winner: playerID });
-    else G.players[playerID].isEliminated = true;
+    else {
+        G.players[playerID].isEliminated = true;
+        events.endTurn();
+    }
 };
 
 export const reset = ({ G }: { G: GameState }) => {

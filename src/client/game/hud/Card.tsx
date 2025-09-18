@@ -5,6 +5,7 @@ import white from '@/assets/textures/cards/white.png';
 import green from '@/assets/textures/cards/green.png';
 import peacock from '@/assets/textures/cards/peacock.png';
 import plum from '@/assets/textures/cards/plum.png';
+import { t } from '@/lib/lang';
 
 const TEXTURE_MAPPING: Record<Card, string> = {
    scarlett,
@@ -46,6 +47,8 @@ export default function Card({
    return (
       <div className={`card ${playable ? 'playable' : ''}`} onClick={onClick}>
          <img src={TEXTURE_MAPPING[id]} alt={id} />
+         <h3 className="card-label card-label-top">{t(`${type}.${id}`)}</h3>
+         <h3 className="card-label card-label-bottom">{t(`${type}.${id}`)}</h3>
       </div>
    );
 }

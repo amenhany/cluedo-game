@@ -2,7 +2,7 @@ import { AudioManager } from '@/lib/AudioManager';
 import type { Suggestion, Card, Room, PlayerState, GameState } from '@/types/game';
 import React, { createContext, useContext } from 'react';
 import spotlightSfx from '@/assets/audio/sfx/spotlight.m4a';
-import doorSound from '@/assets/audio/sfx/door.wav';
+import selectSfx from '@/assets/audio/sfx/select.m4a';
 import suggestionMusic from '@/assets/audio/music/game/suggestion.wav';
 
 type SuggestionContextType = {
@@ -61,7 +61,7 @@ export function SuggestionContextProvider({
 
    const setHighlighted: SuggestionContextType['setHighlighted'] = (type, s) => {
       if (!resolver) {
-         AudioManager.getInstance().playSfx(doorSound);
+         AudioManager.getInstance().playSfx(selectSfx);
          moves.setSuggestion(type, s);
       }
    };

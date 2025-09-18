@@ -1,4 +1,4 @@
-import type { PlayerID } from 'boardgame.io';
+import type { Ctx, PlayerID } from 'boardgame.io';
 import type {
    Card as TCard,
    Character,
@@ -23,10 +23,14 @@ import { CARDS } from '@/game/constants';
 import Popup from './Popup';
 import { useEffect, useRef, useState } from 'react';
 import type { PopupConfig } from '@/types/client';
+import { AudioManager } from '@/lib/AudioManager';
+import popupSfx from '@/assets/audio/sfx/popup.m4a';
+import DetectiveNotes from './DetectiveNotes';
 
 type HudProps = {
    players?: Record<PlayerID, PlayerState>;
    deck: GameState['deck'];
+   ctx: Ctx;
    currentPlayer: PlayerID;
    playerID?: PlayerID;
    moves: Record<string, (...args: any[]) => void>;
@@ -35,7 +39,7 @@ type HudProps = {
 };
 
 export default function CluedoHud(props: HudProps) {
-   const { players, currentPlayer, playerID, moves, active, stage, deck } = props;
+   const { players, currentPlayer, playerID, moves, active, stage, deck, ctx } = props;
    const { settings } = useSettings();
    const { resolver, suggestion } = useSuggestion();
    const suggestionCards = suggestion
@@ -64,6 +68,7 @@ export default function CluedoHud(props: HudProps) {
             children: <Card id={card} playable={false} type={type!}></Card>,
             bottomText: `${name} has ${t(`${type}.${card}`)}!`,
          }));
+         AudioManager.getInstance().playSfx(popupSfx);
          setTimeout(() => {
             setPopupConfig((prev) => ({ ...prev, visible: false }));
          }, 4000);
@@ -125,7 +130,7 @@ export default function CluedoHud(props: HudProps) {
             <SuggestionTooltip {...props} />
             {players && playerID && (
                <Hand
-                  deck={players[playerID].hand.map((card) => ({
+                  hand={players[playerID].hand.map((card) => ({
                      type: getCardType(card) as keyof Suggestion,
                      card,
                      playable:
@@ -139,6 +144,14 @@ export default function CluedoHud(props: HudProps) {
                />
             )}
 
+            <DetectiveNotes
+               stage={stage}
+               makeAccusation={moves.makeAccusation}
+               players={players || {}}
+               playerID={playerID}
+               ctx={ctx}
+            />
+
             <AnimatePresence>
                {popupConfig.visible && (
                   <Popup
@@ -149,6 +162,9 @@ export default function CluedoHud(props: HudProps) {
                   </Popup>
                )}
             </AnimatePresence>
+            {/* <Popup onClick={() => {}} bottomText="Ahmad has Miss Scarlett!">
+               <Card type="suspect" id="scarlett" playable={false} />
+            </Popup> */}
          </TooltipProvider>
       </div>
    );

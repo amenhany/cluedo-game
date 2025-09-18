@@ -1,0 +1,73 @@
+@use './variables' as *;
+
+.hand-trigger {
+    position: absolute;
+    right: 5%;
+    bottom: 0;
+    width: 43%;
+    height: 2%;
+    pointer-events: all;
+    z-index: 1;
+}
+
+.hand {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: flex-end;
+    pointer-events: all;
+    user-select: none;
+
+    .card {
+        width: 14vw;
+        margin-left: -11%;
+        transition: margin 0.5s ease;
+        &.playable img {
+            box-shadow: 0px 0px 10px 10px rgba(173, 216, 230, 1), 0px 0px 5px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        img {
+            border-radius: 16px;
+            transition: transform 0.3s ease-out, box-shadow 0.5s ease;
+            box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-label {
+            font-size: clamp(0.2rem, 1vw, 0.79rem);
+            transition: top 0.3s ease-out, bottom 0.3s ease-out;
+        }
+
+        &:nth-child(1) { z-index: 1; }
+        &:nth-child(2) { z-index: 2; }
+        &:nth-child(3) { z-index: 3; }
+        &:nth-child(4) { z-index: 4; }
+        &:nth-child(5) { z-index: 5; }
+        &:nth-child(6) { z-index: 6; }
+    }
+
+    &.expanded .card {
+        margin-left: -7%;
+        &:hover {
+            // margin-left: 0%;
+            img {
+                transform: translateY(-7%);
+            }
+            .card-label-top {
+                top: calc($card-label-margin-top - 7%);
+            }
+            .card-label-bottom {
+                bottom: calc($card-label-margin-top + 7%);
+            }
+            &.playable {
+                cursor: pointer;
+                img {
+                    box-shadow: 0px 0px 10px 10px rgba(255, 215, 0, 0.5), 0px 0px 5px 5px rgba(0, 0, 0, 0.3);
+                }
+            }
+            + .card {
+                margin-left: 0%;
+            }
+        }
+    }
+}

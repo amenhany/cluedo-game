@@ -21,5 +21,10 @@
     "room.hall": "Hall",
     "room.study": "Study",
     "room.library": "Library",
-    "room.billiardRoom": "Billiard Room"
+    "room.billiardRoom": "Billiard Room",
+
+    "hud.notes.suspect": "Suspects",
+    "hud.notes.weapon": "Weapons",
+    "hud.notes.room": "Rooms",
+    "hud.notes.accusation": "Make Accusation"
 }
