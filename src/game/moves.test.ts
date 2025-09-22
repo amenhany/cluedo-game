@@ -66,6 +66,7 @@ function makeEvents() {
     return {
         setStage: vi.fn(),
         endTurn: vi.fn(),
+        endGame: vi.fn(),
         setActivePlayers: vi.fn(),
     } as unknown as EventsAPI;
 }
@@ -619,14 +620,12 @@ describe('resolve suggestions', () => {
 describe('makeAccusation & suggestion turn order', () => {
     let G: GameState;
     let events: EventsAPI;
-    const mockEndGame = vi.fn();
 
     beforeEach(() => {
         G = makeMockGame();
-        events = { ...makeEvents(), endGame: mockEndGame };
+        events = makeEvents();
         vi.clearAllMocks();
 
-        // Put some cards into the envelope
         G.envelope = ['scarlett', 'dagger', 'study'];
     });
 
@@ -648,7 +647,8 @@ describe('makeAccusation & suggestion turn order', () => {
         );
 
         expect(G.players['0'].isEliminated).toBe(true);
-        expect(mockEndGame).not.toHaveBeenCalled();
+        expect(events.endGame).not.toHaveBeenCalled();
+        expect(events.endTurn).toHaveBeenCalled();
     });
 
     it('ends game with winner if accusation is correct', () => {
@@ -669,11 +669,11 @@ describe('makeAccusation & suggestion turn order', () => {
         );
 
         expect(G.players['1'].isEliminated).toBe(false);
-        expect(mockEndGame).toHaveBeenCalledWith({ winner: '1' });
+        expect(events.endGame).toHaveBeenCalledWith({ winner: '1' });
     });
 
     it('skips eliminated players when resolving suggestion', () => {
-        // Simulate: player 2 is eliminated
+        // Simulate: player 1 is eliminated
         G.players['1'].isEliminated = true;
 
         // Player 0 makes a valid suggestion

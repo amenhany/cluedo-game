@@ -214,6 +214,23 @@ describe('core flow rules', () => {
         expect(events.setActivePlayers).toHaveBeenCalled();
     });
 
+    it('movePlayer into a CLUE sets stage Endgame', () => {
+        G.players['0'].availableMoves = ['end'];
+        moves.movePlayer(
+            {
+                G,
+                ctx: mockCtx,
+                playerID: '0',
+                events,
+                random: mockRandom(),
+                log: null as unknown as LogAPI,
+            },
+            'end'
+        );
+        expect(G.players['0'].position).toBe('end');
+        expect(events.setStage).toHaveBeenCalledWith('Endgame');
+    });
+
     it('disallowed moves return INVALID_MOVE in wrong stage', () => {
         const result = moves.showCard(
             {

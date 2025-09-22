@@ -43,6 +43,7 @@
 
     &.draggable {
         cursor: grab;
+        z-index: 1;
 
         &:hover {
             scale: 1.08;

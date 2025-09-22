@@ -2,24 +2,20 @@ import { useTooltip } from '@/contexts/TooltipContext';
 import { AudioManager } from '@/lib/AudioManager';
 import type { NullableSuggestion, PlayerState, Stage, Suggestion } from '@/types/game';
 import { useEffect, useState } from 'react';
-import suspenseSfx from '@/assets/audio/sfx/suspense.m4a';
 import openSfx from '@/assets/audio/sfx/card_up.m4a';
 import closeSfx from '@/assets/audio/sfx/card_down.m4a';
-import bravo1 from '@/assets/audio/sfx/bravo1.wav';
-import bravo2 from '@/assets/audio/sfx/bravo2.wav';
-import bravo3 from '@/assets/audio/sfx/bravo3.wav';
-import bravo4 from '@/assets/audio/sfx/bravo4.wav';
 import { CARDS } from '@/game/constants';
 import { motion } from 'motion/react';
 import type { Ctx, PlayerID } from 'boardgame.io';
 import NoteTable from './NoteTable';
 import { t } from '@/lib/lang';
+import suspenseSfx from '@/assets/audio/sfx/suspense.m4a';
+import notesImage from '@/assets/textures/card_modal.png';
 
 export default function DetectiveNotes({
    stage,
    players,
    playerID,
-   ctx,
    makeAccusation,
 }: {
    stage: Stage | null;
@@ -46,28 +42,15 @@ export default function DetectiveNotes({
       } else if (accusing) {
          setTooltip(null);
       }
-   }, [stage]);
-
-   useEffect(() => {
-      if (ctx.gameover?.winner === playerID)
-         audioManager.playRandomSfx(bravo1, bravo2, bravo3, bravo4);
-      else if (ctx.gameover.winner) {
-         setTooltip({
-            label: `${players[ctx.gameover.winner].character} wins the game!`,
-         });
-      }
-   }, [ctx.gameover]);
+   }, [stage, accusing]);
 
    function handleAccusation() {
       if (Object.values(acccusation).includes(null) || accusing || stage !== 'Endgame')
          return;
-      setAccusing(true);
-      audioManager.stopMusic();
       audioManager.playSfx(suspenseSfx);
+      setAccusing(true);
       setIsOpen(false);
-      setTimeout(() => {
-         makeAccusation(acccusation as Suggestion);
-      }, 1300);
+      makeAccusation(acccusation as Suggestion);
    }
 
    return (
@@ -82,10 +65,10 @@ export default function DetectiveNotes({
          />
          <motion.div
             className={`notes ${isOpen ? 'expanded' : ''}`}
-            animate={{ bottom: isOpen ? '3vh' : '-75vh', left: isOpen ? '50%' : '20%' }}
+            animate={{ bottom: isOpen ? '6vh' : '-82vh', left: isOpen ? '50%' : '25%' }}
             transition={{ type: 'spring', stiffness: 250, damping: 28 }}
          >
-            <h1>Detective Notes</h1>
+            <img src={notesImage} alt="Detective Notes" className="notes-bg" />
             <div className="tables">
                <NoteTable
                   type="suspect"

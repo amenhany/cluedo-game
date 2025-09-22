@@ -16,5 +16,9 @@ export const Cluedo: Game<GameState> = {
         minMoves: 1,
         onEnd: reset,
     },
+    endIf: ({ G }) => {
+        if (Object.values(G.players).every((player) => player.isEliminated))
+            return { winner: null };
+    },
     disableUndo: true,
 };

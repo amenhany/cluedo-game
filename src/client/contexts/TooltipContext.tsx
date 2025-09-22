@@ -5,15 +5,19 @@ import { createContext, useContext, useState, type ReactNode } from 'react';
 
 type TooltipContextType = {
    setTooltip: (config: TooltipConfig | null) => void;
+   tooltip: TooltipConfig | null;
 };
 
-const TooltipContext = createContext<TooltipContextType>({ setTooltip: () => {} });
+const TooltipContext = createContext<TooltipContextType>({
+   setTooltip: () => {},
+   tooltip: null,
+});
 
 export function TooltipProvider({ children }: { children: ReactNode }) {
    const [tooltip, setTooltip] = useState<TooltipConfig | null>(null);
 
    return (
-      <TooltipContext.Provider value={{ setTooltip }}>
+      <TooltipContext.Provider value={{ setTooltip, tooltip }}>
          {children}
          <AnimatePresence>{tooltip && <Tooltip {...tooltip} />}</AnimatePresence>
       </TooltipContext.Provider>

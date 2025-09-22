@@ -67,16 +67,20 @@ export default function NoteTable({
                      const key = `${item}-${id}`;
                      return (
                         <td key={key}>
-                           <button onClick={() => cycleTick(key)}>
-                              {tick && tick[key] ? tick[key] : ''}
-                           </button>
+                           <div className="center">
+                              <button onClick={() => cycleTick(key)}>
+                                 {tick && tick[key] ? tick[key] : ''}
+                              </button>
+                           </div>
                         </td>
                      );
                   })}
                   <td>
-                     <button onClick={() => selectAccusor(item)}>
-                        {Object.values(accusation).includes(item) && 'O'}
-                     </button>
+                     <div className="center">
+                        <button onClick={() => selectAccusor(item)}>
+                           {Object.values(accusation).includes(item) && 'O'}
+                        </button>
+                     </div>
                   </td>
                </tr>
             ))}

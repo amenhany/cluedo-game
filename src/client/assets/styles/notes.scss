@@ -13,17 +13,33 @@
 .notes {
     position: absolute;
     transform: translateX(-50%);
-    color: black;
+    color: $card-label-color;
     pointer-events: all;
     user-select: none;
-    background-color: beige;
     padding: 2rem;
     font-family: 'CupheadVogue';
     z-index: 1;
+    width: 48%;
+    padding: 180px 55px 0;
+
+    .notes-bg {
+        position: absolute;
+        width: 100%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        object-fit: cover;
+        z-index: -1;
+    }
 
     h1 {
         font-family: 'CupheadPoster';
         margin: 2rem;
+    }
+
+    .tables {
+        overflow: auto;
+        max-height: 450px;
     }
 
     table {
@@ -34,7 +50,7 @@
         thead th {
             font-size: 1.5rem;
             font-weight: 800;
-            width: 10%;
+            // width: 10%;
         }
 
         .accusation-column {
@@ -55,10 +71,21 @@
             border-bottom: 1px solid rgba(0, 0, 0, 0.4);
         }
 
+        tbody tr {
+            height: 4ch;
+        }
+
+        .center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
         td button {
-            width: 100%;
-            height: 2ch;
-            cursor: pointer
+            width: 3ch;
+            height: 3ch;
+            cursor: pointer;
+            border: 1px solid $card-label-color;
         }
     }
 
@@ -86,6 +113,7 @@
     }
 
     span {
+        display: none;
         text-align: center;
         color: $highlight;
         text-transform: uppercase;

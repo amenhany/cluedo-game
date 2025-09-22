@@ -26,6 +26,7 @@ import type { PopupConfig } from '@/types/client';
 import { AudioManager } from '@/lib/AudioManager';
 import popupSfx from '@/assets/audio/sfx/popup.m4a';
 import DetectiveNotes from './DetectiveNotes';
+import GameOver from './GameOver';
 
 type HudProps = {
    players?: Record<PlayerID, PlayerState>;
@@ -150,6 +151,12 @@ export default function CluedoHud(props: HudProps) {
                players={players || {}}
                playerID={playerID}
                ctx={ctx}
+            />
+
+            <GameOver
+               playerID={playerID}
+               winner={ctx.gameover?.winner}
+               players={players}
             />
 
             <AnimatePresence>
