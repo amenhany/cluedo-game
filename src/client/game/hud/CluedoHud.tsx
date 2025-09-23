@@ -31,6 +31,7 @@ import GameOver from './GameOver';
 type HudProps = {
    players?: Record<PlayerID, PlayerState>;
    deck: GameState['deck'];
+   prevSuggestion: GameState['prevSuggestion'];
    ctx: Ctx;
    currentPlayer: PlayerID;
    playerID?: PlayerID;

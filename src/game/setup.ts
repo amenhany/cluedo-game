@@ -20,7 +20,7 @@ export const setup = ({ ctx, random }: { ctx: Ctx; random: RandomAPI }): GameSta
 
     const players: GameState['players'] = {};
 
-    for (let i = 0; i < ctx.numPlayers; i++) {
+    for (let i = 0; i < 6; i++) {
         players[i] = {
             id: i.toString(),
             character: CHARACTERS[i],
@@ -29,6 +29,8 @@ export const setup = ({ ctx, random }: { ctx: Ctx; random: RandomAPI }): GameSta
             seenCards: [],
             isEliminated: false,
         };
+
+        if (i >= ctx.numPlayers) players[i].isEliminated = true;
     }
 
     const rem = deck.length % ctx.numPlayers;

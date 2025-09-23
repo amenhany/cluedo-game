@@ -185,12 +185,14 @@ export const showCard: MoveFn<GameState> = ({ G, playerID, events }, card: Card)
         return INVALID_MOVE;
 
     if (suggestion.suspect && suggestion.suspectOrigin) {
-        Object.values(G.players).find(
-            (player) => player.character === suggestion.suspect
-        )!.position = suggestion.suspectOrigin;
+        const player = Object.values(G.players).find(
+            (player) => player.character === suggestion.suspect && !player.isEliminated
+        );
+        if (player) player.position = suggestion.suspectOrigin;
     }
 
     suggesterSeen.push(card);
+    G.prevSuggestion = { suggester: suggestion.suggester, resolver: playerID };
     G.pendingSuggestion = undefined;
     events.endTurn();
 };
@@ -211,13 +213,15 @@ export const noCard: MoveFn<GameState> = ({ G, playerID, ctx, events }) => {
 
     const loop = nextPlayer(playerID, ctx, events, 'ResolveSuggestion', G.players);
     if (loop) {
+        G.prevSuggestion = { suggester: suggestion.suggester, resolver: null };
         const unseenDeck = G.deck.filter((card) => !suggesterSeen.includes(card));
         if (unseenDeck.length) {
             suggesterSeen.push(unseenDeck[Math.floor(Math.random() * unseenDeck.length)]);
         }
         if (suggestion.suspect && suggestion.suspectOrigin) {
             Object.values(G.players).find(
-                (player) => player.character === suggestion.suspect
+                (player) =>
+                    player.character === suggestion.suspect && !player.isEliminated
             )!.position = suggestion.suspectOrigin;
         }
         G.pendingSuggestion = undefined;

@@ -90,6 +90,10 @@ export type GameState = {
         suggester: PlayerID;
         suspectOrigin: NodeID | null;
     };
+    prevSuggestion?: {
+        suggester: PlayerID;
+        resolver: PlayerID | null;
+    };
 };
 
 export type Stage =

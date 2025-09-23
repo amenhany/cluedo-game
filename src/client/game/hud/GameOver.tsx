@@ -30,8 +30,7 @@ export default function GameOver({
    const isEliminated = players[playerID].isEliminated;
    const prevPlayers = useRef<Record<PlayerID, PlayerState>>(undefined);
    const audioManager = AudioManager.getInstance();
-   const { setTooltip, tooltip } = useTooltip();
-   const prevTooltip = useRef(tooltip);
+   const { setTooltip } = useTooltip();
 
    useEffect(() => {
       if (winner === undefined) return;
@@ -53,9 +52,10 @@ export default function GameOver({
             player.id !== playerID
          ) {
             const timeout = setTimeout(() => {
-               prevTooltip.current = tooltip;
-               setTooltip({ label: `${player.character} is eliminated!` });
-               setTimeout(() => setTooltip(prevTooltip.current), 5000);
+               setTooltip({
+                  label: `${player.character} is eliminated!`,
+                  duration: 5000,
+               });
                prevPlayers.current = players;
             }, DELAY_MS);
             return () => clearTimeout(timeout);

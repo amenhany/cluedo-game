@@ -234,6 +234,7 @@ export default function CluedoGame({ G, ctx, moves, playerID }: BoardProps<GameS
             active={myTurn}
             stage={stage}
             deck={G.deck}
+            prevSuggestion={G.prevSuggestion}
             ctx={ctx}
          />
       </SuggestionContextProvider>

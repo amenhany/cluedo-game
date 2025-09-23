@@ -19,7 +19,7 @@ export default function SpotlightOverlay({
    suggestion: GameState['pendingSuggestion'];
 }) {
    if (!suggestion?.room) return null;
-   const { x, y, r } = ROOM_COORDS[suggestion.room];
+   const { x, y, r = 0 } = ROOM_COORDS[suggestion.room];
 
    return (
       <svg

@@ -1,7 +1,7 @@
 import { useSuggestion } from '@/contexts/SuggestionContext';
 import { useTooltip } from '@/contexts/TooltipContext';
 import { cluedoGraph } from '@/game/board/boardGraph';
-import type { Card, PlayerState, Stage } from '@/types/game';
+import type { Card, GameState, PlayerState, Stage } from '@/types/game';
 import type { PlayerID } from 'boardgame.io';
 import { useEffect, useRef } from 'react';
 
@@ -10,46 +10,54 @@ export default function SuggestionTooltip({
    playerID,
    moves,
    stage,
+   prevSuggestion,
 }: {
    players?: Record<PlayerID, PlayerState>;
    playerID?: PlayerID;
    moves: Record<string, (...args: any[]) => void>;
    stage: Stage | null;
+   deck: Card[];
+   prevSuggestion: GameState['prevSuggestion'];
 }) {
    const playerNode =
       (players && playerID && cluedoGraph[players[playerID].position]) || null;
    const roomNode = (playerNode?.type === 'room' && playerNode) || null;
-   const prevSuggester = useRef<PlayerID | null>(null);
    const { setTooltip } = useTooltip();
    const { canSuggest, completeSuggestion, resolver, suggestion, startSuggestion } =
       useSuggestion();
-   const seenCards = (players && playerID && players[playerID].seenCards) || [];
-   const prevSeenCards = useRef<Card[]>([]);
+   const suggestionRef = useRef(prevSuggestion);
 
    function handleSuggest() {
       moves.makeSuggestion();
    }
 
    useEffect(() => {
-      if (
-         prevSuggester.current === playerID &&
-         !suggestion &&
-         prevSeenCards.current.length === seenCards.length
-      ) {
-         setTooltip({ label: 'No card was shown' });
-         setTimeout(() => {
-            prevSuggester.current = null;
-            setTooltip(null);
+      if (players && prevSuggestion && prevSuggestion !== suggestionRef.current) {
+         const timeout = setTimeout(() => {
+            suggestionRef.current = prevSuggestion;
          }, 4000);
-         return;
+         if (prevSuggestion.resolver === null)
+            setTooltip({ label: `No card was shown`, duration: 4000 });
+         else if (
+            playerID !== prevSuggestion.resolver &&
+            playerID !== prevSuggestion.suggester
+         )
+            setTooltip({
+               label: `${players[prevSuggestion.resolver].character} showed a card to ${
+                  players[prevSuggestion.suggester].character
+               }`,
+               duration: 4000,
+            });
+         else {
+            setTooltip(null);
+            clearTimeout(timeout);
+         }
       } else {
          setTooltip(null);
-         prevSeenCards.current = seenCards;
       }
 
-      if (suggestion) prevSuggester.current = suggestion.suggester;
-
       if (roomNode && canSuggest && !suggestion) {
+         console.log('test');
          setTooltip({
             label: 'Make a Suggestion',
             onClick: () => startSuggestion(roomNode.id),
@@ -115,7 +123,7 @@ export default function SuggestionTooltip({
             });
          }
       }
-   }, [canSuggest, completeSuggestion, suggestion, resolver, stage]);
+   }, [canSuggest, completeSuggestion, suggestion, resolver, stage, prevSuggestion]);
 
    return null;
 }

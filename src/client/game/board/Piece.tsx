@@ -1,5 +1,10 @@
 import piece from '@/assets/textures/ahmed.png';
 import revolver from '@/assets/textures/weapons/revolver.png';
+import leadPipe from '@/assets/textures/weapons/lead_pipe.png';
+import spanner from '@/assets/textures/weapons/spanner.png';
+import dagger from '@/assets/textures/weapons/dagger.png';
+import rope from '@/assets/textures/weapons/rope.png';
+import candlestick from '@/assets/textures/weapons/candlestick.png';
 import { useSuggestion } from '@/contexts/SuggestionContext';
 import { t } from '@/lib/lang';
 import type { Character, Weapon } from '@/types/game';
@@ -27,9 +32,21 @@ const COLORS: Record<Character, string> = {
    plum: 'purple',
 };
 
-// const TEXTURE_MAPPING: Record<Character | Weapon, string> = {
-//    revolver,
-// };
+const TEXTURE_MAPPING: Record<Character | Weapon, string> = {
+   scarlett: piece,
+   mustard: piece,
+   white: piece,
+   green: piece,
+   peacock: revolver,
+   plum: piece,
+
+   revolver,
+   leadPipe,
+   candlestick,
+   dagger,
+   spanner,
+   rope,
+};
 
 export default function Piece({
    id,
@@ -68,7 +85,7 @@ export default function Piece({
       >
          <div className="nametag">{t(`${type}.${id}`)}</div>
          <img
-            src={type === 'suspect' ? piece : revolver}
+            src={TEXTURE_MAPPING[id]}
             alt="Piece"
             // layoutId={id}
             // transition={{
