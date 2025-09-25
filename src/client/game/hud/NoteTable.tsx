@@ -9,6 +9,7 @@ export default function NoteTable({
    arr,
    type,
    players,
+   playerID,
    accusation,
    setAccusation,
    displayNames = false,
@@ -16,6 +17,7 @@ export default function NoteTable({
    arr: Card[];
    type: keyof Suggestion;
    players: Record<PlayerID, PlayerState>;
+   playerID?: PlayerID;
    accusation: NullableSuggestion;
    setAccusation: React.Dispatch<React.SetStateAction<NullableSuggestion>>;
    displayNames?: boolean;
@@ -36,6 +38,7 @@ export default function NoteTable({
    }
 
    function selectAccusor(id: Card) {
+      if (playerID && players[playerID].isEliminated) return;
       if (Object.values(accusation).includes(id)) {
          setAccusation((prev) => ({ ...prev, [type]: null }));
       } else

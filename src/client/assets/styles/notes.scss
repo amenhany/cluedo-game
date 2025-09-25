@@ -1,4 +1,5 @@
 @use './variables' as *;
+@use './mixins' as *;
 
 .notes-trigger {
     position: absolute;
@@ -20,7 +21,7 @@
     font-family: 'CupheadVogue';
     z-index: 6;
     width: clamp(50%, 500px, 90%);
-    padding: 160px 55px 0;
+    padding: 10vw 55px 0;
 
     .notes-bg {
         position: absolute;
@@ -44,7 +45,8 @@
 
     .notes-body {
         overflow: auto;
-        max-height: 560px;
+        height: 38vw;
+        padding-bottom: 1.5rem;
     }
 
     table {
@@ -78,6 +80,10 @@
 
         tbody tr {
             height: 4ch;
+            &:hover .tick:empty::after {
+                content: "✓";
+                color: rgba(0, 0, 0, 0.2);
+            }
         }
 
         .center {
@@ -91,10 +97,12 @@
             height: 2.5ch;
             line-height: 2.5ch;
             cursor: pointer;
+            &::after {
+                transition: color 0.2s ease-out;
+            }
             // border: 1px solid $card-label-color;
             &.tick:empty:hover::after {
-                content: "✓";
-                color: rgba(0, 0, 0, 0.2);
+                color: rgba(0, 0, 0, 0.5);
             }
 
             &.accusor {
@@ -114,30 +122,48 @@
         flex-direction: column;
         align-items: center;
         gap: 0.8rem;
+        div {
+            border: 1px solid rgba(0, 0, 0, 0.4);
+            width: 90%;
+            height: 5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
     }
 
     #accusation-button {
         text-transform: uppercase;
+        width: 100%;
+        height: 100%;
+        pointer-events: all;
         font-size: 2rem;
-        padding: 1rem 4rem;
-        width: fit-content;
-        border: 1px solid rgba(0, 0, 0, 0.4);
         cursor: pointer;
         transition: font-size 0.8s ease, padding 0.8s ease;
         &:disabled {
             color: rgba(0, 0, 0, 0.4);
             cursor: default;
         }
-        &:hover:enabled {
-            font-size: 2.1rem;
-            padding: 0.92rem;
+        &:hover {
+            &:enabled {
+                font-size: 2.1rem;
+            }
         }
     }
-
-    span {
-        display: none;
-        text-align: center;
-        color: $highlight;
-        text-transform: uppercase;
-    }
+}
+.tooltip {
+    z-index: 9999;
+    position: fixed;
+    @include overlay(0.5);
+    color: black;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    white-space: nowrap;
+    pointer-events: none;
+    transition: opacity 0.2s ease-in-out;
+    // display: none;
+    text-align: center;
+    color: $highlight;
+    text-transform: uppercase;
 }

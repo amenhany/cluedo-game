@@ -13,7 +13,7 @@ export default function Tooltip({
    if (!label) return null;
 
    return (
-      <div className="tooltip-container">
+      <div className="tooltip-container no-scroll-zone">
          {onClick ? (
             <button onClick={onClick}>{label}</button>
          ) : (

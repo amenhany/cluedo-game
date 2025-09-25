@@ -12,7 +12,7 @@
     height: 100vh;
     z-index: 9999;
     pointer-events: none;
-    transition: background-color 1s ease, backdrop-filter 1s ease;
+    transition: background-color 1s ease-out, backdrop-filter 1s ease-out;
 
     &:has(.notes.expanded) {
         @include overlay(0.2, true, 2px);

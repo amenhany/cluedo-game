@@ -33,11 +33,14 @@ export function TooltipProvider({ children }: { children: ReactNode }) {
          return;
       }
 
-      if (tooltip && tooltip.duration) {
-         setQueue((prev) => [...prev, config]);
+      if (tooltip) {
+         if (!tooltip.duration) {
+            setQueue((prev) => [...prev, tooltip]);
+            setTooltip(config); // Replace immediately
+         } else {
+            setQueue((prev) => [...prev, config]);
+         }
       } else {
-         if (timerRef.current) clearTimeout(timerRef.current);
-         setQueue([]);
          setTooltip(config);
       }
    };

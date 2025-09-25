@@ -1,7 +1,7 @@
 import { useTooltip } from '@/contexts/TooltipContext';
 import { AudioManager } from '@/lib/AudioManager';
 import type { NullableSuggestion, PlayerState, Stage, Suggestion } from '@/types/game';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import openSfx from '@/assets/audio/sfx/card_up.m4a';
 import closeSfx from '@/assets/audio/sfx/card_down.m4a';
 import { CARDS } from '@/game/constants';
@@ -11,6 +11,7 @@ import NoteTable from './NoteTable';
 import { t } from '@/lib/lang';
 import suspenseSfx from '@/assets/audio/sfx/suspense.m4a';
 import notesImage from '@/assets/textures/card_modal.png';
+import HoverButton from './HoverButton';
 
 export default function DetectiveNotes({
    stage,
@@ -33,6 +34,31 @@ export default function DetectiveNotes({
       room: null,
    });
    const { setTooltip } = useTooltip();
+   const notesRef = useRef<HTMLDivElement>(null);
+
+   useEffect(() => {
+      function handleClickOutside(e: MouseEvent) {
+         if (isOpen && notesRef.current && !notesRef.current.contains(e.target as Node)) {
+            setIsOpen(false);
+            audioManager.playSfx(closeSfx);
+         }
+      }
+
+      function handleKeyDown(e: KeyboardEvent) {
+         if (isOpen && e.key === 'Escape') {
+            setIsOpen(false);
+            audioManager.playSfx(closeSfx);
+         }
+      }
+
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleKeyDown);
+
+      return () => {
+         document.removeEventListener('mousedown', handleClickOutside);
+         document.removeEventListener('keydown', handleKeyDown);
+      };
+   }, [isOpen]);
 
    useEffect(() => {
       if (stage === 'Endgame' && !accusing) {
@@ -40,7 +66,7 @@ export default function DetectiveNotes({
             label: 'Open your notes',
          });
       } else if (accusing) {
-         setTooltip(null);
+         // setTooltip(null);
       }
    }, [stage, accusing]);
 
@@ -58,12 +84,12 @@ export default function DetectiveNotes({
          <div
             className="notes-trigger no-scroll-zone"
             onMouseEnter={() => {
-               if (!playerID || players[playerID].isEliminated) return;
                setIsOpen((prev) => !prev);
                isOpen ? audioManager.playSfx(closeSfx) : audioManager.playSfx(openSfx);
             }}
          />
          <motion.div
+            ref={notesRef}
             className={`notes no-scroll-zone ${isOpen ? 'expanded' : ''}`}
             animate={{ bottom: isOpen ? '48%' : '-42%', left: isOpen ? '50%' : '25%' }}
             transition={{ type: 'spring', stiffness: 250, damping: 28 }}
@@ -74,6 +100,7 @@ export default function DetectiveNotes({
                   type="suspect"
                   arr={CARDS.suspects}
                   players={players}
+                  playerID={playerID}
                   accusation={acccusation}
                   setAccusation={setAccusation}
                   displayNames={true}
@@ -82,6 +109,7 @@ export default function DetectiveNotes({
                   type="weapon"
                   arr={CARDS.weapons}
                   players={players}
+                  playerID={playerID}
                   accusation={acccusation}
                   setAccusation={setAccusation}
                />
@@ -89,11 +117,12 @@ export default function DetectiveNotes({
                   type="room"
                   arr={CARDS.rooms}
                   players={players}
+                  playerID={playerID}
                   accusation={acccusation}
                   setAccusation={setAccusation}
                />
                <div className="accusation">
-                  <button
+                  <HoverButton
                      id="accusation-button"
                      onClick={handleAccusation}
                      disabled={
@@ -101,24 +130,26 @@ export default function DetectiveNotes({
                         stage !== 'Endgame' ||
                         accusing
                      }
+                     tooltip={
+                        playerID && players && players[playerID]?.isEliminated
+                           ? null
+                           : stage !== 'Endgame'
+                           ? 'Go to CLUE!'
+                           : Object.values(acccusation).includes(null)
+                           ? `
+                              Select a
+                              ${
+                                 acccusation.suspect === null
+                                    ? ' Suspect'
+                                    : acccusation.weapon === null
+                                    ? ' Weapon'
+                                    : acccusation.room === null && ' Room'
+                              }!`
+                           : null
+                     }
                   >
                      {t('hud.notes.accusation')}
-                  </button>
-                  {stage !== 'Endgame' ? (
-                     <span>Go to CLUE!</span>
-                  ) : (
-                     Object.values(acccusation).includes(null) && (
-                        <span>
-                           Select a
-                           {acccusation.suspect === null
-                              ? ' Suspect'
-                              : acccusation.weapon === null
-                              ? ' Weapon'
-                              : acccusation.room === null && ' Room'}
-                           !
-                        </span>
-                     )
-                  )}
+                  </HoverButton>
                </div>
             </div>
          </motion.div>
