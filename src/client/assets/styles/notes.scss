@@ -7,20 +7,20 @@
     width: 43%;
     height: 2%;
     pointer-events: all;
-    z-index: 2;
+    z-index: 7;
 }
 
 .notes {
     position: absolute;
-    transform: translateX(-50%);
+    transform: translate(-50%, 50%);
     color: $card-label-color;
     pointer-events: all;
     user-select: none;
     padding: 2rem;
     font-family: 'CupheadVogue';
-    z-index: 1;
-    width: 48%;
-    padding: 180px 55px 0;
+    z-index: 6;
+    width: clamp(50%, 500px, 90%);
+    padding: 160px 55px 0;
 
     .notes-bg {
         position: absolute;
@@ -30,6 +30,11 @@
         transform: translate(-50%, -50%);
         object-fit: cover;
         z-index: -1;
+        filter: drop-shadow(0px 0px 20px rgba(0, 0, 0, 0.3));
+
+        ~ * {
+            filter: blur(0.03rem);
+        }
     }
 
     h1 {
@@ -37,9 +42,9 @@
         margin: 2rem;
     }
 
-    .tables {
+    .notes-body {
         overflow: auto;
-        max-height: 450px;
+        max-height: 560px;
     }
 
     table {
@@ -82,23 +87,40 @@
         }
 
         td button {
-            width: 3ch;
-            height: 3ch;
+            width: 2.5ch;
+            height: 2.5ch;
+            line-height: 2.5ch;
             cursor: pointer;
-            border: 1px solid $card-label-color;
+            // border: 1px solid $card-label-color;
+            &.tick:empty:hover::after {
+                content: "✓";
+                color: rgba(0, 0, 0, 0.2);
+            }
+
+            &.accusor {
+                color: $highlight;
+                font-size: 1.1rem;
+                border: 1px solid $card-label-color;
+                &:empty:hover::after {
+                    content: "O";
+                    color: $highlight-translucent;
+                }
+            }
         }
     }
 
     .accusation {
         display: flex;
         flex-direction: column;
+        align-items: center;
         gap: 0.8rem;
     }
 
     #accusation-button {
         text-transform: uppercase;
         font-size: 2rem;
-        padding: 1rem;
+        padding: 1rem 4rem;
+        width: fit-content;
         border: 1px solid rgba(0, 0, 0, 0.4);
         cursor: pointer;
         transition: font-size 0.8s ease, padding 0.8s ease;

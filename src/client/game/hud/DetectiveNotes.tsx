@@ -56,7 +56,7 @@ export default function DetectiveNotes({
    return (
       <>
          <div
-            className="notes-trigger"
+            className="notes-trigger no-scroll-zone"
             onMouseEnter={() => {
                if (!playerID || players[playerID].isEliminated) return;
                setIsOpen((prev) => !prev);
@@ -64,12 +64,12 @@ export default function DetectiveNotes({
             }}
          />
          <motion.div
-            className={`notes ${isOpen ? 'expanded' : ''}`}
-            animate={{ bottom: isOpen ? '6vh' : '-82vh', left: isOpen ? '50%' : '25%' }}
+            className={`notes no-scroll-zone ${isOpen ? 'expanded' : ''}`}
+            animate={{ bottom: isOpen ? '48%' : '-42%', left: isOpen ? '50%' : '25%' }}
             transition={{ type: 'spring', stiffness: 250, damping: 28 }}
          >
             <img src={notesImage} alt="Detective Notes" className="notes-bg" />
-            <div className="tables">
+            <div className="notes-body">
                <NoteTable
                   type="suspect"
                   arr={CARDS.suspects}
@@ -92,34 +92,34 @@ export default function DetectiveNotes({
                   accusation={acccusation}
                   setAccusation={setAccusation}
                />
-            </div>
-            <div className="accusation">
-               <button
-                  id="accusation-button"
-                  onClick={handleAccusation}
-                  disabled={
-                     Object.values(acccusation).includes(null) ||
-                     stage !== 'Endgame' ||
-                     accusing
-                  }
-               >
-                  {t('hud.notes.accusation')}
-               </button>
-               {stage !== 'Endgame' ? (
-                  <span>Go to CLUE!</span>
-               ) : (
-                  Object.values(acccusation).includes(null) && (
-                     <span>
-                        Select a
-                        {acccusation.suspect === null
-                           ? ' Suspect'
-                           : acccusation.weapon === null
-                           ? ' Weapon'
-                           : acccusation.room === null && ' Room'}
-                        !
-                     </span>
-                  )
-               )}
+               <div className="accusation">
+                  <button
+                     id="accusation-button"
+                     onClick={handleAccusation}
+                     disabled={
+                        Object.values(acccusation).includes(null) ||
+                        stage !== 'Endgame' ||
+                        accusing
+                     }
+                  >
+                     {t('hud.notes.accusation')}
+                  </button>
+                  {stage !== 'Endgame' ? (
+                     <span>Go to CLUE!</span>
+                  ) : (
+                     Object.values(acccusation).includes(null) && (
+                        <span>
+                           Select a
+                           {acccusation.suspect === null
+                              ? ' Suspect'
+                              : acccusation.weapon === null
+                              ? ' Weapon'
+                              : acccusation.room === null && ' Room'}
+                           !
+                        </span>
+                     )
+                  )}
+               </div>
             </div>
          </motion.div>
       </>

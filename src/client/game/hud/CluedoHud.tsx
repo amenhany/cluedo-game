@@ -27,6 +27,7 @@ import { AudioManager } from '@/lib/AudioManager';
 import popupSfx from '@/assets/audio/sfx/popup.m4a';
 import DetectiveNotes from './DetectiveNotes';
 import GameOver from './GameOver';
+import ScrollTriggers from './ScrollTriggers';
 
 type HudProps = {
    players?: Record<PlayerID, PlayerState>;
@@ -86,20 +87,19 @@ export default function CluedoHud(props: HudProps) {
          style={{ filter: settings?.filter === 'b&w' ? 'grayscale(100%)' : 'none' }}
       >
          <TooltipProvider>
-            <AnimatePresence>
-               {active && !suggestion && (
-                  <Dice
-                     key="dice"
-                     face={
-                        playerID && players && players[playerID].steps
-                           ? players[playerID].steps
-                           : 0
-                     }
-                     onRoll={moves.handleRoll}
-                     disabled={!(active && stage === 'TurnAction')}
-                  />
-               )}
-            </AnimatePresence>
+            <Dice
+               key="dice"
+               face={
+                  playerID && players && players[playerID].steps
+                     ? players[playerID].steps
+                     : 0
+               }
+               visible={active && !suggestion}
+               onRoll={moves.handleRoll}
+               disabled={!(active && stage === 'TurnAction')}
+            />
+
+            <ScrollTriggers />
 
             <div className="turn-container">
                <h1>

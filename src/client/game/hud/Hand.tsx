@@ -19,12 +19,12 @@ export default function Hand({
    return (
       <>
          <div
-            className="hand-trigger"
+            className="hand-trigger no-scroll-zone"
             onMouseEnter={() => setIsHandExpanded((prev) => !prev)}
          />
 
          <motion.div
-            className={`hand ${isHandExpanded ? 'expanded' : ''}`}
+            className={`hand no-scroll-zone ${isHandExpanded ? 'expanded' : ''}`}
             animate={{ bottom: isHandExpanded ? '3vh' : '-31vh' }}
             transition={{ type: 'spring', stiffness: 200, damping: 20 }}
          >

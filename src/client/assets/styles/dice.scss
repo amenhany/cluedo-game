@@ -2,6 +2,7 @@
 
 .dice-button.active {
   cursor: pointer;
+  z-index: 2;
   animation: click-me 0.9s linear infinite;
 
   &:hover {

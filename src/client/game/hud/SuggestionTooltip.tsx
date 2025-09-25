@@ -57,7 +57,6 @@ export default function SuggestionTooltip({
       }
 
       if (roomNode && canSuggest && !suggestion) {
-         console.log('test');
          setTooltip({
             label: 'Make a Suggestion',
             onClick: () => startSuggestion(roomNode.id),

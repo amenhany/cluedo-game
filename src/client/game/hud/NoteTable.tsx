@@ -53,6 +53,7 @@ export default function NoteTable({
             <tr>
                <th scope="col">{t(`hud.notes.${type}`)}</th>
                {Object.values(players).map((player) => {
+                  if (!player.hand.length) return;
                   const char = player.character[0].toUpperCase();
                   return <th key={player.id}>{displayNames && char}</th>;
                })}
@@ -63,12 +64,13 @@ export default function NoteTable({
             {arr.map((item) => (
                <tr key={item}>
                   <th scope="row">{t(`${type}.${item}`)}</th>
-                  {Object.entries(players).map(([id, _]) => {
+                  {Object.entries(players).map(([id, player]) => {
+                     if (!player.hand.length) return;
                      const key = `${item}-${id}`;
                      return (
                         <td key={key}>
                            <div className="center">
-                              <button onClick={() => cycleTick(key)}>
+                              <button className="tick" onClick={() => cycleTick(key)}>
                                  {tick && tick[key] ? tick[key] : ''}
                               </button>
                            </div>
@@ -77,7 +79,7 @@ export default function NoteTable({
                   })}
                   <td>
                      <div className="center">
-                        <button onClick={() => selectAccusor(item)}>
+                        <button className="accusor" onClick={() => selectAccusor(item)}>
                            {Object.values(accusation).includes(item) && 'O'}
                         </button>
                      </div>

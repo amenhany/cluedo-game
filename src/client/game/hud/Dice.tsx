@@ -8,6 +8,7 @@ export default function Dice(props: {
    face: number;
    onRoll: () => void;
    disabled: boolean;
+   visible: boolean;
 }) {
    const [isDisabled, setIsDisabled] = useState(props.disabled);
    const [dieFace, setDieFace] = useState(1);
@@ -36,7 +37,7 @@ export default function Dice(props: {
       <motion.button
          onClick={handleRoll}
          className={`dice-button ${isDisabled ? 'disabled' : 'active'}`}
-         exit={{ x: -200 }}
+         animate={{ x: props.visible ? 0 : -200 }}
          transition={{ duration: 0.2 }}
          disabled={isDisabled}
       >
