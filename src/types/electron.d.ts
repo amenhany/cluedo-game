@@ -16,4 +16,5 @@ export type EventPayloadMapping = {
     'settings:save': Partial<Settings>;
     'packs:get': Packs;
     'packs:set': Packs;
+    'game:start-server': { port: number };
 };

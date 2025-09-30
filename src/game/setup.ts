@@ -1,9 +1,24 @@
-import type { Ctx } from 'boardgame.io';
-import type { GameState, Room, Weapon } from '../types/game';
-import type { RandomAPI } from 'boardgame.io/dist/types/src/plugins/random/random';
-import { CARDS, CHARACTERS, SUSPECT_POSITIONS } from './constants';
+import type { Ctx, DefaultPluginAPIs } from 'boardgame.io';
+import type {
+    Card,
+    Character,
+    GameState,
+    Room,
+    SetupData,
+    Weapon,
+} from '../types/game.js';
+import { CARDS, SUSPECT_POSITIONS } from './constants.js';
 
-export const setup = ({ ctx, random }: { ctx: Ctx; random: RandomAPI }): GameState => {
+export const setup = (
+    {
+        ctx,
+        random,
+    }: {
+        ctx: Ctx;
+        random: DefaultPluginAPIs['random'];
+    },
+    setupData: SetupData | undefined
+): GameState => {
     const envelope: GameState['envelope'] = [
         random.Shuffle(CARDS.suspects)[0],
         random.Shuffle(CARDS.weapons)[0],
@@ -18,24 +33,37 @@ export const setup = ({ ctx, random }: { ctx: Ctx; random: RandomAPI }): GameSta
     ];
     deck = random.Shuffle(deck);
 
+    const rules = setupData?.rules || {
+        returnPlayersAfterSuggestion: false,
+    };
+
     const players: GameState['players'] = {};
+    const realPlayers = setupData?.players;
+    const takenCharacters = realPlayers?.map((player) => player.data.character) || [];
 
     for (let i = 0; i < 6; i++) {
+        const player = realPlayers?.find((p) => p.id === i);
+        const character =
+            player?.data.character ||
+            (CARDS.suspects.find((c) => !takenCharacters.includes(c)) as Character);
         players[i] = {
             id: i.toString(),
-            character: CHARACTERS[i],
-            position: SUSPECT_POSITIONS[CHARACTERS[i]],
+            name: player?.name || character,
+            character,
+            position: SUSPECT_POSITIONS[character],
             hand: [],
             seenCards: [],
             isEliminated: false,
         };
 
-        if (i >= ctx.numPlayers) players[i].isEliminated = true;
+        if (setupData && setupData.players.find((p) => p.id === i) === undefined)
+            players[i].isEliminated = true;
     }
 
     const rem = deck.length % ctx.numPlayers;
+    const handArr = realPlayers?.map((p) => ({ ...p, hand: [] as Card[] }));
     for (let i = 0; i < deck.length - rem; i++) {
-        players[i % ctx.numPlayers].hand.push(deck[i]);
+        if (handArr) handArr[i % ctx.numPlayers].hand.push(deck[i]);
     }
     if (rem) deck = deck.slice(-1 * rem);
     else deck = [];
@@ -45,12 +73,15 @@ export const setup = ({ ctx, random }: { ctx: Ctx; random: RandomAPI }): GameSta
     return {
         players,
         weapons,
+        rules,
         envelope,
         deck,
     };
 };
 
-function generateWeaponPositions(random: RandomAPI): Record<Weapon, Room> {
+function generateWeaponPositions(
+    random: DefaultPluginAPIs['random']
+): Record<Weapon, Room> {
     const shuffledRooms = random.Shuffle([...CARDS.rooms]);
     const shuffledWeapons = random.Shuffle([...CARDS.weapons]);
 
@@ -58,7 +89,7 @@ function generateWeaponPositions(random: RandomAPI): Record<Weapon, Room> {
 
     for (let i = 0; i < shuffledWeapons.length; i++) {
         const weapon = shuffledWeapons[i];
-        mapping[weapon] = shuffledRooms[i];
+        mapping[weapon as Weapon] = shuffledRooms[i] as Room;
     }
 
     return mapping;

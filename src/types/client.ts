@@ -16,3 +16,20 @@ export type PopupConfig = {
     onClick: () => void;
     bottomText?: string;
 };
+
+export type HostOptions = {
+    playerName: string;
+    port: number;
+};
+
+export type JoinOptions = {
+    playerName: string;
+    ip: string;
+};
+
+export type ClientOptions = {
+    server: string;
+    playerID: string;
+    credentials: string;
+    matchID: string;
+};

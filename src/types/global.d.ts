@@ -16,6 +16,11 @@ declare global {
                 get(): Promise<Packs>;
                 set(pack: Packs): void;
             };
+            game: {
+                startServer(options: {
+                    port: number;
+                }): Promise<{ ok: boolean; port?: number; message?: string }>;
+            };
         };
     }
 }

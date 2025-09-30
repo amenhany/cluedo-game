@@ -1,4 +1,4 @@
-import type { Ctx, MoveFn, PlayerID } from 'boardgame.io';
+import type { Ctx, DefaultPluginAPIs, MoveFn, PlayerID } from 'boardgame.io';
 import type {
     Card,
     GameState,
@@ -8,11 +8,10 @@ import type {
     Stage,
     Suggestion,
     Weapon,
-} from '../types/game';
-import { getReachableNodes } from './board/getReachableNodes';
-import { cluedoGraph } from './board/boardGraph';
-import { INVALID_MOVE } from 'boardgame.io/core';
-import type { EventsAPI } from 'boardgame.io/dist/types/src/plugins/plugin-events';
+} from '../types/game.js';
+import { getReachableNodes } from './board/getReachableNodes.js';
+import { cluedoGraph } from './board/boardGraph.js';
+import { INVALID_MOVE } from 'boardgame.io/dist/cjs/core.js';
 
 export const rollDice: MoveFn<GameState> = ({ G, playerID, random }) => {
     const player = G.players[playerID];
@@ -73,7 +72,7 @@ export const endTurn: MoveFn<GameState> = ({ events }) => {
 function nextPlayer(
     currentPlayer: PlayerID,
     ctx: Ctx,
-    events: EventsAPI,
+    events: DefaultPluginAPIs['events'],
     stageName: Stage,
     players: Record<PlayerID, PlayerState>
 ) {
@@ -188,7 +187,8 @@ export const showCard: MoveFn<GameState> = ({ G, playerID, events }, card: Card)
         const player = Object.values(G.players).find(
             (player) => player.character === suggestion.suspect && !player.isEliminated
         );
-        if (player) player.position = suggestion.suspectOrigin;
+        if (player && G.rules.returnPlayersAfterSuggestion)
+            player.position = suggestion.suspectOrigin;
     }
 
     suggesterSeen.push(card);
@@ -219,10 +219,12 @@ export const noCard: MoveFn<GameState> = ({ G, playerID, ctx, events }) => {
             suggesterSeen.push(unseenDeck[Math.floor(Math.random() * unseenDeck.length)]);
         }
         if (suggestion.suspect && suggestion.suspectOrigin) {
-            Object.values(G.players).find(
+            const player = Object.values(G.players).find(
                 (player) =>
                     player.character === suggestion.suspect && !player.isEliminated
-            )!.position = suggestion.suspectOrigin;
+            );
+            if (player && G.rules.returnPlayersAfterSuggestion)
+                player.position = suggestion.suspectOrigin;
         }
         G.pendingSuggestion = undefined;
         events.endTurn();

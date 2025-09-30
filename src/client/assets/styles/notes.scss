@@ -140,17 +140,16 @@
         font-size: 2rem;
         cursor: pointer;
         transition: font-size 0.8s ease, padding 0.8s ease;
-        &:disabled {
+        &[aria-disabled="true"] {
             color: rgba(0, 0, 0, 0.4);
             cursor: default;
         }
-        &:hover {
-            &:enabled {
-                font-size: 2.1rem;
-            }
+        &[aria-disabled="false"]:hover {
+            font-size: 2.1rem;
         }
     }
 }
+
 .tooltip {
     z-index: 9999;
     position: fixed;

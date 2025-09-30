@@ -2,7 +2,7 @@ import { AudioManager } from '@/lib/AudioManager';
 import type { Suggestion, Card, Room, PlayerState, GameState } from '@/types/game';
 import React, { createContext, useContext } from 'react';
 import spotlightSfx from '@/assets/audio/sfx/spotlight.m4a';
-import selectSfx from '@/assets/audio/sfx/select.m4a';
+import selectSfx from '@/assets/audio/sfx/select.wav';
 import suggestionMusic from '@/assets/audio/music/game/suggestion.wav';
 
 type SuggestionContextType = {
@@ -49,7 +49,8 @@ export function SuggestionContextProvider({
       if (canSuggest) {
          moves.startSuggestion();
          AudioManager.getInstance().playSfx(spotlightSfx);
-         // setTimeout(() => AudioManager.getInstance().playMusic(suggestionMusic), 1500);
+         AudioManager.getInstance().stopMusic();
+         setTimeout(() => AudioManager.getInstance().playMusic(suggestionMusic), 1500);
       }
    };
 

@@ -1,11 +1,12 @@
 import type { Game } from 'boardgame.io';
-import { reset } from './moves';
-import { setup } from './setup';
-import * as stages from './stages';
-import type { GameState } from '@/types/game';
-import { SkipEliminated } from './cycle';
+import { reset } from './moves.js';
+import { setup } from './setup.js';
+import * as stages from './stages.js';
+import type { GameState, SetupData } from '@/types/game.js';
+import { SkipEliminated } from './cycle.js';
 
-export const Cluedo: Game<GameState> = {
+export const Cluedo: Game<GameState, Record<string, unknown>, SetupData> = {
+    name: 'cluedo',
     setup,
     turn: {
         order: SkipEliminated,

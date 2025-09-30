@@ -15,5 +15,5 @@
         "skipLibCheck": true,
         "typeRoots": ["src/types/electron", "src/types/global"]
     },
-    "include": ["src/electron", "src/types/global.d.ts"]
+    "include": ["src/electron", "src/types/global.d.ts", "src/types/boardgameio.d.ts"]
 }

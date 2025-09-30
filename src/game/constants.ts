@@ -1,4 +1,4 @@
-import type { Character, NodeID, Room, Weapon } from '../types/game';
+import type { Character, NodeID, Room, Weapon } from '../types/game.js';
 
 export const CARDS: {
     suspects: Character[];
@@ -51,3 +51,5 @@ export const BOARD_COLUMNS = 25;
 export const BOARD_ROWS = 25;
 export const OFFSET_X = 1;
 export const OFFSET_Y = 0;
+
+export const PORT = 25565;

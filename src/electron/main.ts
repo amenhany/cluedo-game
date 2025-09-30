@@ -4,6 +4,10 @@ import path from 'path';
 import { ipcMainHandle, ipcMainOn, isDev } from './util.js';
 import { getPreloadPath } from './pathResolver.js';
 import { getAllSettings, getSetting, saveSettings } from './settings.js';
+import { Server, Origins } from 'boardgame.io/dist/cjs/server.js';
+import { Cluedo } from '../game/index.js';
+
+let serverInstance: ReturnType<typeof Server> | undefined;
 
 app.on('ready', () => {
     const fullscreen = getSetting('fullscreen');
@@ -14,6 +18,7 @@ app.on('ready', () => {
         webPreferences: {
             preload: getPreloadPath(),
             contextIsolation: true,
+            sandbox: false,
         },
     });
 
@@ -25,6 +30,21 @@ app.on('ready', () => {
         saveSettings(settings);
         if (settings.fullscreen !== undefined)
             mainWindow.setFullScreen(settings.fullscreen);
+    });
+
+    ipcMainHandle('game:start-server', async ({ port }) => {
+        if (serverInstance) {
+            return { ok: false, message: 'Server already running' };
+        }
+
+        serverInstance = Server({
+            games: [Cluedo],
+            origins: Origins.LOCALHOST_IN_DEVELOPMENT,
+        });
+
+        await serverInstance.run({ port });
+
+        return { ok: true, port };
     });
 
     if (isDev()) {

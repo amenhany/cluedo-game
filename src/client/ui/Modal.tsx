@@ -2,12 +2,13 @@ import { motion } from 'motion/react';
 import Backdrop from './Backdrop';
 import { useEffect } from 'react';
 import board from '@/assets/textures/board_modal.png';
+import card from '@/assets/textures/card_short.png';
 
-type Texture = 'board' | 'sheet';
+type Texture = 'board' | 'card';
 
 const TEXTURE_MAPPING: Record<Texture, string> = {
    board,
-   sheet: '',
+   card,
 };
 
 export default function Modal({

@@ -9,6 +9,9 @@ import cover3 from '@/assets/textures/albums/menu3.jpeg';
 import cover4 from '@/assets/textures/albums/menu4.jpeg';
 import cover5 from '@/assets/textures/albums/menu5.jpg';
 import modalOpen from '@/assets/audio/sfx/modal_open.wav';
+import cardUp from '@/assets/audio/sfx/card_up.wav';
+import cardDown from '@/assets/audio/sfx/card_down.wav';
+import select from '@/assets/audio/sfx/select.wav';
 
 import '@/assets/styles/menu.scss';
 import AudioPlayer from './AudioPlayer';
@@ -16,9 +19,11 @@ import { useState } from 'react';
 import { Settings, DoorOpen, DoorClosed } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import SettingsScreen from './Settings';
-import { useSceneTransition } from '../contexts/SceneTransitionContext';
 import { AudioManager } from '@/lib/AudioManager';
 import { useSettings } from '@/contexts/SettingsContext';
+import type { HostOptions, JoinOptions } from '@/types/client';
+import HostModal from './HostModal';
+import JoinModal from './JoinModal';
 
 const tracks = [
    {
@@ -57,21 +62,14 @@ export default function MainMenu({
    onHost,
    onJoin,
 }: {
-   onHost: () => void;
-   onJoin: () => void;
+   onHost: (options: HostOptions) => void;
+   onJoin: (options: JoinOptions) => void;
 }) {
    const [hoverClose, setHoverClose] = useState(false);
    const [openSettings, setOpenSettings] = useState(false);
-   const { triggerTransition } = useSceneTransition();
+   const [hostModal, setHostModal] = useState(false);
+   const [joinModal, setJoinModal] = useState(false);
    const { settings } = useSettings();
-
-   function handleHost() {
-      triggerTransition(onHost, 'iris');
-   }
-
-   function handleJoin() {
-      triggerTransition(onJoin, 'fade');
-   }
 
    return (
       <div
@@ -82,10 +80,20 @@ export default function MainMenu({
             <span>C</span>LUEDO
          </h1>
          <div className="button-container">
-            <button onClick={handleHost}>
+            <button
+               onClick={() => {
+                  AudioManager.getInstance().playSfx(cardUp);
+                  setHostModal(true);
+               }}
+            >
                <p>Host Game</p>
             </button>
-            <button onClick={handleJoin}>
+            <button
+               onClick={() => {
+                  AudioManager.getInstance().playSfx(cardUp);
+                  setJoinModal(true);
+               }}
+            >
                <p>Join Game</p>
             </button>
             <motion.button
@@ -108,7 +116,10 @@ export default function MainMenu({
                <Settings size={40} />
             </motion.button>
             <button
-               onClick={close}
+               onClick={() => {
+                  AudioManager.getInstance().playSfx(select);
+                  setTimeout(close, 100);
+               }}
                className="button-icon"
                onMouseEnter={() => setHoverClose(true)}
                onMouseLeave={() => setHoverClose(false)}
@@ -119,6 +130,24 @@ export default function MainMenu({
          <AudioPlayer tracks={tracks} />
          <AnimatePresence>
             {openSettings && <SettingsScreen onClose={() => setOpenSettings(false)} />}
+            {hostModal && (
+               <HostModal
+                  onHost={onHost}
+                  onClose={() => {
+                     AudioManager.getInstance().playSfx(cardDown);
+                     setHostModal(false);
+                  }}
+               />
+            )}
+            {joinModal && (
+               <JoinModal
+                  onJoin={onJoin}
+                  onClose={() => {
+                     AudioManager.getInstance().playSfx(cardDown);
+                     setJoinModal(false);
+                  }}
+               />
+            )}
          </AnimatePresence>
       </div>
    );

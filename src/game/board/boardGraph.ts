@@ -1,5 +1,5 @@
-import type { Coordinates, Graph, Room } from '../../types/game';
-import { generateTileGraph } from './tileGen';
+import type { Coordinates, Graph, Room } from '../../types/game.js';
+import { generateTileGraph } from './tileGen.js';
 
 /* prettier-ignore */
 const grid: (0 | 1 | Room)[][] = [

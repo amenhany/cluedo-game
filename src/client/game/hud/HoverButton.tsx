@@ -15,10 +15,7 @@ export default function HoverButton({
    return (
       <div
          style={{ position: 'relative' }}
-         onMouseEnter={() => {
-            setPos({ x: 0, y: 0 });
-            console.log(pos);
-         }}
+         onMouseEnter={() => setPos({ x: 0, y: 0 })}
          onMouseLeave={() => setPos(null)}
          onMouseMove={(e) => setPos({ x: e.clientX, y: e.clientY })}
       >
@@ -30,7 +27,7 @@ export default function HoverButton({
                <span
                   className="tooltip"
                   style={{
-                     top: pos.y + 6, // offset from cursor
+                     top: pos.y + 6,
                      left: pos.x + 10,
                   }}
                >

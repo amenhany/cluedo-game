@@ -143,7 +143,7 @@ export default function CluedoGame({ G, ctx, moves, playerID }: BoardProps<GameS
          canSuggest={canSuggest}
       >
          <div
-            className={`game board-${'0'}`}
+            className="game"
             style={{ filter: settings?.filter === 'b&w' ? 'grayscale(100%)' : 'none' }}
          >
             <DndContext

@@ -2,8 +2,8 @@ import { useTooltip } from '@/contexts/TooltipContext';
 import { AudioManager } from '@/lib/AudioManager';
 import type { NullableSuggestion, PlayerState, Stage, Suggestion } from '@/types/game';
 import { useEffect, useRef, useState } from 'react';
-import openSfx from '@/assets/audio/sfx/card_up.m4a';
-import closeSfx from '@/assets/audio/sfx/card_down.m4a';
+import openSfx from '@/assets/audio/sfx/card_up.wav';
+import closeSfx from '@/assets/audio/sfx/card_down.wav';
 import { CARDS } from '@/game/constants';
 import { motion } from 'motion/react';
 import type { Ctx, PlayerID } from 'boardgame.io';
@@ -12,6 +12,8 @@ import { t } from '@/lib/lang';
 import suspenseSfx from '@/assets/audio/sfx/suspense.m4a';
 import notesImage from '@/assets/textures/card_modal.png';
 import HoverButton from './HoverButton';
+import appear from '@/assets/audio/sfx/appear.wav';
+import locked from '@/assets/audio/sfx/card_locked.wav';
 
 export default function DetectiveNotes({
    stage,
@@ -34,6 +36,8 @@ export default function DetectiveNotes({
       room: null,
    });
    const { setTooltip } = useTooltip();
+   const accusationButtonDisabled =
+      Object.values(acccusation).includes(null) || accusing || stage !== 'Endgame';
    const notesRef = useRef<HTMLDivElement>(null);
 
    useEffect(() => {
@@ -66,13 +70,15 @@ export default function DetectiveNotes({
             label: 'Open your notes',
          });
       } else if (accusing) {
-         // setTooltip(null);
+         setTooltip(null);
       }
    }, [stage, accusing]);
 
    function handleAccusation() {
-      if (Object.values(acccusation).includes(null) || accusing || stage !== 'Endgame')
+      if (accusationButtonDisabled) {
+         audioManager.playSfx(locked);
          return;
+      }
       audioManager.playSfx(suspenseSfx);
       setAccusing(true);
       setIsOpen(false);
@@ -125,11 +131,13 @@ export default function DetectiveNotes({
                   <HoverButton
                      id="accusation-button"
                      onClick={handleAccusation}
-                     disabled={
-                        Object.values(acccusation).includes(null) ||
-                        stage !== 'Endgame' ||
-                        accusing
-                     }
+                     onMouseEnter={() => {
+                        if (accusationButtonDisabled) {
+                           return;
+                        }
+                        AudioManager.getInstance().playSfx(appear);
+                     }}
+                     aria-disabled={accusationButtonDisabled}
                      tooltip={
                         playerID && players && players[playerID]?.isEliminated
                            ? null

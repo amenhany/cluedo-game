@@ -3,7 +3,7 @@ import { t } from '@/lib/lang';
 import type { Card, Suggestion, PlayerState, NullableSuggestion } from '@/types/game';
 import type { PlayerID } from 'boardgame.io';
 import { useState } from 'react';
-import clickSfx from '@/assets/audio/sfx/card_select.m4a';
+import clickSfx from '@/assets/audio/sfx/card_select.wav';
 
 export default function NoteTable({
    arr,

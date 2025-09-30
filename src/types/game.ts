@@ -71,6 +71,7 @@ export type NullableSuggestion = {
 };
 export type PlayerState = {
     id: PlayerID;
+    name: string;
     character: Character;
     position: NodeID;
     hand: Card[];
@@ -84,6 +85,7 @@ export type PlayerState = {
 export type GameState = {
     players: Record<PlayerID, PlayerState>;
     weapons: Record<Weapon, Room>;
+    rules: Rules;
     envelope: Card[];
     deck: Card[];
     pendingSuggestion?: NullableSuggestion & {
@@ -102,3 +104,13 @@ export type Stage =
     | 'Suggest'
     | 'ResolveSuggestion'
     | 'Endgame';
+
+export type Rules = {
+    returnPlayersAfterSuggestion: boolean;
+};
+
+export type SetupData = {
+    started: boolean;
+    rules: Rules;
+    players: { id: number; name: string; data: { character: Character } }[];
+};

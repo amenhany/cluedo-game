@@ -1,0 +1,19 @@
+@use './board.scss';
+
+.lobby {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    #board {
+        filter: blur(6px);
+    }
+}
+
+.lobby-ui {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}

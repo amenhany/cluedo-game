@@ -1,17 +1,11 @@
-import type { EventPayloadMapping, Settings } from '@/types/electron.d.ts';
+import type { EventPayloadMapping } from '@/types/electron.d.ts';
 const { contextBridge, ipcRenderer } = require('electron');
 
-contextBridge.exposeInMainWorld('api', {
-    settings: {
-        get: () => ipcRendererInvoke('settings:get'),
-        save: (settings) => ipcRendererSend('settings:save', settings),
-    },
-} satisfies Window['api']);
-
 export function ipcRendererInvoke<Key extends keyof EventPayloadMapping>(
-    key: Key
-): Promise<EventPayloadMapping[Key]> {
-    return ipcRenderer.invoke(key);
+    key: Key,
+    payload?: EventPayloadMapping[Key]
+): Promise<any> {
+    return ipcRenderer.invoke(key, payload);
 }
 
 export function ipcRendererOn<Key extends keyof EventPayloadMapping>(
@@ -30,3 +24,13 @@ export function ipcRendererSend<Key extends keyof EventPayloadMapping>(
 ) {
     ipcRenderer.send(key, payload);
 }
+
+contextBridge.exposeInMainWorld('api', {
+    settings: {
+        get: () => ipcRendererInvoke('settings:get'),
+        save: (settings) => ipcRendererSend('settings:save', settings),
+    },
+    game: {
+        startServer: (options) => ipcRendererInvoke('game:start-server', options),
+    },
+} satisfies Window['api']);

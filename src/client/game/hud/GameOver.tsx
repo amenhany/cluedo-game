@@ -3,6 +3,8 @@ import bravo1 from '@/assets/audio/sfx/bravo1.wav';
 import bravo2 from '@/assets/audio/sfx/bravo2.wav';
 import bravo3 from '@/assets/audio/sfx/bravo3.wav';
 import bravo4 from '@/assets/audio/sfx/bravo4.wav';
+import death1 from '@/assets/audio/sfx/death1.wav';
+import death2 from '@/assets/audio/sfx/death2.wav';
 import suspenseSfx from '@/assets/audio/sfx/suspense.m4a';
 import victoryMusic from '@/assets/audio/music/game/victory.wav';
 import { useEffect, useRef } from 'react';
@@ -14,7 +16,7 @@ import bravoImage from '@/assets/textures/bravo.png';
 import diedImage from '@/assets/textures/died.png';
 import { motion } from 'motion/react';
 
-const DELAY_MS = 1700;
+const DELAY_MS = 1600;
 
 export default function GameOver({
    winner,
@@ -31,6 +33,11 @@ export default function GameOver({
    const prevPlayers = useRef<Record<PlayerID, PlayerState>>(undefined);
    const audioManager = AudioManager.getInstance();
    const { setTooltip } = useTooltip();
+
+   useEffect(() => {
+      if (isEliminated)
+         setTimeout(() => audioManager.playRandomSfx(death1, death2), DELAY_MS + 100);
+   }, [isEliminated]);
 
    useEffect(() => {
       if (winner === undefined) return;

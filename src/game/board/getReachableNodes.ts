@@ -1,4 +1,4 @@
-import type { Graph, NodeID } from '../../types/game';
+import type { Graph, NodeID } from '../../types/game.js';
 
 /**
  * Returns all nodes reachable from a starting node within `steps` moves.

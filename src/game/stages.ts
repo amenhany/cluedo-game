@@ -10,7 +10,7 @@ import {
     useSecretPassage,
     startSuggestion,
     makeAccusation,
-} from './moves';
+} from './moves.js';
 
 export const TurnAction: StageConfig = {
     moves: {

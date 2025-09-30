@@ -1,4 +1,6 @@
-import React, { useState, useRef } from 'react';
+import { AudioManager } from '@/lib/AudioManager';
+import React, { useState, useRef, useEffect } from 'react';
+import sliderSfx from '@/assets/audio/sfx/slider_move.wav';
 
 type SliderProps = {
    min?: number;
@@ -16,6 +18,7 @@ export default function SegmentedSlider({
    const [internalValue, setInternalValue] = useState(min);
    const [isDragging, setIsDragging] = useState(false);
    const containerRef = useRef<HTMLDivElement>(null);
+   const [loaded, setLoaded] = useState(false);
 
    const value = controlledValue ?? internalValue;
 
@@ -38,7 +41,12 @@ export default function SegmentedSlider({
       setIsDragging(true);
    };
 
-   React.useEffect(() => {
+   useEffect(() => {
+      if (loaded) AudioManager.getInstance().playSfx(sliderSfx);
+      else setLoaded(true);
+   }, [controlledValue]);
+
+   useEffect(() => {
       if (!isDragging) return;
 
       const handleMove = (e: MouseEvent) => {
