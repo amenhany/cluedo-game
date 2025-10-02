@@ -9,6 +9,7 @@ export type TooltipConfig = {
     onSecondaryClick?: () => void;
     waitingDots?: boolean;
     card?: Card;
+    noQueue?: boolean;
 };
 
 export type PopupConfig = {

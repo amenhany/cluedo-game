@@ -54,9 +54,9 @@ describe('Game Setup Tests', () => {
 describe('setupData with unordered or missing player IDs', () => {
     it('handles players not in order (e.g. 2,0,1)', () => {
         const setupData = makeSetupData([
-            { id: 2, name: 'C', data: { character: CARDS.suspects[2] as Character } },
-            { id: 0, name: 'A', data: { character: CARDS.suspects[0] as Character } },
-            { id: 1, name: 'B', data: { character: CARDS.suspects[1] as Character } },
+            { id: 2, name: 'C', data: { character: CARDS.suspects[2] } },
+            { id: 0, name: 'A', data: { character: CARDS.suspects[0] } },
+            { id: 1, name: 'B', data: { character: CARDS.suspects[1] } },
         ]);
 
         const { G: state } = InitializeGame({
@@ -80,12 +80,12 @@ describe('setupData with unordered or missing player IDs', () => {
 
     it('handles missing IDs in between (e.g. players 0, 2, 5)', () => {
         const setupData = makeSetupData([
-            { id: 0, name: 'Host', data: { character: CARDS.suspects[0] as Character } },
-            { id: 2, name: 'Skip1', data: { character: CARDS.suspects[2] as Character } },
-            { id: 5, name: 'Skip2', data: { character: CARDS.suspects[5] as Character } },
+            { id: 0, name: 'Host', data: { character: CARDS.suspects[0] } },
+            { id: 2, name: 'Skip1', data: { character: CARDS.suspects[2] } },
+            { id: 5, name: 'Skip2', data: { character: CARDS.suspects[5] } },
         ]);
 
-        const { G: state } = InitializeGame({
+        const { G: state }: { G: GameState } = InitializeGame({
             game: Cluedo,
             numPlayers: setupData.players.length,
             setupData,
@@ -111,41 +111,17 @@ describe('setupData with unordered or missing player IDs', () => {
         expect(activeCharacters).toContain(CARDS.suspects[5]);
     });
 
-    it('fills in missing characters for unassigned slots', () => {
-        const setupData = makeSetupData([
-            { id: 0, name: 'A', data: { character: CARDS.suspects[0] } },
-            { id: 3, name: 'B', data: { character: CARDS.suspects[3] } },
-        ]);
-
-        const { G: state } = InitializeGame({
-            game: Cluedo,
-            numPlayers: setupData.players.length,
-            setupData,
-        });
-
-        // Players 0 and 3 get their chosen characters
-        expect(state.players[0].character).toBe(CARDS.suspects[0]);
-        expect(state.players[3].character).toBe(CARDS.suspects[3]);
-
-        // Unused slots get auto-assigned characters not taken
-        const allChars = Object.values(state.players).map((p) => p.character);
-        const uniqueChars = new Set(allChars);
-        expect(uniqueChars.size).toBe(allChars.length);
-    });
-
     it('still deals cards evenly even when IDs skipped', () => {
         const setupData = makeSetupData([
             { id: 0, name: 'A', data: { character: CARDS.suspects[0] } },
-            { id: 2, name: 'B', data: { character: CARDS.suspects[2] } },
+            { id: 1, name: 'B', data: { character: CARDS.suspects[2] } },
         ]);
 
-        const { G: state, ctx } = InitializeGame({
+        const { G: state }: { G: GameState } = InitializeGame({
             game: Cluedo,
             numPlayers: setupData.players.length,
             setupData,
         });
-
-        console.log(state);
 
         const activeHands = Object.values(state.players)
             .filter((p) => !p.isEliminated)

@@ -17,8 +17,16 @@ export default function JoinModal({
       playerName: '',
       ip: '',
    });
+   const [isDisabled, setIsDisabled] = useState(false);
    const invalid = options.playerName.trim() === '' || options.ip.trim() === '';
    const { triggerTransition } = useSceneTransition();
+
+   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+      if (e.key === 'Enter') {
+         e.preventDefault();
+         handleJoin();
+      }
+   }
 
    function handleChange(evt: ChangeEvent<HTMLInputElement>) {
       setOptions((currData) => ({
@@ -28,10 +36,12 @@ export default function JoinModal({
    }
 
    function handleJoin() {
+      if (isDisabled) return;
       if (invalid) {
          AudioManager.getInstance().playSfx(lockedSfx);
          return;
       }
+      setIsDisabled(true);
       triggerTransition(() => onJoin(options), 'iris');
    }
 
@@ -45,6 +55,7 @@ export default function JoinModal({
                   id="playerName"
                   value={options.playerName}
                   onChange={handleChange}
+                  onKeyDown={handleKeyDown}
                   onFocus={() => AudioManager.getInstance().playSfx(selectSfx)}
                />
             </li>
@@ -55,12 +66,13 @@ export default function JoinModal({
                   id="ip"
                   value={options.ip}
                   onChange={handleChange}
+                  onKeyDown={handleKeyDown}
                   onFocus={() => AudioManager.getInstance().playSfx(selectSfx)}
                />
             </li>
          </ul>
 
-         <button onClick={handleJoin} aria-disabled={invalid}>
+         <button onClick={handleJoin} aria-disabled={invalid || isDisabled}>
             Join
          </button>
       </Modal>

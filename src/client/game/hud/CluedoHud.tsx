@@ -64,7 +64,7 @@ export default function CluedoHud(props: HudProps) {
       if (prevSeenCards.current.length !== seenCards.length && seenCards.length) {
          const card = seenCards[seenCards.length - 1];
          const type = getCardType(card);
-         const name = deck.includes(card) ? 'The deck' : prevResolver.current?.character;
+         const name = deck.includes(card) ? 'The deck' : prevResolver.current?.name;
          setPopupConfig((prev) => ({
             ...prev,
             visible: true,
@@ -105,7 +105,7 @@ export default function CluedoHud(props: HudProps) {
                <h1>
                   {players &&
                      (currentPlayer !== playerID
-                        ? `${players[currentPlayer].character}'s Turn`
+                        ? `${players[currentPlayer].name}'s Turn`
                         : 'Your Turn')}
                </h1>
             </div>

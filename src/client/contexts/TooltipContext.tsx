@@ -22,7 +22,7 @@ const TooltipContext = createContext<TooltipContextType>({
 
 export function TooltipProvider({ children }: { children: ReactNode }) {
    const [tooltip, setTooltip] = useState<TooltipConfig | null>(null);
-   const [queue, setQueue] = useState<TooltipConfig[]>([]);
+   const [_, setQueue] = useState<TooltipConfig[]>([]);
    const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
    const setTooltipWithQueue = (config: TooltipConfig | null) => {
@@ -35,10 +35,14 @@ export function TooltipProvider({ children }: { children: ReactNode }) {
 
       if (tooltip) {
          if (!tooltip.duration) {
-            setQueue((prev) => [...prev, tooltip]);
+            if (!tooltip.noQueue) {
+               setQueue((prev) => [...prev, tooltip]);
+            }
             setTooltip(config); // Replace immediately
          } else {
-            setQueue((prev) => [...prev, config]);
+            if (!tooltip.noQueue) {
+               setQueue((prev) => [...prev, config]);
+            }
          }
       } else {
          setTooltip(config);

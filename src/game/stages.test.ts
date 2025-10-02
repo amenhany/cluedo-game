@@ -12,6 +12,7 @@ function makeMockGame(): GameState {
         players: {
             '0': {
                 id: '0',
+                name: 'player0',
                 character: 'scarlett',
                 hand: [],
                 position: 'hall',
@@ -22,6 +23,7 @@ function makeMockGame(): GameState {
             },
             '1': {
                 id: '1',
+                name: 'player1',
                 character: 'mustard',
                 hand: ['rope'],
                 position: 'study',
@@ -41,6 +43,9 @@ function makeMockGame(): GameState {
         },
         envelope: [],
         deck: [],
+        rules: {
+            returnPlayersAfterSuggestion: true,
+        },
     };
 }
 

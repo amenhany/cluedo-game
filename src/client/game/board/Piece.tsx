@@ -15,6 +15,7 @@ import type { PlayerID } from 'boardgame.io';
 
 type BasePieceProps = {
    playerID: PlayerID | null;
+   name: string;
    isDraggable?: boolean;
    decorative?: boolean;
 };
@@ -52,6 +53,7 @@ export default function Piece({
    id,
    type,
    playerID,
+   name,
    isDraggable = false,
    decorative = false,
 }: PieceProps) {
@@ -83,7 +85,9 @@ export default function Piece({
                : () => {}
          }
       >
-         <div className="nametag">{t(`${type}.${id}`)}</div>
+         <div className="nametag">
+            {t(`${type}.${id}`)} {name !== '' && <span>"{name}"</span>}
+         </div>
          <img
             src={TEXTURE_MAPPING[id]}
             alt="Piece"

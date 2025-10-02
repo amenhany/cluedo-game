@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import MainMenu from './ui/MainMenu';
 import { CluedoClient } from './game/CluedoClient';
 import { SceneTransitionProvider } from './contexts/SceneTransitionContext';
-import FilmFilter from './FilmFilter';
-import { AudioManager } from '@/lib/AudioManager';
-import opticalStart from '@/assets/audio/sfx/optical_start.wav';
-import opticalLoop from '@/assets/audio/sfx/optical_loop.wav';
+// import FilmFilter from './FilmFilter';
+// import { AudioManager } from '@/lib/AudioManager';
+// import opticalStart from '@/assets/audio/sfx/optical_start.wav';
+// import opticalLoop from '@/assets/audio/sfx/optical_loop.wav';
 import { SettingsProvider } from './contexts/SettingsContext';
 import { LobbyClient } from 'boardgame.io/client';
 import type { ClientOptions, HostOptions, JoinOptions } from '@/types/client';
@@ -57,9 +57,13 @@ export default function App() {
       const lobbyClient = new LobbyClient({ server: serverURL });
 
       const { matches } = await lobbyClient.listMatches('cluedo');
-      if (matches.length === 0) throw new Error('No match running on host');
+      const lobby = matches.find((match) => match.setupData?.started === false);
+      if (!lobby)
+         throw new Error(
+            matches.length ? 'Game has already started!' : 'No match running on host.'
+         );
 
-      const matchID = matches[0].matchID;
+      const matchID = lobby.matchID;
 
       const { playerCredentials, playerID } = await lobbyClient.joinMatch(
          'cluedo',
@@ -76,9 +80,16 @@ export default function App() {
       setGameState('lobby');
    }
 
-   function startGame(newMatchID: string) {
+   function startGame(newMatchID: string, newCredentials: string) {
       setGameState('game');
-      setClientOptions((prev) => ({ ...prev, matchID: newMatchID } as ClientOptions));
+      setClientOptions(
+         (prev) =>
+            ({
+               ...prev,
+               matchID: newMatchID,
+               credentials: newCredentials,
+            } as ClientOptions)
+      );
    }
 
    return (

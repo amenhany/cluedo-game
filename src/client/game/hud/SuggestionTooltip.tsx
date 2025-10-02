@@ -25,16 +25,16 @@ export default function SuggestionTooltip({
    const { setTooltip } = useTooltip();
    const { canSuggest, completeSuggestion, resolver, suggestion, startSuggestion } =
       useSuggestion();
-   const suggestionRef = useRef(prevSuggestion);
+   const suggestionIdRef = useRef(prevSuggestion?.id);
 
    function handleSuggest() {
       moves.makeSuggestion();
    }
 
    useEffect(() => {
-      if (players && prevSuggestion && prevSuggestion !== suggestionRef.current) {
+      if (players && prevSuggestion && prevSuggestion.id !== suggestionIdRef.current) {
          const timeout = setTimeout(() => {
-            suggestionRef.current = prevSuggestion;
+            suggestionIdRef.current = prevSuggestion.id;
          }, 4000);
          if (prevSuggestion.resolver === null)
             setTooltip({ label: `No card was shown`, duration: 4000 });
@@ -43,8 +43,8 @@ export default function SuggestionTooltip({
             playerID !== prevSuggestion.suggester
          )
             setTooltip({
-               label: `${players[prevSuggestion.resolver].character} showed a card to ${
-                  players[prevSuggestion.suggester].character
+               label: `${players[prevSuggestion.resolver].name} showed a card to ${
+                  players[prevSuggestion.suggester].name
                }`,
                duration: 4000,
             });
@@ -61,7 +61,7 @@ export default function SuggestionTooltip({
             label: 'Make a Suggestion',
             onClick: () => startSuggestion(roomNode.id),
             secondaryLabel: stage === 'RoomAction' ? 'End Turn' : undefined,
-            onSecondaryClick: moves.endTurn,
+            onSecondaryClick: () => moves.endTurn(),
          });
          return;
       }
@@ -85,16 +85,18 @@ export default function SuggestionTooltip({
 
       if (suggestion.suggester !== playerID && !resolver) {
          setTooltip({
-            label: `Waiting for ${players[suggestion.suggester].character}`,
+            label: `Waiting for ${players[suggestion.suggester].name}`,
             waitingDots: true,
+            noQueue: true,
          });
          return;
       }
 
       if (resolver && resolver.id !== playerID) {
          setTooltip({
-            label: `Waiting for ${resolver.character}`,
+            label: `Waiting for ${resolver.name}`,
             waitingDots: true,
+            noQueue: true,
          });
          return;
       }
@@ -114,11 +116,11 @@ export default function SuggestionTooltip({
             setTooltip({
                label: 'No card to show?',
                secondaryLabel: 'End Turn',
-               onSecondaryClick: moves.noCard,
+               onSecondaryClick: () => moves.noCard(),
             });
          } else {
             setTooltip({
-               label: `Show a card to ${players[suggestion.suggester].character}`,
+               label: `Show a card to ${players[suggestion.suggester].name}`,
             });
          }
       }

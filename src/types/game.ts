@@ -93,6 +93,7 @@ export type GameState = {
         suspectOrigin: NodeID | null;
     };
     prevSuggestion?: {
+        id: number;
         suggester: PlayerID;
         resolver: PlayerID | null;
     };

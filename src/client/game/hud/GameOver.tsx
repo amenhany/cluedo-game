@@ -60,7 +60,7 @@ export default function GameOver({
          ) {
             const timeout = setTimeout(() => {
                setTooltip({
-                  label: `${player.character} is eliminated!`,
+                  label: `${player.name} is eliminated!`,
                   duration: 5000,
                });
                prevPlayers.current = players;
@@ -78,7 +78,7 @@ export default function GameOver({
       } else if (winner !== null) {
          audioManager.playSfx(suspenseSfx);
          setTooltip({
-            label: `${winner.character} wins the game!`,
+            label: `${winner.name} wins the game!`,
          });
       } else {
          setTooltip({

@@ -18,8 +18,16 @@ export default function HostModal({
       playerName: '',
       port: PORT,
    });
+   const [isDisabled, setIsDisabled] = useState(false);
    const invalid = options.playerName.trim() === '';
    const { triggerTransition } = useSceneTransition();
+
+   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+      if (e.key === 'Enter') {
+         e.preventDefault();
+         handleHost();
+      }
+   }
 
    function handleChange(evt: ChangeEvent<HTMLInputElement>) {
       setOptions((currData) => ({
@@ -29,10 +37,12 @@ export default function HostModal({
    }
 
    function handleHost() {
+      if (isDisabled) return;
       if (invalid) {
          AudioManager.getInstance().playSfx(lockedSfx);
          return;
       }
+      setIsDisabled(true);
       triggerTransition(() => onHost(options), 'iris');
    }
 
@@ -46,6 +56,7 @@ export default function HostModal({
                   id="playerName"
                   value={options.playerName}
                   onChange={handleChange}
+                  onKeyDown={handleKeyDown}
                   onFocus={() => AudioManager.getInstance().playSfx(selectSfx)}
                />
             </li>
@@ -55,13 +66,15 @@ export default function HostModal({
                   name="port"
                   id="port"
                   value={options.port}
+                  type="number"
                   onChange={handleChange}
+                  onKeyDown={handleKeyDown}
                   onFocus={() => AudioManager.getInstance().playSfx(selectSfx)}
                />
             </li>
          </ul>
 
-         <button onClick={handleHost} aria-disabled={invalid}>
+         <button onClick={handleHost} aria-disabled={invalid || isDisabled}>
             Host
          </button>
       </Modal>

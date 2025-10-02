@@ -211,12 +211,14 @@ export default function CluedoGame({ G, ctx, moves, playerID }: BoardProps<GameS
                            id={dragging.id as Character}
                            type="suspect"
                            playerID={playerID}
+                           name=""
                            decorative={true}
                         />
                      ) : (
                         <Piece
                            id={dragging.id as Weapon}
                            playerID={playerID}
+                           name=""
                            type="weapon"
                            decorative={true}
                         />

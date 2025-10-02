@@ -89,6 +89,7 @@ export default function Node({
                key={player.id}
                id={player.character}
                playerID={playerID}
+               name={player.name}
                type="suspect"
                isDraggable={
                   (player.id === playerID && myTurn) || suggestion?.suggester === playerID
@@ -99,6 +100,7 @@ export default function Node({
             <Piece
                id={weapon}
                type="weapon"
+               name=""
                playerID={playerID}
                isDraggable={suggestion?.suggester === playerID}
             />

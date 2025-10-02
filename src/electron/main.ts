@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, Menu } from 'electron';
 
 import path from 'path';
 import { ipcMainHandle, ipcMainOn, isDev } from './util.js';
@@ -6,6 +6,7 @@ import { getPreloadPath } from './pathResolver.js';
 import { getAllSettings, getSetting, saveSettings } from './settings.js';
 import { Server, Origins } from 'boardgame.io/dist/cjs/server.js';
 import { Cluedo } from '../game/index.js';
+import { createMenu } from './menu.js';
 
 let serverInstance: ReturnType<typeof Server> | undefined;
 
@@ -46,6 +47,12 @@ app.on('ready', () => {
 
         return { ok: true, port };
     });
+
+    if (process.platform === 'darwin') {
+        createMenu();
+    } else {
+        Menu.setApplicationMenu(null);
+    }
 
     if (isDev()) {
         mainWindow.loadURL('http://localhost:5123');

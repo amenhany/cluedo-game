@@ -13,7 +13,7 @@ import HoverButton from '../hud/HoverButton';
 
 type LobbyProps = ClientOptions & {
    isHost: boolean;
-   onStart: (newMatchID: string) => void;
+   onStart: (newMatchID: string, newCredentials: string) => void;
 };
 
 export default function CluedoLobby({
@@ -30,32 +30,23 @@ export default function CluedoLobby({
 
    const [playerName, setPlayerName] = useState('');
    const [character, setCharacter] = useState<Character | null>(null);
-   const [rules, setRules] = useState<Rules>({
+   const [rules] = useState<Rules>({
       returnPlayersAfterSuggestion: false,
    });
    const [isTyping, setIsTyping] = useState(false);
+   const [countdown] = useState<number | null>(null);
+   const [gameId, setGameId] = useState<string | null>(null);
 
    useEffect(() => {
       const interval = setInterval(async () => {
          const { matches } = await lobbyClient.listMatches('cluedo');
          const game = matches.find((match) => match.setupData?.started === true);
-         if (game && !isHost) {
-            await lobbyClient.leaveMatch('cluedo', matchID, {
-               playerID,
-               credentials,
-            });
-            await lobbyClient.joinMatch('cluedo', game.matchID, {
-               playerID,
-               playerName,
-            });
-            onStart(game.matchID);
-            return;
-         }
+         if (game && countdown === null && !isHost) setGameId(game.matchID);
          const m = await lobbyClient.getMatch('cluedo', matchID);
          setMatch(m);
       }, 1000);
       return () => clearInterval(interval);
-   }, [matchID]);
+   }, [matchID, credentials]);
 
    const players = match?.players ?? [];
    const player = players.find((p) => p.id.toString() === playerID);
@@ -110,9 +101,9 @@ export default function CluedoLobby({
    }
 
    async function startGame() {
-      if (invalidGame) return audioManager.playSfx(lockedSfx);
+      if (invalidGame || !isHost) return audioManager.playSfx(lockedSfx);
 
-      const { matchID: newMatchID } = await lobbyClient.createMatch('cluedo', {
+      const { matchID: gameID } = await lobbyClient.createMatch('cluedo', {
          numPlayers: readyPlayers.length,
          setupData: {
             started: true,
@@ -121,15 +112,38 @@ export default function CluedoLobby({
          } satisfies SetupData,
       });
 
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
+      await joinGame(gameID);
+   }
+
+   // function startCountdown(gameID: string) {
+   //    if (countdown === null) {
+   //       setCountdown(3);
+   //       audioManager.playSfx(selectSfx);
+   //       const timer = setInterval(() => {
+   //          setCountdown((prev) => {
+   //             if (prev === null) return null;
+   //             audioManager.playSfx(selectSfx);
+   //             if (prev > 1) return prev - 1;
+   //             clearInterval(timer);
+   //             joinGame(gameID);
+   //             return 0;
+   //          });
+   //       }, 1000);
+   //    }
+   // }
+
+   async function joinGame(gameID: string) {
       await lobbyClient.leaveMatch('cluedo', matchID, {
          playerID,
          credentials,
       });
-      await lobbyClient.joinMatch('cluedo', newMatchID, {
+      const { playerCredentials } = await lobbyClient.joinMatch('cluedo', gameID, {
          playerID,
          playerName,
       });
-      onStart(newMatchID);
+      onStart(gameID, playerCredentials);
    }
 
    if (!match) {
@@ -186,15 +200,35 @@ export default function CluedoLobby({
                   ))}
                </select>
             </div>
-            {isHost && (
+            {isHost ? (
                <HoverButton
-                  tooltip={invalidGame ? 'You need at least 3 players!' : null}
-                  aria-disabled={invalidGame}
+                  tooltip={
+                     invalidGame
+                        ? 'You need at least 3 players!'
+                        : !isHost
+                        ? 'Only the host can start the game!'
+                        : null
+                  }
+                  aria-disabled={invalidGame || !isHost}
                   onClick={startGame}
                >
                   Start Game
                </HoverButton>
+            ) : (
+               gameId && (
+                  <HoverButton
+                     tooltip={gameId ? null : 'Game has not started!'}
+                     aria-disabled={!gameId}
+                     onClick={() => {
+                        if (!gameId) audioManager.playSfx(lockedSfx);
+                        else joinGame(gameId);
+                     }}
+                  >
+                     Join Game
+                  </HoverButton>
+               )
             )}
+            {countdown && <span>{countdown}</span>}
          </div>
       </div>
    );

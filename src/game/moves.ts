@@ -192,7 +192,11 @@ export const showCard: MoveFn<GameState> = ({ G, playerID, events }, card: Card)
     }
 
     suggesterSeen.push(card);
-    G.prevSuggestion = { suggester: suggestion.suggester, resolver: playerID };
+    G.prevSuggestion = {
+        suggester: suggestion.suggester,
+        resolver: playerID,
+        id: G.prevSuggestion ? G.prevSuggestion.id + 1 : 0,
+    };
     G.pendingSuggestion = undefined;
     events.endTurn();
 };
@@ -213,7 +217,11 @@ export const noCard: MoveFn<GameState> = ({ G, playerID, ctx, events }) => {
 
     const loop = nextPlayer(playerID, ctx, events, 'ResolveSuggestion', G.players);
     if (loop) {
-        G.prevSuggestion = { suggester: suggestion.suggester, resolver: null };
+        G.prevSuggestion = {
+            suggester: suggestion.suggester,
+            resolver: null,
+            id: G.prevSuggestion ? G.prevSuggestion.id + 1 : 0,
+        };
         const unseenDeck = G.deck.filter((card) => !suggesterSeen.includes(card));
         if (unseenDeck.length) {
             suggesterSeen.push(unseenDeck[Math.floor(Math.random() * unseenDeck.length)]);

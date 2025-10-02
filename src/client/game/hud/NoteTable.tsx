@@ -57,7 +57,7 @@ export default function NoteTable({
                <th scope="col">{t(`hud.notes.${type}`)}</th>
                {Object.values(players).map((player) => {
                   if (!player.hand.length) return;
-                  const char = player.character[0].toUpperCase();
+                  const char = player.name[0].toUpperCase();
                   return <th key={player.id}>{displayNames && char}</th>;
                })}
                <th className="accusation-column"></th>

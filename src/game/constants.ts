@@ -5,7 +5,7 @@ export const CARDS: {
     weapons: Weapon[];
     rooms: Room[];
 } = {
-    suspects: ['scarlett', 'mustard', 'plum', 'peacock', 'green', 'white'],
+    suspects: ['scarlett', 'mustard', 'white', 'green', 'peacock', 'plum'],
     weapons: ['candlestick', 'dagger', 'leadPipe', 'revolver', 'rope', 'spanner'],
     rooms: [
         'kitchen',

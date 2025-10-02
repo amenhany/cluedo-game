@@ -1,5 +1,11 @@
 import { useEffect, useRef } from 'react';
 import { useSettings } from './contexts/SettingsContext';
+import scratch1 from '@/assets/textures/scratches/scratch1.png';
+import scratch2 from '@/assets/textures/scratches/scratch2.png';
+import scratch3 from '@/assets/textures/scratches/scratch3.png';
+import scratch4 from '@/assets/textures/scratches/scratch4.png';
+import scratch5 from '@/assets/textures/scratches/scratch5.png';
+import scratch6 from '@/assets/textures/scratches/scratch6.png';
 
 interface Scratch {
    x: number;
@@ -26,14 +32,7 @@ export default function VintageFilmFilter() {
       let height = (canvas.height = window.innerHeight);
 
       // Load scratch textures
-      const texturePaths = [
-         '/images/scratch1.png',
-         '/images/scratch2.png',
-         '/images/scratch3.png',
-         '/images/scratch4.png',
-         '/images/scratch5.png',
-         '/images/scratch6.png',
-      ];
+      const texturePaths = [scratch1, scratch2, scratch3, scratch4, scratch5, scratch6];
       texturesRef.current = texturePaths.map((src) => {
          const img = new Image();
          img.src = src;

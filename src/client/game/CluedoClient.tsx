@@ -8,7 +8,7 @@ export const CluedoClient = (options: ClientOptions) => {
    const CluedoClient = Client({
       game: Cluedo,
       board: CluedoGame,
-      debug: false,
+      debug: true,
       multiplayer: SocketIO({ server: options.server }),
    });
 

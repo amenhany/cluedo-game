@@ -1,12 +1,5 @@
 import type { Ctx, DefaultPluginAPIs } from 'boardgame.io';
-import type {
-    Card,
-    Character,
-    GameState,
-    Room,
-    SetupData,
-    Weapon,
-} from '../types/game.js';
+import type { Card, GameState, Room, SetupData, Weapon } from '../types/game.js';
 import { CARDS, SUSPECT_POSITIONS } from './constants.js';
 
 export const setup = (
@@ -43,12 +36,14 @@ export const setup = (
 
     for (let i = 0; i < 6; i++) {
         const player = realPlayers?.find((p) => p.id === i);
-        const character =
-            player?.data.character ||
-            (CARDS.suspects.find((c) => !takenCharacters.includes(c)) as Character);
+        let character = player?.data.character;
+        if (!character) {
+            character = CARDS.suspects.find((c) => !takenCharacters.includes(c))!;
+            takenCharacters.push(character);
+        }
         players[i] = {
             id: i.toString(),
-            name: player?.name || character,
+            name: player?.name || '',
             character,
             position: SUSPECT_POSITIONS[character],
             hand: [],
@@ -60,11 +55,21 @@ export const setup = (
             players[i].isEliminated = true;
     }
 
-    const rem = deck.length % ctx.numPlayers;
+    const playerCount = realPlayers?.length ?? ctx.numPlayers;
+    const rem = deck.length % playerCount;
     const handArr = realPlayers?.map((p) => ({ ...p, hand: [] as Card[] }));
-    for (let i = 0; i < deck.length - rem; i++) {
-        if (handArr) handArr[i % ctx.numPlayers].hand.push(deck[i]);
+
+    if (handArr) {
+        for (let i = 0; i < deck.length - rem; i++) {
+            handArr[i % playerCount].hand.push(deck[i]);
+        }
+
+        handArr.forEach((p) => {
+            const id = p.id.toString();
+            if (players[id]) players[id].hand = p.hand;
+        });
     }
+
     if (rem) deck = deck.slice(-1 * rem);
     else deck = [];
 

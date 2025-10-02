@@ -32,6 +32,9 @@ it('should end the game when all players are eliminated', () => {
             weapons: {},
             envelope: [],
             deck: [],
+            rules: {
+                returnPlayersAfterSuggestion: true,
+            },
         }),
     };
 
