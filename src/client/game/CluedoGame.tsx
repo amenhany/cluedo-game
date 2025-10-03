@@ -41,10 +41,10 @@ import SpotlightOverlay from './SpotlightOverlay';
 
 export default function CluedoGame({ G, ctx, moves, playerID }: BoardProps<GameState>) {
    const { settings } = useSettings();
-   const [players, setPlayers] = useState<Record<PlayerID, PlayerState>>();
+   const [players, setPlayers] = useState<Record<PlayerID, PlayerState>>(G.players);
    let playerNode: TNode | null = null,
       roomNode: RoomNode | null = null;
-   if (players && playerID) playerNode = cluedoGraph[players[playerID].position];
+   if (playerID) playerNode = cluedoGraph[players[playerID].position];
    if (playerNode?.type === 'room') roomNode = playerNode;
    const [availableMoves, setAvailableMoves] = useState<TNode[]>([]);
    const [dragging, setDragging] = useState<{
@@ -63,7 +63,7 @@ export default function CluedoGame({ G, ctx, moves, playerID }: BoardProps<GameS
       false;
    let resolver: PlayerState | null = null;
 
-   if (ctx.activePlayers && players) {
+   if (ctx.activePlayers) {
       const resolverEntry = Object.entries(ctx.activePlayers).find(
          ([, stage]) => stage === 'ResolveSuggestion'
       );
@@ -95,16 +95,14 @@ export default function CluedoGame({ G, ctx, moves, playerID }: BoardProps<GameS
    };
 
    function handleMove(newPos: NodeID) {
-      setPlayers((prev) => {
-         if (!prev || playerID === null) return;
-         return {
-            ...prev,
-            [playerID]: {
-               ...prev[playerID],
-               position: newPos,
-            },
-         };
-      });
+      if (!playerID) return;
+      setPlayers((prev) => ({
+         ...prev,
+         [playerID]: {
+            ...prev[playerID],
+            position: newPos,
+         },
+      }));
       if (cluedoGraph[newPos].type === 'room')
          AudioManager.getInstance().playSfx(doorSound);
       else AudioManager.getInstance().playRandomSfx(step1, step2, step3, step4, step5);
@@ -157,7 +155,11 @@ export default function CluedoGame({ G, ctx, moves, playerID }: BoardProps<GameS
                   })
                }
             >
-               <div className={`alignment board-${playerID || '0'}`}>
+               <div
+                  className={`alignment board-${
+                     playerID ? G.players[playerID].character : 'scarlett'
+                  }`}
+               >
                   <CluedoBoard>
                      {Object.values(cluedoGraph).map((node) => {
                         const residents = Object.values(G.players).filter((player) => {

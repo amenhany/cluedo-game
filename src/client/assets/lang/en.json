@@ -23,8 +23,47 @@
     "room.library": "Library",
     "room.billiardRoom": "Billiard Room",
 
+    "hud.secret_passage": "Go to {room}",
+
     "hud.notes.suspect": "Suspects",
     "hud.notes.weapon": "Weapons",
     "hud.notes.room": "Rooms",
-    "hud.notes.accusation": "Make Accusation"
+    "hud.notes.accusation": "Make Accusation",
+    "hud.notes.tooltip.clue": "Go to CLUE!",
+    "hud.notes.tooltip.suspect": "Select a Suspect!",
+    "hud.notes.tooltip.weapon": "Select a Weapon!",
+    "hud.notes.tooltip.room": "Select a Room!",
+
+    "hud.turn.you": "Your Turn",
+    "hud.turn.other": "{player}'s Turn",
+
+    "hud.tooltip.no_resolution": "No card was shown",
+    "hud.tooltip.shown_card": "{resolver} showed a card to {suggester}",
+    "hud.tooltip.can_suggest": "Make a Suggestion",
+    "hud.tooltip.suggest": "Suggest",
+    "hud.tooltip.end_turn": "End Turn",
+    "hud.tooltip.suspect": "Please select a Suspect",
+    "hud.tooltip.weapon": "Please select a Weapon",
+    "hud.tooltip.wait": "Waiting for {player}",
+    "hud.tooltip.no_card": "No card to show?",
+    "hud.tooltip.show_card": "Show a card to {suggester}",
+
+    "hud.popup.deck": "The deck has {card}!",
+    "hud.popup.has": "{player} has {card}!",
+
+    "menu.main.title": "CLUEDO",
+    "menu.main.host": "Host Game",
+    "menu.main.join": "Join Game",
+
+    "credits.music.author1": "Fairuz",
+    "credits.music.author2": "Farid al-Atrash",
+    "credits.music.author3": "Frankie Valli",
+    "credits.music.author4": "Najaat Al Saghira",
+
+    "credits.music.track1": "Indi Thika Feek",
+    "credits.music.track2": "Khalleek Be El Bait",
+    "credits.music.track3": "Albi Ou Meftahou",
+    "credits.music.track4": "Can't Take My Eyes off You",
+    "credits.music.track5": "Bahlam Maak",
+    "credits.music.track6": "Wahdon"
 }

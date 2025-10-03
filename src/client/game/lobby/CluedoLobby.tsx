@@ -1,6 +1,7 @@
 import type { ClientOptions } from '@/types/client';
+import { motion } from 'motion/react';
 import CluedoBoard from '../board/CluedoBoard';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { LobbyClient } from 'boardgame.io/client';
 import '@/assets/styles/lobby.scss';
 import type { LobbyAPI } from 'boardgame.io';
@@ -9,7 +10,12 @@ import type { Character, Rules, SetupData } from '@/types/game';
 import { AudioManager } from '@/lib/AudioManager';
 import lockedSfx from '@/assets/audio/sfx/card_locked.wav';
 import selectSfx from '@/assets/audio/sfx/card_select.wav';
+import joinSfx from '@/assets/audio/sfx/join.wav';
+import lobbyMusic from '@/assets/audio/music/game/lobby.wav';
 import HoverButton from '../hud/HoverButton';
+import { cluedoGraph } from '@/game/board/boardGraph';
+import Node from '../board/Node';
+import { t } from '@/lib/lang';
 
 type LobbyProps = ClientOptions & {
    isHost: boolean;
@@ -34,7 +40,7 @@ export default function CluedoLobby({
       returnPlayersAfterSuggestion: false,
    });
    const [isTyping, setIsTyping] = useState(false);
-   const [countdown] = useState<number | null>(null);
+   const [countdown, setCountdown] = useState<number | null>(null);
    const [gameId, setGameId] = useState<string | null>(null);
 
    useEffect(() => {
@@ -54,7 +60,21 @@ export default function CluedoLobby({
       p.data?.character ? (p.data.character as Character) : null
    );
    const readyPlayers = players.filter((player) => player.data?.character !== undefined);
-   const invalidGame = readyPlayers.length < 1 || readyPlayers.length > 6;
+   const invalidGame =
+      readyPlayers.length < (import.meta.env.DEV ? 1 : 3) || readyPlayers.length > 6;
+   const readyPlayerLength = useRef(readyPlayers.length);
+
+   useEffect(() => {
+      audioManager.playMusic(lobbyMusic, true);
+   }, []);
+
+   useEffect(() => {
+      console.log(readyPlayerLength.current);
+      if (readyPlayerLength.current > readyPlayers.length) {
+         audioManager.playSfx(joinSfx);
+         readyPlayerLength.current = readyPlayers.length;
+      }
+   }, [readyPlayers]);
 
    useEffect(() => {
       if (!match || !player) return;
@@ -112,27 +132,25 @@ export default function CluedoLobby({
          } satisfies SetupData,
       });
 
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-
-      await joinGame(gameID);
+      startCountdown(gameID);
    }
 
-   // function startCountdown(gameID: string) {
-   //    if (countdown === null) {
-   //       setCountdown(3);
-   //       audioManager.playSfx(selectSfx);
-   //       const timer = setInterval(() => {
-   //          setCountdown((prev) => {
-   //             if (prev === null) return null;
-   //             audioManager.playSfx(selectSfx);
-   //             if (prev > 1) return prev - 1;
-   //             clearInterval(timer);
-   //             joinGame(gameID);
-   //             return 0;
-   //          });
-   //       }, 1000);
-   //    }
-   // }
+   function startCountdown(gameID: string) {
+      if (countdown === null) {
+         setCountdown(3);
+         audioManager.playSfx(selectSfx);
+         const timer = setInterval(() => {
+            setCountdown((prev) => {
+               if (prev === null) return null;
+               audioManager.playSfx(selectSfx);
+               if (prev > 1) return prev - 1;
+               clearInterval(timer);
+               joinGame(gameID);
+               return 0;
+            });
+         }, 1000);
+      }
+   }
 
    async function joinGame(gameID: string) {
       await lobbyClient.leaveMatch('cluedo', matchID, {
@@ -148,7 +166,7 @@ export default function CluedoLobby({
 
    if (!match) {
       return (
-         <div className="lobby alignment">
+         <div className={`lobby alignment board-${character}`}>
             <CluedoBoard>
                <></>
             </CluedoBoard>
@@ -158,11 +176,26 @@ export default function CluedoLobby({
    }
 
    return (
-      <div className="lobby alignment">
-         <CluedoBoard>
-            <></>
-         </CluedoBoard>
-         <div className="lobby-ui">
+      <div className="lobby">
+         <div className={`alignment board-${character}`}>
+            <CluedoBoard>
+               {Object.values(cluedoGraph).map((node) => (
+                  <Node
+                     key={node.id}
+                     node={node}
+                     players={[]}
+                     playerID={playerID}
+                     weapon={null}
+                     myTurn={false}
+                  />
+               ))}
+            </CluedoBoard>
+         </div>
+         <motion.div
+            className="lobby-ui"
+            animate={{ opacity: countdown === null ? 1 : 0 }}
+            transition={{ duration: 1, ease: 'easeIn', delay: 2 }}
+         >
             <div className="player-form">
                <label htmlFor="name">Name</label>
                <input
@@ -195,7 +228,7 @@ export default function CluedoLobby({
                         value={suspect}
                         disabled={takenCharacters.includes(suspect)}
                      >
-                        {suspect}
+                        {t(`suspect.${suspect}`)}
                      </option>
                   ))}
                </select>
@@ -229,7 +262,7 @@ export default function CluedoLobby({
                )
             )}
             {countdown && <span>{countdown}</span>}
-         </div>
+         </motion.div>
       </div>
    );
 }

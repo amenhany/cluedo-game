@@ -34,7 +34,11 @@ export default function SecretPassage({
             active ? () => AudioManager.getInstance().playSfx(appear) : () => {}
          }
       >
-         {active && <div className="nametag">Go to {t(`room.${destination}`)}</div>}
+         {active && (
+            <div className="nametag">
+               {t('hud.secret_passage', { room: t(`room.${destination}`) })}
+            </div>
+         )}
       </button>
    );
 }

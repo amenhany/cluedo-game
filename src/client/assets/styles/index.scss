@@ -113,18 +113,31 @@ select {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* Font variables for lang */
+  --font-body: 'CupheadFelix', sans-serif;
+  --font-serif: 'CupheadMemphis', serif;
+  --font-heading: 'CupheadPoster';
+  --font-sans-serif: 'CupheadVogue';
+  --font-title: 'CupheadHenriette';
+}
+
+html:lang(ar) {
+  --font-body: 'SultanRuqah';
+  --font-serif: 'SultanRuqah';
+  --font-sans-serif: 'SultanRuqah';
+  --font-title: 'SultanRuqah';
 }
 
 html,
 body {
   height: 100%;
   line-height: 1.5;
-  font-family: 'CupheadFelix', sans-serif;
-}
+  font-family: var(--font-body);
+  user-select: none;
 
-html:lang(ar) {
-  body {
-    font-family: 'SultanRuqah', sans-serif;
+  input {
+    user-select: auto;
   }
 }
 

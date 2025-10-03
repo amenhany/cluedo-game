@@ -21,5 +21,49 @@
     "room.hall": "المدخل",
     "room.study": "غرفة النوم",
     "room.library": "المكتبة",
-    "room.billiardRoom": "غرفة البلياردو"
+    "room.billiardRoom": "غرفة البلياردو",
+
+    "hud.secret_passage": "اذهب إلى {room}",
+
+    "hud.notes.suspect": "المشتبه بهم",
+    "hud.notes.weapon": "أدوات القتل",
+    "hud.notes.room": "أماكن الجريمة",
+    "hud.notes.accusation": "اتهم",
+    "hud.notes.tooltip.clue": "CLUE اذهب إلى",
+    "hud.notes.tooltip.suspect": "اختر المشتبه به",
+    "hud.notes.tooltip.weapon": "اختر أداة القتل",
+    "hud.notes.tooltip.room": "اختر مكان الجريمة",
+
+    "hud.turn.you": "دورك",
+    "hud.turn.other": "{player} دور",
+
+    "hud.tooltip.no_resolution": "لم يتم كشف أي كارت",
+    "hud.tooltip.shown_card": "{resolver} كشف كارتاً إلى {suggester}",
+    "hud.tooltip.can_suggest": "اقترح",
+    "hud.tooltip.suggest": "اقترح",
+    "hud.tooltip.end_turn": "انهي دورك",
+    "hud.tooltip.suspect": "اختر المشتبه به",
+    "hud.tooltip.weapon": "اختر أداة القتل",
+    "hud.tooltip.wait": "في انتظار {player} ",
+    "hud.tooltip.no_card": "لا يوجد كارت؟",
+    "hud.tooltip.show_card": "اكشف كارتاً إلى {suggester}",
+
+    "hud.popup.deck": "الكومة فيها {card}!",
+    "hud.popup.has": "{player} لديه {card}!",
+
+    "menu.main.title": "كلودو",
+    "menu.main.host": "استضيف اللعبة",
+    "menu.main.join": "انضم للعبة",
+
+    "credits.music.author1": "فيروز",
+    "credits.music.author2": "فريد الأطرش",
+    "credits.music.author3": "Frankie Valli",
+    "credits.music.author4": "نجاة الصغيرة",
+
+    "credits.music.track1": "عندي ثقة فيك",
+    "credits.music.track2": "خليك بالبيت",
+    "credits.music.track3": "قلبي و مفتاحه",
+    "credits.music.track4": "Can't Take My Eyes off You",
+    "credits.music.track5": "بحلم معاك",
+    "credits.music.track6": "وحدن"
 }

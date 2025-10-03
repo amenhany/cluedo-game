@@ -3,6 +3,7 @@ import music3 from '@/assets/audio/music/menu/menu3.mp3';
 import music2 from '@/assets/audio/music/menu/menu2.mp3';
 import music4 from '@/assets/audio/music/menu/menu4.mp3';
 import music5 from '@/assets/audio/music/menu/menu5.mp3';
+import music6 from '@/assets/audio/music/menu/menu6.mp3';
 import cover1 from '@/assets/textures/albums/menu1.jpeg';
 import cover2 from '@/assets/textures/albums/menu2.jpeg';
 import cover3 from '@/assets/textures/albums/menu3.jpeg';
@@ -24,39 +25,7 @@ import { useSettings } from '@/contexts/SettingsContext';
 import type { HostOptions, JoinOptions } from '@/types/client';
 import HostModal from './HostModal';
 import JoinModal from './JoinModal';
-
-const tracks = [
-   {
-      audio: music1,
-      cover: cover1,
-      name: 'Indi Thika Feek',
-      author: 'Fairuz',
-   },
-   {
-      audio: music2,
-      cover: cover2,
-      name: 'Khalleek Be El Bait',
-      author: 'Fairuz',
-   },
-   {
-      audio: music3,
-      cover: cover3,
-      name: 'Albi Ou Meftahou',
-      author: 'Farid al-Atrash',
-   },
-   {
-      audio: music4,
-      cover: cover4,
-      name: "Can't Take My Eyes off You",
-      author: 'Frankie Valli',
-   },
-   {
-      audio: music5,
-      cover: cover5,
-      name: 'Bahlam Maak',
-      author: 'Najaat Al Saghira',
-   },
-];
+import { t } from '@/lib/lang';
 
 export default function MainMenu({
    onHost,
@@ -70,6 +39,44 @@ export default function MainMenu({
    const [hostModal, setHostModal] = useState(false);
    const [joinModal, setJoinModal] = useState(false);
    const { settings } = useSettings();
+   const tracks = [
+      {
+         audio: music1,
+         cover: cover1,
+         name: 'credits.music.track1',
+         author: 'credits.music.author1',
+      },
+      {
+         audio: music2,
+         cover: cover2,
+         name: 'credits.music.track2',
+         author: 'credits.music.author1',
+      },
+      {
+         audio: music3,
+         cover: cover3,
+         name: 'credits.music.track3',
+         author: 'credits.music.author2',
+      },
+      {
+         audio: music4,
+         cover: cover4,
+         name: 'credits.music.track4',
+         author: 'credits.music.author3',
+      },
+      {
+         audio: music5,
+         cover: cover5,
+         name: 'credits.music.track5',
+         author: 'credits.music.author4',
+      },
+      {
+         audio: music6,
+         cover: cover1,
+         name: 'credits.music.track6',
+         author: 'credits.music.author1',
+      },
+   ];
 
    return (
       <div
@@ -77,7 +84,8 @@ export default function MainMenu({
          style={{ filter: settings?.filter === 'b&w' ? 'grayscale(100%)' : 'none' }}
       >
          <h1>
-            <span>C</span>LUEDO
+            <span>{t('menu.main.title')[0]}</span>
+            {t('menu.main.title').slice(1)}
          </h1>
          <div className="button-container">
             <button
@@ -86,7 +94,7 @@ export default function MainMenu({
                   setHostModal(true);
                }}
             >
-               <p>Host Game</p>
+               <p>{t('menu.main.host')}</p>
             </button>
             <button
                onClick={() => {
@@ -94,7 +102,7 @@ export default function MainMenu({
                   setJoinModal(true);
                }}
             >
-               <p>Join Game</p>
+               <p>{t('menu.main.join')}</p>
             </button>
             <motion.button
                className="button-icon"

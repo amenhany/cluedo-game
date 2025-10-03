@@ -39,7 +39,7 @@
 
         .nametag {
             @include overlay(0.2);
-            font-family: 'CupheadHenriette';
+            font-family: var(--font-title);
             opacity: 0;
             visibility: hidden;
             position: absolute;

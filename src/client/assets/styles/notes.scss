@@ -18,7 +18,7 @@
     pointer-events: all;
     user-select: none;
     padding: 2rem;
-    font-family: 'CupheadVogue';
+    font-family: var(--font-sans-serif);
     z-index: 6;
     width: clamp(50%, 500px, 90%);
     padding: 10vw 55px 0;
@@ -39,7 +39,7 @@
     }
 
     h1 {
-        font-family: 'CupheadPoster';
+        font-family: var(--font-heading);
         margin: 2rem;
     }
 
@@ -165,4 +165,16 @@
     text-align: center;
     color: $highlight;
     text-transform: uppercase;
+}
+
+html:lang(ar) .notes {
+    table {
+        direction: rtl;
+    }
+
+    th[scope="row"], th[scope="col"] {
+        text-align: right;
+        position: relative;
+        top: 2px;
+    }
 }

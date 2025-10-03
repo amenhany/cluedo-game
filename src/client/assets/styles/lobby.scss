@@ -4,10 +4,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-
-    #board {
-        filter: blur(6px);
-    }
 }
 
 .lobby-ui {
@@ -16,4 +12,6 @@
     left: 0;
     width: 100%;
     height: 100%;
+
+    backdrop-filter: blur(6px);
 }

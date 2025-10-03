@@ -86,7 +86,7 @@ export default function Piece({
          }
       >
          <div className="nametag">
-            {t(`${type}.${id}`)} {name !== '' && <span>"{name}"</span>}
+            {t(`${type}.${id}`)} {name !== '' && <span>'{name}'</span>}
          </div>
          <img
             src={TEXTURE_MAPPING[id]}

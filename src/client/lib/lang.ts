@@ -11,7 +11,15 @@ export function setLang(lang: Lang) {
     document.documentElement.lang = lang;
 }
 
-export function t(id: string): string {
+export function t(id: string, vars?: Record<string, string | number>): string {
     const pack = LANGS[currentLang];
-    return pack[id] ?? id; // fallback to id if not found
+    let text = pack[id] ?? id;
+
+    if (vars) {
+        for (const [key, value] of Object.entries(vars)) {
+            text = text.replaceAll(`{${key}}`, String(value));
+        }
+    }
+
+    return text;
 }

@@ -1,9 +1,10 @@
 import { useSuggestion } from '@/contexts/SuggestionContext';
 import { useTooltip } from '@/contexts/TooltipContext';
 import { cluedoGraph } from '@/game/board/boardGraph';
+import { t } from '@/lib/lang';
 import type { Card, GameState, PlayerState, Stage } from '@/types/game';
 import type { PlayerID } from 'boardgame.io';
-import { useEffect, useRef } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function SuggestionTooltip({
    players,
@@ -12,43 +13,46 @@ export default function SuggestionTooltip({
    stage,
    prevSuggestion,
 }: {
-   players?: Record<PlayerID, PlayerState>;
+   players: Record<PlayerID, PlayerState>;
    playerID?: PlayerID;
    moves: Record<string, (...args: any[]) => void>;
    stage: Stage | null;
    deck: Card[];
    prevSuggestion: GameState['prevSuggestion'];
 }) {
-   const playerNode =
-      (players && playerID && cluedoGraph[players[playerID].position]) || null;
+   const playerNode = (playerID && cluedoGraph[players[playerID].position]) || null;
    const roomNode = (playerNode?.type === 'room' && playerNode) || null;
-   const { setTooltip } = useTooltip();
+   const { setTooltip, tooltip } = useTooltip();
    const { canSuggest, completeSuggestion, resolver, suggestion, startSuggestion } =
       useSuggestion();
-   const suggestionIdRef = useRef(prevSuggestion?.id);
+   const [suggestionId, setSuggestionId] = useState(prevSuggestion?.id);
 
    function handleSuggest() {
       moves.makeSuggestion();
    }
 
    useEffect(() => {
-      if (players && prevSuggestion && prevSuggestion.id !== suggestionIdRef.current) {
+      console.log(prevSuggestion, suggestionId);
+      if (prevSuggestion && prevSuggestion.id !== suggestionId) {
          const timeout = setTimeout(() => {
-            suggestionIdRef.current = prevSuggestion.id;
+            setSuggestionId(prevSuggestion.id);
          }, 4000);
-         if (prevSuggestion.resolver === null)
-            setTooltip({ label: `No card was shown`, duration: 4000 });
-         else if (
+         if (prevSuggestion.resolver === null) {
+            setTooltip({ label: t('hud.tooltip.no_resolution'), duration: 4000 });
+            return;
+         } else if (
             playerID !== prevSuggestion.resolver &&
             playerID !== prevSuggestion.suggester
-         )
+         ) {
             setTooltip({
-               label: `${players[prevSuggestion.resolver].name} showed a card to ${
-                  players[prevSuggestion.suggester].name
-               }`,
+               label: t('hud.tooltip.shown_card', {
+                  resolver: players[prevSuggestion.resolver].name,
+                  suggester: players[prevSuggestion.suggester].name,
+               }),
                duration: 4000,
             });
-         else {
+            return;
+         } else {
             setTooltip(null);
             clearTimeout(timeout);
          }
@@ -58,9 +62,10 @@ export default function SuggestionTooltip({
 
       if (roomNode && canSuggest && !suggestion) {
          setTooltip({
-            label: 'Make a Suggestion',
+            label: t('hud.tooltip.can_suggest'),
             onClick: () => startSuggestion(roomNode.id),
-            secondaryLabel: stage === 'RoomAction' ? 'End Turn' : undefined,
+            secondaryLabel:
+               stage === 'RoomAction' ? t('hud.tooltip.end_turn') : undefined,
             onSecondaryClick: () => moves.endTurn(),
          });
          return;
@@ -72,12 +77,12 @@ export default function SuggestionTooltip({
             ? setTooltip({
                  label:
                     suggestion.suspect === null
-                       ? 'Please select a Suspect'
-                       : 'Please select a Weapon',
+                       ? t('hud.tooltip.suspect')
+                       : t('hud.tooltip.weapon'),
                  delay: 1.35,
               })
             : setTooltip({
-                 label: 'Suggest',
+                 label: t('hud.tooltip.suggest'),
                  onClick: handleSuggest,
               });
          return;
@@ -85,7 +90,7 @@ export default function SuggestionTooltip({
 
       if (suggestion.suggester !== playerID && !resolver) {
          setTooltip({
-            label: `Waiting for ${players[suggestion.suggester].name}`,
+            label: t('hud.tooltip.wait', { player: players[suggestion.suggester].name }),
             waitingDots: true,
             noQueue: true,
          });
@@ -94,7 +99,7 @@ export default function SuggestionTooltip({
 
       if (resolver && resolver.id !== playerID) {
          setTooltip({
-            label: `Waiting for ${resolver.name}`,
+            label: t('hud.tooltip.wait', { player: resolver.name }),
             waitingDots: true,
             noQueue: true,
          });
@@ -114,17 +119,29 @@ export default function SuggestionTooltip({
          );
          if (!hasPlayableCard) {
             setTooltip({
-               label: 'No card to show?',
-               secondaryLabel: 'End Turn',
+               label: t('hud.tooltip.no_card'),
+               secondaryLabel: t('hud.tooltip.end_turn'),
                onSecondaryClick: () => moves.noCard(),
+               noQueue: true,
             });
          } else {
             setTooltip({
-               label: `Show a card to ${players[suggestion.suggester].name}`,
+               label: t('hud.tooltip.show_card', {
+                  suggester: players[suggestion.suggester].name,
+               }),
             });
          }
       }
-   }, [canSuggest, completeSuggestion, suggestion, resolver, stage, prevSuggestion]);
+   }, [
+      canSuggest,
+      completeSuggestion,
+      suggestion,
+      resolver,
+      stage,
+      prevSuggestion,
+      suggestionId,
+      tooltip,
+   ]);
 
    return null;
 }

@@ -97,6 +97,7 @@ export default function DetectiveNotes({
          <motion.div
             ref={notesRef}
             className={`notes no-scroll-zone ${isOpen ? 'expanded' : ''}`}
+            initial={{ bottom: '-50%', left: '25%' }}
             animate={{ bottom: isOpen ? '48%' : '-42%', left: isOpen ? '50%' : '25%' }}
             transition={{ type: 'spring', stiffness: 250, damping: 28 }}
          >
@@ -139,20 +140,18 @@ export default function DetectiveNotes({
                      }}
                      aria-disabled={accusationButtonDisabled}
                      tooltip={
-                        playerID && players && players[playerID]?.isEliminated
+                        playerID && players[playerID]?.isEliminated
                            ? null
                            : stage !== 'Endgame'
-                           ? 'Go to CLUE!'
+                           ? t('hud.notes.tooltip.clue')
                            : Object.values(acccusation).includes(null)
-                           ? `
-                              Select a
-                              ${
-                                 acccusation.suspect === null
-                                    ? ' Suspect'
-                                    : acccusation.weapon === null
-                                    ? ' Weapon'
-                                    : acccusation.room === null && ' Room'
-                              }!`
+                           ? acccusation.suspect === null
+                              ? t('hud.notes.tooltip.suspect')
+                              : acccusation.weapon === null
+                              ? t('hud.notes.tooltip.weapon')
+                              : acccusation.room === null
+                              ? t('hud.notes.tooltip.room')
+                              : null
                            : null
                      }
                   >

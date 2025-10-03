@@ -30,7 +30,7 @@ import GameOver from './GameOver';
 import ScrollTriggers from './ScrollTriggers';
 
 type HudProps = {
-   players?: Record<PlayerID, PlayerState>;
+   players: Record<PlayerID, PlayerState>;
    deck: GameState['deck'];
    prevSuggestion: GameState['prevSuggestion'];
    ctx: Ctx;
@@ -56,7 +56,7 @@ export default function CluedoHud(props: HudProps) {
       },
       visible: false,
    });
-   const seenCards = (players && playerID && players[playerID].seenCards) || [];
+   const seenCards = (playerID && players[playerID].seenCards) || [];
    const prevSeenCards = useRef<TCard[]>([]);
    const prevResolver = useRef<PlayerState | null>(null);
 
@@ -64,12 +64,16 @@ export default function CluedoHud(props: HudProps) {
       if (prevSeenCards.current.length !== seenCards.length && seenCards.length) {
          const card = seenCards[seenCards.length - 1];
          const type = getCardType(card);
-         const name = deck.includes(card) ? 'The deck' : prevResolver.current?.name;
          setPopupConfig((prev) => ({
             ...prev,
             visible: true,
             children: <Card id={card} playable={false} type={type!}></Card>,
-            bottomText: `${name} has ${t(`${type}.${card}`)}!`,
+            bottomText: deck.includes(card)
+               ? t('hud.popup.deck', { card: t(`${type}.${card}`) })
+               : t('hud.popup.has', {
+                    player: prevResolver.current?.name ?? '',
+                    card: t(`${type}.${card}`),
+                 }),
          }));
          AudioManager.getInstance().playSfx(popupSfx);
          setTimeout(() => {
@@ -87,28 +91,23 @@ export default function CluedoHud(props: HudProps) {
          style={{ filter: settings?.filter === 'b&w' ? 'grayscale(100%)' : 'none' }}
       >
          <TooltipProvider>
-            <Dice
-               key="dice"
-               face={
-                  playerID && players && players[playerID].steps
-                     ? players[playerID].steps
-                     : 0
-               }
-               visible={active && !suggestion}
-               onRoll={moves.handleRoll}
-               disabled={!(active && stage === 'TurnAction')}
-            />
-
-            <ScrollTriggers />
-
             <div className="turn-container">
                <h1>
-                  {players &&
-                     (currentPlayer !== playerID
-                        ? `${players[currentPlayer].name}'s Turn`
-                        : 'Your Turn')}
+                  {currentPlayer !== playerID
+                     ? `${t('hud.turn.other', { player: players[currentPlayer].name })}`
+                     : t('hud.turn.you')}
                </h1>
+               <Dice
+                  key="dice"
+                  turn={ctx.turn}
+                  face={playerID && players[playerID].steps ? players[playerID].steps : 0}
+                  visible={active && !suggestion}
+                  onRoll={moves.handleRoll}
+                  disabled={!(active && stage === 'TurnAction')}
+               />
             </div>
+
+            <ScrollTriggers />
 
             {suggestion && (
                <div className="suggestion">
@@ -130,7 +129,7 @@ export default function CluedoHud(props: HudProps) {
             )}
 
             <SuggestionTooltip {...props} />
-            {players && playerID && (
+            {playerID && (
                <Hand
                   hand={players[playerID].hand.map((card) => ({
                      type: getCardType(card) as keyof Suggestion,
@@ -170,7 +169,13 @@ export default function CluedoHud(props: HudProps) {
                   </Popup>
                )}
             </AnimatePresence>
-            {/* <Popup onClick={() => {}} bottomText="Ahmad has Miss Scarlett!">
+            {/* <Popup
+               onClick={() => {}}
+               bottomText={t('hud.tooltip.wait', {
+                  player: 'resolver',
+                  suggester: 'suggester',
+               })}
+            >
                <Card type="suspect" id="scarlett" playable={false} />
             </Popup> */}
          </TooltipProvider>

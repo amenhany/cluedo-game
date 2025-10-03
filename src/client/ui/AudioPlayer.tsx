@@ -3,6 +3,7 @@ import record from '@/assets/textures/record.png';
 import { ChevronDown, SkipForward } from 'lucide-react';
 import { backInOut, motion, useAnimationControls } from 'motion/react';
 import { AudioManager } from '@/lib/AudioManager';
+import { t } from '@/lib/lang';
 
 type Track = {
    audio: string;
@@ -21,7 +22,7 @@ export default function AudioPlayer({ tracks }: { tracks: Track[] }) {
    useEffect(() => {
       audioManager.setMasterVolume(0.1);
       const timeout = setTimeout(playTrack, 2000);
-      const interval = setInterval(playTrack, 1000 * 60 * 6);
+      const interval = setInterval(playTrack, 1000 * 60 * 7);
       return () => {
          clearInterval(interval);
          clearTimeout(timeout);
@@ -95,8 +96,8 @@ export default function AudioPlayer({ tracks }: { tracks: Track[] }) {
                <img src={currentTrack.cover} alt="Album Cover" className="album-cover" />
             </div>
             <div className="audio-info">
-               <h2>{currentTrack.name}</h2>
-               <h3>{currentTrack.author}</h3>
+               <h2>{t(currentTrack.name)}</h2>
+               <h3>{t(currentTrack.author)}</h3>
                {tracks.length && (
                   <button onClick={playTrack}>
                      <SkipForward />

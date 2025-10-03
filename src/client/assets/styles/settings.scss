@@ -16,8 +16,11 @@
 .modal {
     @include no-select();
 
-    width: clamp(50%, 600px, 90%);
-    height: min(70%, 600px);
+    max-width: 800px;
+    width: 70%;
+    height: min(50%, 600px);
+    // width: clamp(50%, 600px, 90%);
+    // height: min(70%, 600px);
 
     // background-image: url('/images/modal.png');
     // background-size: contain;
@@ -27,6 +30,7 @@
     position: relative;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     color: $primary-text;
     z-index: 0;
 
@@ -40,17 +44,19 @@
     }
 
     .modal-title {
-        margin-top: 7rem;
-        margin-bottom: 1.5rem;
-        font-size: 2.5rem;
+        margin-top: clamp(0.5rem, 1vw, 5rem);
+        margin-bottom: clamp(0.2rem, 1vw, 1.5rem);
+        font-size: clamp(1rem, 3vw + 0.5rem, 2.8rem);
         text-align: center;
-        font-family: "CupheadPoster";
+        font-family: var(--font-heading);
     }
 
     ul {
-        margin: 0rem 7rem;
-        font-size: 1.3rem;
-        font-family: "CupheadMemphis";
+        margin-left: clamp(2rem, 9vw, 7rem);
+        margin-right: clamp(2rem, 9vw, 7rem);
+        font-size: clamp(0.2rem, 1vw + 0.5rem, 1.5rem);
+        line-height: clamp(1rem, 3vw, 6rem);
+        font-family: 'CupheadMemphis';
     }
 
     li {

@@ -32,7 +32,13 @@
   bottom: 0;
   box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.8);
   font-size: 2rem;
-  font-family: 'CupheadMemphis';
+  font-family: var(--font-serif);
+}
+
+html:lang(ar) .letterbox-bar.bottom-bar {
+  display: inline-flex;
+  direction: rtl;
+  flex-direction: row-reverse;
 }
 
 .letterbox-content {

@@ -18,7 +18,7 @@
         position: absolute;
         top: 16%;
         left: 10%;
-        font-family: CupheadHenriette;
+        font-family: var(--font-title);
         font-size: 5.8vw;
         /* letter-spacing: 0.15rem; */
         color: $primary-text;
@@ -40,7 +40,7 @@
     right: 18%;
     font-size: 3vw;
     color: $primary-text;
-    font-family: CupheadVogue;
+    font-family: var(--font-sans-serif);
     font-weight: 800;
     text-shadow: 4px 2px 0px black;
 
@@ -82,7 +82,7 @@
     .container {
         @include overlay(0.3, true, 1px);
         display: flex;
-        padding-right: 5rem;
+        padding-right: 2rem;
         border-radius: 20px;
         border-top-left-radius: 0;
     }
@@ -148,10 +148,12 @@
     }
 
     .audio-info {
-        font-family: CupheadVogue;
+        font-family: var(--font-sans-serif);
         margin-top: 6%;
+        min-width: clamp(60px, 500px, 100px);
 
         button{
+            margin-top: 12%;
             padding: 5%;
             padding-left: 0;
             cursor: pointer !important;
@@ -164,6 +166,10 @@
             }
         }
     }
+}
+
+html:lang(ar) .audio-info {
+    text-align: right;
 }
 
 

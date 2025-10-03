@@ -43,7 +43,7 @@ function WaitingDots({ duration = 700 }: { duration?: number }) {
    }, []);
 
    return (
-      <span style={{ display: 'inline-block', width: '1.5em', textAlign: 'left' }}>
+      <span className="waiting-dots">
          <span style={{ visibility: active >= 1 ? 'visible' : 'hidden' }}>.</span>
          <span style={{ visibility: active >= 2 ? 'visible' : 'hidden' }}>.</span>
          <span style={{ visibility: active >= 3 ? 'visible' : 'hidden' }}>.</span>

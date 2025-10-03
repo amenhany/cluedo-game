@@ -6,6 +6,7 @@ import slap2 from '@/assets/audio/sfx/slap2.wav';
 
 export default function Dice(props: {
    face: number;
+   turn: number;
    onRoll: () => void;
    disabled: boolean;
    visible: boolean;
@@ -24,7 +25,7 @@ export default function Dice(props: {
       }
    }, [props.face]);
 
-   useEffect(() => setIsDisabled(props.disabled), [props.disabled]);
+   useEffect(() => setIsDisabled(props.disabled), [props.disabled, props.turn]);
 
    function handleRoll() {
       if (isDisabled) return;
@@ -37,6 +38,7 @@ export default function Dice(props: {
       <motion.button
          onClick={handleRoll}
          className={`dice-button no-scroll-zone ${isDisabled ? 'disabled' : 'active'}`}
+         initial={{ x: -200 }}
          animate={{ x: props.visible ? 0 : -200 }}
          transition={{ duration: 0.2 }}
          disabled={isDisabled}

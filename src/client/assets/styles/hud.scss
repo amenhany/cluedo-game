@@ -19,21 +19,22 @@
     }
 }
 
-.dice-button {
-    position: absolute;
-    top: 10.5%;
-    left: 6.4%;
-    pointer-events: all;
-}
-
 .turn-container {
     position: absolute;
-    width: 100%;
-    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 2% 6%;
     h1 {
-        margin: 1.75rem 3.5rem;
-        font-family: 'CupheadMemphis';
+        text-align: center;
+        margin-bottom: 1.3rem;
+        width: 100%;
+        font-family: var(--font-serif);
         text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.8);
+    }
+
+    .dice-button {
+        pointer-events: all;
     }
 }
 
@@ -62,6 +63,7 @@
         margin: 2.3rem auto;
         text-align: center;
         text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.8);
+        display: inline-flex;
     }
     .show-card {
         position: absolute;
@@ -72,6 +74,20 @@
         display: flex;
         justify-content: center;
         align-items: center;
+    }
+
+    .waiting-dots {
+        display: inline-block;
+        width: 1.5em;
+        text-align: left;
+    }
+}
+
+html:lang(ar) .tooltip-container {
+    direction: rtl;
+    .waiting-dots {
+        text-align: right;
+        direction: rtl;
     }
 }
 
@@ -103,7 +119,7 @@
         width: 65%;
         position: absolute;
         font-size: 1rem;
-        font-family: 'CupheadVogue';
+        font-family: var(--font-sans-serif);
         color: black;
         text-transform: uppercase;
         font-weight: 800;
@@ -119,6 +135,19 @@
             right: $card-label-margin-left;
             transform: scale(-1, -1);
         }
+    }
+}
+
+html:lang(ar) .card-label {
+    font-size: 1.15rem;
+    text-indent: 20%;
+    transform: scaleX(1.1);
+    &.card-label-top{
+        margin-top: 1px;
+    }
+    &.card-label-bottom {
+        margin-bottom: 2px;
+        transform: scale(-1.1, -1);
     }
 }
 
