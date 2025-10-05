@@ -38,9 +38,9 @@ export default function Dice(props: {
       <motion.button
          onClick={handleRoll}
          className={`dice-button no-scroll-zone ${isDisabled ? 'disabled' : 'active'}`}
-         initial={{ x: -200 }}
-         animate={{ x: props.visible ? 0 : -200 }}
-         transition={{ duration: 0.2 }}
+         initial={{ x: -200, opacity: 0 }}
+         animate={{ x: props.visible ? 0 : -200, opacity: props.visible ? 1 : 0 }}
+         transition={{ duration: 0.2, opacity: { ease: 'easeIn' } }}
          disabled={isDisabled}
       >
          <div className={`dice show-${dieFace}`}>

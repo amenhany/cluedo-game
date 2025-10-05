@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import '@/assets/styles/settings.scss';
+import '@/assets/styles/modal.scss';
 
 export default function Backdrop({
    children,

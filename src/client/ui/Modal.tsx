@@ -15,11 +15,13 @@ export default function Modal({
    onClose,
    title,
    texture,
+   className,
    children,
 }: {
    onClose: () => void;
    title: string;
    children: React.ReactNode;
+   className?: string;
    texture: Texture;
 }) {
    useEffect(() => {
@@ -34,7 +36,7 @@ export default function Modal({
    return (
       <Backdrop onClick={onClose}>
          <motion.div
-            className="modal"
+            className={`modal ${className}`}
             onClick={(e) => e.stopPropagation()}
             variants={{
                hidden: { scale: 0, opacity: 0 },

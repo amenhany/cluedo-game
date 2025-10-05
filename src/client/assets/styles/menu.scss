@@ -72,7 +72,6 @@
     }
 }
 
-
 .audio-player {
     position: absolute;
     bottom: 2rem;
@@ -152,7 +151,7 @@
         margin-top: 6%;
         min-width: clamp(60px, 500px, 100px);
 
-        button{
+        button {
             margin-top: 12%;
             padding: 5%;
             padding-left: 0;
@@ -171,7 +170,6 @@
 html:lang(ar) .audio-info {
     text-align: right;
 }
-
 
 @keyframes rotate {
     0% {

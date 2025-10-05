@@ -13,7 +13,7 @@
 
 #billiardRoom .room-name {
     margin-left: 20px;
-    rotate: -90deg
+    rotate: -90deg;
 }
 
 #ballroom .room-name {
@@ -28,7 +28,8 @@
 .board-mustard {
     rotate: -90deg;
 
-    .piece, .room-name {
+    .piece,
+    .room-name {
         rotate: 90deg;
     }
 
@@ -55,11 +56,12 @@
     }
 }
 
-
-.board-white, .board-green {
+.board-white,
+.board-green {
     rotate: 180deg;
 
-    .piece, .room-name {
+    .piece,
+    .room-name {
         rotate: 180deg;
     }
 
@@ -74,10 +76,12 @@
     }
 }
 
-.board-peacock, .board-plum {
+.board-peacock,
+.board-plum {
     rotate: 90deg;
 
-    .piece, .room-name {
+    .piece,
+    .room-name {
         rotate: -90deg;
     }
 

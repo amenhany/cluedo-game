@@ -162,7 +162,7 @@ export default function CluedoGame({ G, ctx, moves, playerID }: BoardProps<GameS
                >
                   <CluedoBoard>
                      {Object.values(cluedoGraph).map((node) => {
-                        const residents = Object.values(G.players).filter((player) => {
+                        const residents = Object.values(players).filter((player) => {
                            return player.position === node.id;
                         });
                         return (

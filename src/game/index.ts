@@ -7,6 +7,7 @@ import { SkipEliminated } from './cycle.js';
 
 export const Cluedo: Game<GameState, Record<string, unknown>, SetupData> = {
     name: 'cluedo',
+    seed: process.env.NODE_ENV === 'development' ? 'set-seed' : undefined,
     setup,
     turn: {
         order: SkipEliminated,

@@ -17,7 +17,8 @@
         "dist:mac": "npm run transpile:electron && npm run build && electron-builder --mac --arm64",
         "dist:win": "npm run transpile:electron && npm run build && electron-builder --win --x64",
         "dist:linux": "npm run transpile:electron && npm run build && electron-builder --linux --x64",
-        "test:unit": "vitest src"
+        "test:unit": "vitest src",
+        "test:e2e": "playwright test"
     },
     "dependencies": {
         "@dnd-kit/core": "^6.3.1",

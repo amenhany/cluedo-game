@@ -47,7 +47,7 @@ export default function HostModal({
    }
 
    return (
-      <Modal title="Host Game" texture="card" onClose={onClose}>
+      <Modal title="Host Game" texture="card" onClose={onClose} className="game-modal">
          <ul>
             <li>
                <label htmlFor="playerName">Player Name</label>
@@ -74,8 +74,12 @@ export default function HostModal({
             </li>
          </ul>
 
-         <button onClick={handleHost} aria-disabled={invalid || isDisabled}>
-            Host
+         <button
+            onClick={handleHost}
+            aria-disabled={invalid || isDisabled}
+            className="game-button"
+         >
+            HOST
          </button>
       </Modal>
    );

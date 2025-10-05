@@ -23,7 +23,7 @@ export default function Settings({ onClose }: { onClose: () => void }) {
    }
 
    return (
-      <Modal onClose={onClose} title="Settings" texture="board">
+      <Modal onClose={onClose} title="Settings" texture="board" className="settings">
          <ul>
             <li>
                <label>Master Volume</label>

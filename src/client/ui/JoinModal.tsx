@@ -46,7 +46,7 @@ export default function JoinModal({
    }
 
    return (
-      <Modal title="Join Game" texture="card" onClose={onClose}>
+      <Modal title="Join Game" texture="card" onClose={onClose} className="game-modal">
          <ul>
             <li>
                <label htmlFor="playerName">Player Name</label>
@@ -72,8 +72,12 @@ export default function JoinModal({
             </li>
          </ul>
 
-         <button onClick={handleJoin} aria-disabled={invalid || isDisabled}>
-            Join
+         <button
+            onClick={handleJoin}
+            aria-disabled={invalid || isDisabled}
+            className="game-button"
+         >
+            JOIN
          </button>
       </Modal>
    );

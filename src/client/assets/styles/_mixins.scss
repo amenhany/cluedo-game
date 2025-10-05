@@ -15,9 +15,9 @@
 }
 
 @mixin overlay($darkenAmount, $blur: false, $blurAmount: 1px) {
-  background-color: rgba(0, 0, 0, $darkenAmount);
+    background-color: rgba(0, 0, 0, $darkenAmount);
 
-  @if $blur {
-    backdrop-filter: blur($blurAmount);
-  }
+    @if $blur {
+        backdrop-filter: blur($blurAmount);
+    }
 }

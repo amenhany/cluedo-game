@@ -24,8 +24,8 @@ export const SceneTransitionProvider: React.FC<{ children: React.ReactNode }> = 
    const [transitionType, setTransitionType] = useState<TransitionType>('fade');
    const callbackQueue = useRef<(() => void) | null>(null);
    const radius = useRef(
-      (Math.sqrt(window.innerWidth ** 2 + window.innerHeight ** 2) / 2) *
-         (100 / Math.max(window.innerWidth, window.innerHeight))
+      (Math.sqrt(window.outerWidth ** 2 + window.outerHeight ** 2) / 2) *
+         (100 / Math.max(window.outerWidth, window.outerHeight))
    );
    const controls = useAnimationControls();
 
