@@ -1,4 +1,4 @@
-import type { Ctx, PlayerID } from 'boardgame.io';
+import type { ChatMessage, Ctx, PlayerID } from 'boardgame.io';
 import type {
    Card as TCard,
    Character,
@@ -28,6 +28,7 @@ import popupSfx from '@/assets/audio/sfx/popup.m4a';
 import DetectiveNotes from './DetectiveNotes';
 import GameOver from './GameOver';
 import ScrollTriggers from './ScrollTriggers';
+import Chatbox from './Chatbox';
 
 type HudProps = {
    players: Record<PlayerID, PlayerState>;
@@ -39,10 +40,15 @@ type HudProps = {
    moves: Record<string, (...args: any[]) => void>;
    active: boolean;
    stage: Stage | null;
+   chat: {
+      messages: ChatMessage[];
+      send: (message: any) => void;
+   };
 };
 
 export default function CluedoHud(props: HudProps) {
-   const { players, currentPlayer, playerID, moves, active, stage, deck, ctx } = props;
+   const { players, currentPlayer, playerID, moves, active, stage, deck, ctx, chat } =
+      props;
    const { settings } = useSettings();
    const { resolver, suggestion } = useSuggestion();
    const suggestionCards = suggestion
@@ -144,6 +150,8 @@ export default function CluedoHud(props: HudProps) {
                   moves={{ showCard: moves.showCard }}
                />
             )}
+
+            <Chatbox chat={chat} players={players} />
 
             <DetectiveNotes
                stage={stage}

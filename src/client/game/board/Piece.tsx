@@ -11,6 +11,7 @@ import type { Character, Weapon } from '@/types/game';
 import { useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
 import type { PlayerID } from 'boardgame.io';
+import { SUSPECT_COLORS } from '@/game/constants';
 // import { motion } from 'motion/react';
 
 type BasePieceProps = {
@@ -23,15 +24,6 @@ type BasePieceProps = {
 type PieceProps =
    | ({ type: 'suspect'; id: Character } & BasePieceProps)
    | ({ type: 'weapon'; id: Weapon } & BasePieceProps);
-
-const COLORS: Record<Character, string> = {
-   scarlett: 'red',
-   mustard: 'yellow',
-   white: 'white',
-   green: 'green',
-   peacock: 'lightblue',
-   plum: 'purple',
-};
 
 const TEXTURE_MAPPING: Record<Character | Weapon, string> = {
    scarlett: piece,
@@ -77,7 +69,7 @@ export default function Piece({
          style={{
             ...style,
             opacity: isDragging ? 0 : 1,
-            backgroundColor: type === 'suspect' ? COLORS[id] : 'transparent',
+            backgroundColor: type === 'suspect' ? SUSPECT_COLORS[id] : 'transparent',
          }}
          onClick={
             playerID && suggestion?.suggester === playerID

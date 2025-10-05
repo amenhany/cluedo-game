@@ -39,7 +39,14 @@ import SecretPassage from './board/SecretPassage';
 import { SuggestionContextProvider } from '@/contexts/SuggestionContext';
 import SpotlightOverlay from './SpotlightOverlay';
 
-export default function CluedoGame({ G, ctx, moves, playerID }: BoardProps<GameState>) {
+export default function CluedoGame({
+   G,
+   ctx,
+   moves,
+   playerID,
+   chatMessages,
+   sendChatMessage,
+}: BoardProps<GameState>) {
    const { settings } = useSettings();
    const [players, setPlayers] = useState<Record<PlayerID, PlayerState>>(G.players);
    let playerNode: TNode | null = null,
@@ -240,6 +247,7 @@ export default function CluedoGame({ G, ctx, moves, playerID }: BoardProps<GameS
             deck={G.deck}
             prevSuggestion={G.prevSuggestion}
             ctx={ctx}
+            chat={{ messages: chatMessages, send: sendChatMessage }}
          />
       </SuggestionContextProvider>
    );

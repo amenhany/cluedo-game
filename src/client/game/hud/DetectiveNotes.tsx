@@ -35,7 +35,7 @@ export default function DetectiveNotes({
       weapon: null,
       room: null,
    });
-   const { setTooltip } = useTooltip();
+   const { setTooltip, tooltip } = useTooltip();
    const accusationButtonDisabled =
       Object.values(acccusation).includes(null) || accusing || stage !== 'Endgame';
    const notesRef = useRef<HTMLDivElement>(null);
@@ -72,7 +72,7 @@ export default function DetectiveNotes({
       } else if (accusing) {
          setTooltip(null);
       }
-   }, [stage, accusing]);
+   }, [stage, accusing, tooltip]);
 
    function handleAccusation() {
       if (accusationButtonDisabled) {

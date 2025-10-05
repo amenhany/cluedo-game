@@ -29,6 +29,15 @@ export const CHARACTERS: Record<number, Character> = {
     5: 'plum',
 };
 
+export const SUSPECT_COLORS: Record<Character, string> = {
+    scarlett: '#ff6b6b', // softer, slightly coral red — warm but not blinding
+    mustard: '#ffd93d', // golden yellow — readable without glowing harshly
+    white: '#e5e5e5', // off-white — avoids pure white glare
+    green: '#4cd964', // apple green — lively but easy on the eyes
+    peacock: '#5ac8fa', // soft cyan-blue — vibrant but not neon
+    plum: '#af52de', // elegant violet — rich but not over-saturated
+};
+
 export const SUSPECT_POSITIONS: Record<Character, NodeID> = {
     scarlett: '11-7', // 16-0
     mustard: '11-7', // 23-7
