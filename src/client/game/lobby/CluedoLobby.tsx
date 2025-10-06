@@ -1,5 +1,5 @@
 import type { ClientOptions } from '@/types/client';
-import { motion } from 'motion/react';
+import { AnimatePresence, motion } from 'motion/react';
 import CluedoBoard from '../board/CluedoBoard';
 import { useEffect, useRef, useState } from 'react';
 import { LobbyClient } from 'boardgame.io/client';
@@ -11,26 +11,35 @@ import { AudioManager } from '@/lib/AudioManager';
 import lockedSfx from '@/assets/audio/sfx/card_locked.wav';
 import selectSfx from '@/assets/audio/sfx/card_select.wav';
 import joinSfx from '@/assets/audio/sfx/join.wav';
+import leaveSfx from '@/assets/audio/sfx/leave.wav';
 import lobbyMusic from '@/assets/audio/music/game/lobby.wav';
 import HoverButton from '../hud/HoverButton';
 import { cluedoGraph } from '@/game/board/boardGraph';
 import Node from '../board/Node';
 import { t } from '@/lib/lang';
+import { isDev } from '@/lib/util';
+import SettingsScreen from '@/ui/SettingsScreen';
+import NavButtons from '@/ui/NavButtons';
+import { useSceneTransition } from '@/contexts/SceneTransitionContext';
 
 type LobbyProps = ClientOptions & {
    isHost: boolean;
    onStart: (newMatchID: string, newCredentials: string) => void;
+   onLeave: () => void;
 };
 
 export default function CluedoLobby({
    isHost,
    onStart,
+   onLeave,
    server,
    matchID,
    playerID,
    credentials,
 }: LobbyProps) {
+   const [openSettings, setOpenSettings] = useState(false);
    const [match, setMatch] = useState<LobbyAPI.Match | null>(null);
+   const port = server.split(':')[2];
    const lobbyClient = new LobbyClient({ server });
    const audioManager = AudioManager.getInstance();
 
@@ -42,6 +51,7 @@ export default function CluedoLobby({
    const [isTyping, setIsTyping] = useState(false);
    const [countdown, setCountdown] = useState<number | null>(null);
    const [gameId, setGameId] = useState<string | null>(null);
+   const { triggerTransition } = useSceneTransition();
 
    useEffect(() => {
       const interval = setInterval(async () => {
@@ -59,9 +69,10 @@ export default function CluedoLobby({
    const takenCharacters = players.map((p) =>
       p.data?.character ? (p.data.character as Character) : null
    );
-   const readyPlayers = players.filter((player) => player.data?.character !== undefined);
-   const invalidGame =
-      readyPlayers.length < (import.meta.env.DEV ? 1 : 3) || readyPlayers.length > 6;
+   const [readyPlayers, setReadyPlayers] = useState(
+      players.filter((player) => player.data?.character !== undefined)
+   );
+   const invalidGame = readyPlayers.length < (isDev ? 1 : 3) || readyPlayers.length > 6;
    const readyPlayerLength = useRef(readyPlayers.length);
 
    useEffect(() => {
@@ -70,15 +81,18 @@ export default function CluedoLobby({
 
    useEffect(() => {
       console.log(readyPlayerLength.current);
-      if (readyPlayerLength.current > readyPlayers.length) {
+      console.log(readyPlayers.length);
+      if (readyPlayerLength.current < readyPlayers.length) {
          audioManager.playSfx(joinSfx);
+         readyPlayerLength.current = readyPlayers.length;
+      } else if (readyPlayerLength.current > readyPlayers.length) {
+         audioManager.playSfx(leaveSfx);
          readyPlayerLength.current = readyPlayers.length;
       }
    }, [readyPlayers]);
 
    useEffect(() => {
       if (!match || !player) return;
-      console.log(readyPlayers);
 
       if (player.name && player.name !== playerName && !isTyping) {
          setPlayerName(player.name);
@@ -94,7 +108,18 @@ export default function CluedoLobby({
          );
          if (availableCharacter) saveCharacter(availableCharacter);
       }
+
+      setReadyPlayers(
+         players.filter(
+            (player) => player.data?.character !== undefined && player.name !== undefined
+         )
+      );
    }, [match]);
+
+   useEffect(() => {
+      window.addEventListener('beforeunload', leaveGame);
+      return () => window.removeEventListener('beforeunload', leaveGame);
+   }, [server, matchID, playerID, credentials]);
 
    useEffect(() => {
       const debounce = setTimeout(() => {
@@ -164,6 +189,17 @@ export default function CluedoLobby({
       onStart(gameID, playerCredentials);
    }
 
+   function leaveGame() {
+      lobbyClient.updatePlayer('cluedo', matchID, {
+         playerID,
+         credentials,
+         playerName: undefined,
+         data: undefined,
+      });
+      lobbyClient.leaveMatch('cluedo', matchID, { playerID, credentials });
+      triggerTransition(onLeave, 'iris');
+   }
+
    if (!match) {
       return (
          <div className={`lobby alignment board-${character}`}>
@@ -196,6 +232,11 @@ export default function CluedoLobby({
             animate={{ opacity: countdown === null ? 1 : 0 }}
             transition={{ duration: 1, ease: 'easeIn', delay: 2 }}
          >
+            <NavButtons
+               setOpenSettings={setOpenSettings}
+               exitFn={leaveGame}
+               exitTooltip="Exit to Main Menu"
+            />
             <div className="player-form">
                <label htmlFor="name">Name</label>
                <input
@@ -233,6 +274,18 @@ export default function CluedoLobby({
                   ))}
                </select>
             </div>
+
+            <h2>Player List ({readyPlayers.length}/6)</h2>
+            <ul>
+               {readyPlayers.map((p, i) => (
+                  <li key={p.id}>
+                     {i + 1 + ')'} {p.name} "{t(`suspect.${p.data.character}`)}"
+                  </li>
+               ))}
+            </ul>
+
+            {isHost && <h1>Serving on port {port}</h1>}
+
             {isHost ? (
                <HoverButton
                   tooltip={
@@ -262,6 +315,9 @@ export default function CluedoLobby({
                )
             )}
             {countdown && <span>{countdown}</span>}
+            <AnimatePresence>
+               {openSettings && <SettingsScreen onClose={() => setOpenSettings(false)} />}
+            </AnimatePresence>
          </motion.div>
       </div>
    );

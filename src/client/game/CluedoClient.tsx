@@ -3,12 +3,13 @@ import { Cluedo } from '../../game';
 import CluedoGame from './CluedoGame';
 import type { ClientOptions } from '@/types/client';
 import { SocketIO } from 'boardgame.io/multiplayer';
+import { isDev } from '@/lib/util';
 
 export const CluedoClient = (options: ClientOptions) => {
    const CluedoClient = Client({
       game: Cluedo,
       board: CluedoGame,
-      debug: import.meta.env.DEV,
+      debug: isDev,
       multiplayer: SocketIO({ server: options.server }),
    });
 

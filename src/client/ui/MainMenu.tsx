@@ -9,32 +9,29 @@ import cover2 from '@/assets/textures/albums/menu2.jpeg';
 import cover3 from '@/assets/textures/albums/menu3.jpeg';
 import cover4 from '@/assets/textures/albums/menu4.jpeg';
 import cover5 from '@/assets/textures/albums/menu5.jpg';
-import modalOpen from '@/assets/audio/sfx/modal_open.wav';
 import cardUp from '@/assets/audio/sfx/card_up.wav';
 import cardDown from '@/assets/audio/sfx/card_down.wav';
-import select from '@/assets/audio/sfx/select.wav';
 
 import '@/assets/styles/menu.scss';
 import AudioPlayer from './AudioPlayer';
 import { useState } from 'react';
-import { Settings, DoorOpen, DoorClosed } from 'lucide-react';
-import { AnimatePresence, motion } from 'motion/react';
-import SettingsScreen from './Settings';
+import { AnimatePresence } from 'motion/react';
 import { AudioManager } from '@/lib/AudioManager';
 import { useSettings } from '@/contexts/SettingsContext';
 import type { HostOptions, JoinOptions } from '@/types/client';
 import HostModal from './HostModal';
 import JoinModal from './JoinModal';
 import { t } from '@/lib/lang';
+import NavButtons from './NavButtons';
+import SettingsScreen from './SettingsScreen';
 
 export default function MainMenu({
    onHost,
    onJoin,
 }: {
    onHost: (options: HostOptions) => void;
-   onJoin: (options: JoinOptions) => void;
+   onJoin: (options: JoinOptions) => Promise<void>;
 }) {
-   const [hoverClose, setHoverClose] = useState(false);
    const [openSettings, setOpenSettings] = useState(false);
    const [hostModal, setHostModal] = useState(false);
    const [joinModal, setJoinModal] = useState(false);
@@ -104,36 +101,7 @@ export default function MainMenu({
             >
                <p>{t('menu.main.join')}</p>
             </button>
-            <motion.button
-               className="button-icon"
-               variants={{
-                  initial: {
-                     rotate: 0,
-                  },
-                  active: {
-                     rotate: 30,
-                  },
-               }}
-               initial="initial"
-               whileHover="active"
-               onClick={() => {
-                  setOpenSettings(true);
-                  AudioManager.getInstance().playSfx(modalOpen);
-               }}
-            >
-               <Settings size={40} />
-            </motion.button>
-            <button
-               onClick={() => {
-                  AudioManager.getInstance().playSfx(select);
-                  setTimeout(close, 100);
-               }}
-               className="button-icon"
-               onMouseEnter={() => setHoverClose(true)}
-               onMouseLeave={() => setHoverClose(false)}
-            >
-               {hoverClose ? <DoorOpen size={40} /> : <DoorClosed size={40} />}
-            </button>
+            <NavButtons setOpenSettings={setOpenSettings} />
          </div>
          <AudioPlayer tracks={tracks} />
          <AnimatePresence>

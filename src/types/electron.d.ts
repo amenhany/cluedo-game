@@ -17,4 +17,6 @@ export type EventPayloadMapping = {
     'packs:get': Packs;
     'packs:set': Packs;
     'game:start-server': { port: number };
+    'game:is-port-available': number;
+    'game:close-server': undefined;
 };

@@ -78,6 +78,7 @@ export default function App() {
          credentials: playerCredentials,
       });
       setGameState('lobby');
+      setIsHost(false);
    }
 
    function startGame(newMatchID: string, newCredentials: string) {
@@ -92,6 +93,15 @@ export default function App() {
       );
    }
 
+   function leaveGame() {
+      setGameState('menu');
+      setClientOptions(undefined);
+      if (isHost) {
+         const result = window.api.game.closeServer();
+         console.log(result);
+      }
+   }
+
    return (
       <>
          <SettingsProvider>
@@ -99,7 +109,12 @@ export default function App() {
                {gameState === 'menu' ? (
                   <MainMenu onHost={hostGame} onJoin={joinGame} />
                ) : gameState === 'lobby' && clientOptions ? (
-                  <CluedoLobby {...clientOptions} isHost={isHost} onStart={startGame} />
+                  <CluedoLobby
+                     {...clientOptions}
+                     isHost={isHost}
+                     onStart={startGame}
+                     onLeave={leaveGame}
+                  />
                ) : (
                   clientOptions && <CluedoClient {...clientOptions} />
                )}

@@ -5,12 +5,13 @@ import { useSceneTransition } from '@/contexts/SceneTransitionContext';
 import selectSfx from '@/assets/audio/sfx/card_select.wav';
 import lockedSfx from '@/assets/audio/sfx/card_locked.wav';
 import { AudioManager } from '@/lib/AudioManager';
+import { isServerAlive } from '@/lib/util';
 
 export default function JoinModal({
    onJoin,
    onClose,
 }: {
-   onJoin: (options: JoinOptions) => void;
+   onJoin: (options: JoinOptions) => Promise<void>;
    onClose: () => void;
 }) {
    const [options, setOptions] = useState<JoinOptions>({
@@ -18,6 +19,7 @@ export default function JoinModal({
       ip: '',
    });
    const [isDisabled, setIsDisabled] = useState(false);
+   const [error, setError] = useState<string | null>(null);
    const invalid = options.playerName.trim() === '' || options.ip.trim() === '';
    const { triggerTransition } = useSceneTransition();
 
@@ -35,14 +37,29 @@ export default function JoinModal({
       }));
    }
 
-   function handleJoin() {
+   async function handleJoin() {
       if (isDisabled) return;
       if (invalid) {
          AudioManager.getInstance().playSfx(lockedSfx);
          return;
       }
+
+      const isIpValid = await isServerAlive(options.ip);
+      if (!isIpValid) {
+         setError('Invalid IP');
+         AudioManager.getInstance().playSfx(lockedSfx);
+         return;
+      }
+
+      setError(null);
       setIsDisabled(true);
-      triggerTransition(() => onJoin(options), 'iris');
+      triggerTransition(() => {
+         onJoin(options).catch((e) => {
+            if (e.message.slice(-3) === '409') setError('Server is full! (6)');
+            else setError(e.details);
+            setIsDisabled(false);
+         });
+      }, 'iris');
    }
 
    return (
@@ -79,6 +96,7 @@ export default function JoinModal({
          >
             JOIN
          </button>
+         {error && <span className="error-message">{error}</span>}
       </Modal>
    );
 }

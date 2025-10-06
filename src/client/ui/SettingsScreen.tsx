@@ -10,7 +10,7 @@ const LANGUAGE_MAPPING: Record<Lang, string> = {
    ar: 'Arabic',
 };
 
-export default function Settings({ onClose }: { onClose: () => void }) {
+export default function SettingsScreen({ onClose }: { onClose: () => void }) {
    const { settings, update } = useSettings();
 
    function toggleList<K extends keyof Settings>(option: K, list: Settings[K][]) {

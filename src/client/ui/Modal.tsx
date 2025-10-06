@@ -39,13 +39,19 @@ export default function Modal({
             className={`modal ${className}`}
             onClick={(e) => e.stopPropagation()}
             variants={{
-               hidden: { scale: 0, opacity: 0 },
-               visible: { scale: 1, opacity: 1 },
+               boardHidden: { scale: 0, opacity: 0 },
+               boardVisible: { scale: 1, opacity: 1 },
+               cardHidden: { y: '100vh' },
+               cardVisible: { y: 0 },
             }}
-            initial="hidden"
-            animate="visible"
-            exit="hidden"
-            transition={{ duration: 0.8, type: 'spring' }}
+            initial={`${texture}Hidden`}
+            animate={`${texture}Visible`}
+            exit={`${texture}Hidden`}
+            transition={{
+               duration: 0.8,
+               type: 'spring',
+               damping: texture === 'card' ? 16 : 12,
+            }}
          >
             <img src={TEXTURE_MAPPING[texture]} className="modal-bg" />
             <h2 className="modal-title">{title}</h2>

@@ -31,6 +31,8 @@ contextBridge.exposeInMainWorld('api', {
         save: (settings) => ipcRendererSend('settings:save', settings),
     },
     game: {
-        startServer: (options) => ipcRendererInvoke('game:start-server', options),
+        isPortAvailable: (port) => ipcRenderer.invoke('game:is-port-available', port),
+        startServer: (options) => ipcRenderer.invoke('game:start-server', options),
+        closeServer: () => ipcRenderer.send('game:close-server'),
     },
 } satisfies Window['api']);

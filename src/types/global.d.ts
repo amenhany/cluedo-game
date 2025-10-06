@@ -17,9 +17,11 @@ declare global {
                 set(pack: Packs): void;
             };
             game: {
+                isPortAvailable(port: number): Promise<boolean>;
                 startServer(options: {
                     port: number;
                 }): Promise<{ ok: boolean; port?: number; message?: string }>;
+                closeServer(): void;
             };
         };
     }

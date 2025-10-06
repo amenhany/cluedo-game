@@ -44,6 +44,10 @@
     font-weight: 800;
     text-shadow: 4px 2px 0px black;
 
+    div {
+        display: inline;
+    }
+
     button {
         cursor: pointer;
         display: block;

@@ -19,6 +19,7 @@ export default function HostModal({
       port: PORT,
    });
    const [isDisabled, setIsDisabled] = useState(false);
+   const [error, setError] = useState<string | null>(null);
    const invalid = options.playerName.trim() === '';
    const { triggerTransition } = useSceneTransition();
 
@@ -36,14 +37,25 @@ export default function HostModal({
       }));
    }
 
-   function handleHost() {
+   async function handleHost() {
       if (isDisabled) return;
       if (invalid) {
          AudioManager.getInstance().playSfx(lockedSfx);
          return;
       }
+
+      const isPortAvailable = await window.api.game.isPortAvailable(options.port);
+      if (!isPortAvailable) {
+         setError('Port in use');
+         AudioManager.getInstance().playSfx(lockedSfx);
+         return;
+      }
+
+      setError(null);
       setIsDisabled(true);
-      triggerTransition(() => onHost(options), 'iris');
+      triggerTransition(() => {
+         onHost(options);
+      }, 'iris');
    }
 
    return (
@@ -81,6 +93,7 @@ export default function HostModal({
          >
             HOST
          </button>
+         {error && <span className="error-message">{error}</span>}
       </Modal>
    );
 }

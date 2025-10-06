@@ -128,6 +128,18 @@
             appearance: none;
         }
     }
+
+    .error-message {
+        position: absolute;
+        bottom: -8%;
+        left: 50%;
+        transform: translateX(-50%);
+        color: $highlight;
+        font-size: clamp(0.4rem, 1vw + 0.7rem, 1.3rem);
+        font-family: var(--font-sans-serif);
+        font-weight: 800;
+        text-transform: uppercase;
+    }
 }
 
 // html:lang(ar) .game-modal {
