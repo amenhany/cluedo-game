@@ -62,3 +62,5 @@ export const OFFSET_X = 1;
 export const OFFSET_Y = 0;
 
 export const PORT = 25565;
+
+export const SUSPENSE_DELAY_MS = 1600;

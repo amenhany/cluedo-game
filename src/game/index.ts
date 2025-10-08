@@ -11,6 +11,18 @@ export const Cluedo: Game<GameState, Record<string, unknown>, SetupData> = {
     setup,
     turn: {
         order: SkipEliminated,
+        onBegin: ({ G, events }) => {
+            const alive = Object.entries(G.players)
+                .filter(([_, p]) => !p.isEliminated)
+                .map(([id]) => id);
+
+            if (alive.length === 1) {
+                const last = alive[0];
+                events.setActivePlayers({
+                    value: { [last]: 'Endgame' },
+                });
+            }
+        },
         activePlayers: {
             currentPlayer: 'TurnAction',
         },

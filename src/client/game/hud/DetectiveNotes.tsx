@@ -1,4 +1,3 @@
-import { useTooltip } from '@/contexts/TooltipContext';
 import { AudioManager } from '@/lib/AudioManager';
 import type { NullableSuggestion, PlayerState, Stage, Suggestion } from '@/types/game';
 import { useEffect, useRef, useState } from 'react';
@@ -35,7 +34,6 @@ export default function DetectiveNotes({
       weapon: null,
       room: null,
    });
-   const { setTooltip, tooltip } = useTooltip();
    const accusationButtonDisabled =
       Object.values(acccusation).includes(null) || accusing || stage !== 'Endgame';
    const notesRef = useRef<HTMLDivElement>(null);
@@ -63,16 +61,6 @@ export default function DetectiveNotes({
          document.removeEventListener('keydown', handleKeyDown);
       };
    }, [isOpen]);
-
-   useEffect(() => {
-      if (stage === 'Endgame' && !accusing) {
-         setTooltip({
-            label: 'Open your notes',
-         });
-      } else if (accusing) {
-         setTooltip(null);
-      }
-   }, [stage, accusing, tooltip]);
 
    function handleAccusation() {
       if (accusationButtonDisabled) {

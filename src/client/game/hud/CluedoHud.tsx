@@ -16,7 +16,6 @@ import { useSettings } from '@/contexts/SettingsContext';
 import { useSuggestion } from '@/contexts/SuggestionContext';
 import { t } from '@/lib/lang';
 import { TooltipProvider } from '@/contexts/TooltipContext';
-import SuggestionTooltip from './SuggestionTooltip';
 import Hand from './Hand';
 import Card from './Card';
 import { CARDS } from '@/game/constants';
@@ -29,6 +28,7 @@ import DetectiveNotes from './DetectiveNotes';
 import GameOver from './GameOver';
 import ScrollTriggers from './ScrollTriggers';
 import Chatbox from './Chatbox';
+import TooltipManager from './TooltipManager';
 
 type HudProps = {
    players: Record<PlayerID, PlayerState>;
@@ -134,7 +134,8 @@ export default function CluedoHud(props: HudProps) {
                </div>
             )}
 
-            <SuggestionTooltip {...props} />
+            <TooltipManager {...props} winner={ctx.gameover?.winner} />
+
             {playerID && (
                <Hand
                   hand={players[playerID].hand.map((card) => ({

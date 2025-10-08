@@ -7,19 +7,18 @@ import death1 from '@/assets/audio/sfx/death1.wav';
 import death2 from '@/assets/audio/sfx/death2.wav';
 import begin from '@/assets/audio/sfx/begin.wav';
 import suspenseSfx from '@/assets/audio/sfx/suspense.m4a';
+import loseSfx from '@/assets/audio/sfx/lose.wav';
 import victoryMusic from '@/assets/audio/music/game/victory.wav';
 import { useEffect, useRef, useState } from 'react';
 import { AudioManager } from '@/lib/AudioManager';
 import type { PlayerState } from '@/types/game';
-import { useTooltip } from '@/contexts/TooltipContext';
 import Backdrop from '@/ui/Backdrop';
 import bravoImage from '@/assets/textures/text/bravo.png';
 import diedImage from '@/assets/textures/text/died.png';
 import wallopImage1 from '@/assets/textures/text/wallop1.png';
 import wallopImage2 from '@/assets/textures/text/wallop2.png';
 import { motion } from 'motion/react';
-
-const DELAY_MS = 1600;
+import { SUSPENSE_DELAY_MS } from '@/game/constants';
 
 export default function GameOver({
    winner,
@@ -28,14 +27,12 @@ export default function GameOver({
 }: {
    winner: PlayerID | null | undefined;
    playerID: PlayerID | undefined;
-   players: Record<PlayerID, PlayerState> | undefined;
+   players: Record<PlayerID, PlayerState>;
 }) {
-   if (!players || !playerID) return;
+   if (!playerID) return;
 
    const isEliminated = players[playerID].isEliminated;
-   const prevPlayers = useRef<Record<PlayerID, PlayerState>>(undefined);
    const audioManager = AudioManager.getInstance();
-   const { setTooltip } = useTooltip();
    const [wallop, setWallop] = useState<string | null>(null);
    const countRef = useRef(0);
 
@@ -59,39 +56,20 @@ export default function GameOver({
 
    useEffect(() => {
       if (isEliminated)
-         setTimeout(() => audioManager.playRandomSfx(death1, death2), DELAY_MS + 100);
+         setTimeout(
+            () => audioManager.playRandomSfx(death1, death2),
+            SUSPENSE_DELAY_MS + 100
+         );
    }, [isEliminated]);
 
    useEffect(() => {
       if (winner === undefined) return;
       const timeout = setTimeout(
          () => handleWin(winner ? players[winner] : null),
-         DELAY_MS
+         SUSPENSE_DELAY_MS
       );
       return () => clearTimeout(timeout);
    }, [winner]);
-
-   useEffect(() => {
-      if (prevPlayers.current === undefined) {
-         prevPlayers.current = players;
-         return;
-      }
-      Object.values(players).forEach((player) => {
-         if (
-            player.isEliminated !== prevPlayers.current![player.id].isEliminated &&
-            player.id !== playerID
-         ) {
-            const timeout = setTimeout(() => {
-               setTooltip({
-                  label: `${player.name} is eliminated!`,
-                  duration: 5000,
-               });
-               prevPlayers.current = players;
-            }, DELAY_MS);
-            return () => clearTimeout(timeout);
-         }
-      });
-   }, [players]);
 
    function handleWin(winner: PlayerState | null) {
       audioManager.stopMusic();
@@ -100,13 +78,9 @@ export default function GameOver({
          setTimeout(() => audioManager.playMusic(victoryMusic), 700);
       } else if (winner !== null) {
          audioManager.playSfx(suspenseSfx);
-         setTooltip({
-            label: `${winner.name} wins the game!`,
-         });
+         setTimeout(() => audioManager.playMusic(loseSfx), SUSPENSE_DELAY_MS);
       } else {
-         setTooltip({
-            label: 'Everybody loses!',
-         });
+         audioManager.playMusic(loseSfx);
       }
    }
 
@@ -141,7 +115,7 @@ export default function GameOver({
                initial={{ opacity: 0 }}
                animate={{ opacity: [0, 1, 1, 0] }}
                transition={{
-                  delay: DELAY_MS / 1000,
+                  delay: SUSPENSE_DELAY_MS / 1000,
                   duration: 5,
                   times: [0, 0.1, 0.8, 1],
                }}
@@ -157,7 +131,7 @@ export default function GameOver({
                initial={{ opacity: 0 }}
                animate={{ opacity: [0, 1, 1, 0] }}
                transition={{
-                  delay: DELAY_MS / 1000,
+                  delay: SUSPENSE_DELAY_MS / 1000,
                   duration: 5,
                   times: [0, 0.1, 0.8, 1],
                }}
