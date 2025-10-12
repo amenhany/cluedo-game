@@ -48,8 +48,31 @@
     "hud.tooltip.no_card": "لا يوجد كارت؟",
     "hud.tooltip.show_card": "اكشف كارتاً إلى {suggester}",
 
+    "hud.tooltip.notes": "افتح ملاحظاتك",
+    "hud.tooltip.lose": "الكل يخسر!",
+    "hud.tooltip.elimination": "{player} يخسر!",
+    "hud.tooltip.winner": "{player} يكسب!",
+
     "hud.popup.deck": "الكومة فيها {card}!",
     "hud.popup.has": "{player} لديه {card}!",
+
+    "hud.sidebar.title": "وقف اللعب",
+    "hud.sidebar.player_list": "قائمة اللاعبين",
+    "hud.sidebar.settings": "الإعدادات",
+    "hud.sidebar.main_menu": "الخروج إلى القائمة الرئيسية",
+    "hud.sidebar.exit": "الخروج من اللعبة",
+
+    "hud.lobby.name": "الاسم",
+    "hud.lobby.character_select": "الشخصية",
+    "hud.lobby.start_game": "ابدأ اللعبة",
+    "hud.lobby.join_game": "ادخل اللعبة",
+    "hud.lobby.player_list": "قائمة اللاعبين ({num}/6)",
+    "hud.lobby.port": "Serving on port {port}",
+    "hud.lobby.return_players": "إعادة اللاعبين بعد الاقتراح",
+    "hud.lobby.spectators_show": "يمكن للخاسرين إظهار كروت",
+
+    "error.start.num_players": "تحتاج على الأقل ٣ لاعبين!",
+    "error.start.auth": "فقط المستضيف يستطيع بدأ اللعبة!",
 
     "menu.main.title": "كلودو",
     "menu.main.host": "استضيف اللعبة",

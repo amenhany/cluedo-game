@@ -34,5 +34,6 @@ contextBridge.exposeInMainWorld('api', {
         isPortAvailable: (port) => ipcRenderer.invoke('game:is-port-available', port),
         startServer: (options) => ipcRenderer.invoke('game:start-server', options),
         closeServer: () => ipcRenderer.send('game:close-server'),
+        wipeMatch: (matchID) => ipcRendererSend('game:wipe-match', matchID),
     },
 } satisfies Window['api']);

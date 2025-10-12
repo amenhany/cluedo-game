@@ -1,5 +1,5 @@
 import type { ClientOptions } from '@/types/client';
-import { AnimatePresence, motion } from 'motion/react';
+import { motion } from 'motion/react';
 import CluedoBoard from '../board/CluedoBoard';
 import { useEffect, useRef, useState } from 'react';
 import { LobbyClient } from 'boardgame.io/client';
@@ -18,9 +18,9 @@ import { cluedoGraph } from '@/game/board/boardGraph';
 import Node from '../board/Node';
 import { t } from '@/lib/lang';
 import { isDev } from '@/lib/util';
-import SettingsScreen from '@/ui/SettingsScreen';
-import NavButtons from '@/ui/NavButtons';
 import { useSceneTransition } from '@/contexts/SceneTransitionContext';
+import Sidebar from './Sidebar';
+import { ChevronDown } from 'lucide-react';
 
 type LobbyProps = ClientOptions & {
    isHost: boolean;
@@ -37,7 +37,6 @@ export default function CluedoLobby({
    playerID,
    credentials,
 }: LobbyProps) {
-   const [openSettings, setOpenSettings] = useState(false);
    const [match, setMatch] = useState<LobbyAPI.Match | null>(null);
    const port = server.split(':')[2];
    const lobbyClient = new LobbyClient({ server });
@@ -45,8 +44,9 @@ export default function CluedoLobby({
 
    const [playerName, setPlayerName] = useState('');
    const [character, setCharacter] = useState<Character | null>(null);
-   const [rules] = useState<Rules>({
+   const [rules, setRules] = useState<Rules>({
       returnPlayersAfterSuggestion: false,
+      spectatorsCanShowCards: true,
    });
    const [isTyping, setIsTyping] = useState(false);
    const [countdown, setCountdown] = useState<number | null>(null);
@@ -56,7 +56,9 @@ export default function CluedoLobby({
    useEffect(() => {
       const interval = setInterval(async () => {
          const { matches } = await lobbyClient.listMatches('cluedo');
-         const game = matches.find((match) => match.setupData?.started === true);
+         const game = matches.find(
+            (match) => match.setupData?.started === true && !match.gameover
+         );
          if (game && countdown === null && !isHost) setGameId(game.matchID);
          const m = await lobbyClient.getMatch('cluedo', matchID);
          setMatch(m);
@@ -80,8 +82,8 @@ export default function CluedoLobby({
    }, []);
 
    useEffect(() => {
-      console.log(readyPlayerLength.current);
-      console.log(readyPlayers.length);
+      if (gameId) return;
+
       if (readyPlayerLength.current < readyPlayers.length) {
          audioManager.playSfx(joinSfx);
          readyPlayerLength.current = readyPlayers.length;
@@ -196,7 +198,6 @@ export default function CluedoLobby({
          playerName: undefined,
          data: undefined,
       });
-      lobbyClient.leaveMatch('cluedo', matchID, { playerID, credentials });
       triggerTransition(onLeave, 'iris');
    }
 
@@ -232,92 +233,136 @@ export default function CluedoLobby({
             animate={{ opacity: countdown === null ? 1 : 0 }}
             transition={{ duration: 1, ease: 'easeIn', delay: 2 }}
          >
-            <NavButtons
-               setOpenSettings={setOpenSettings}
-               exitFn={leaveGame}
-               exitTooltip="Exit to Main Menu"
-            />
+            <Sidebar exitFn={leaveGame} players={readyPlayers} playerID={playerID} />
             <div className="player-form">
-               <label htmlFor="name">Name</label>
-               <input
-                  id="name"
-                  name="name"
-                  value={playerName}
-                  onChange={(evt) => setPlayerName(evt.target.value.trim())}
-                  onFocus={() => {
-                     setIsTyping(true);
-                     audioManager.playSfx(selectSfx);
-                  }}
-                  onBlur={() => {
-                     saveName(playerName);
-                     setIsTyping(false);
-                  }}
-               />
-               <label htmlFor="character-select">Character</label>
-               <select
-                  name="character"
-                  id="character-select"
-                  value={character ?? ''}
-                  onChange={(evt) => {
-                     saveCharacter(evt.target.value as Character);
-                     audioManager.playSfx(selectSfx);
-                  }}
-               >
-                  {CARDS.suspects.map((suspect) => (
-                     <option
-                        key={suspect}
-                        value={suspect}
-                        disabled={takenCharacters.includes(suspect)}
-                     >
-                        {t(`suspect.${suspect}`)}
-                     </option>
-                  ))}
-               </select>
-            </div>
-
-            <h2>Player List ({readyPlayers.length}/6)</h2>
-            <ul>
-               {readyPlayers.map((p, i) => (
-                  <li key={p.id}>
-                     {i + 1 + ')'} {p.name} "{t(`suspect.${p.data.character}`)}"
-                  </li>
-               ))}
-            </ul>
-
-            {isHost && <h1>Serving on port {port}</h1>}
-
-            {isHost ? (
-               <HoverButton
-                  tooltip={
-                     invalidGame
-                        ? 'You need at least 3 players!'
-                        : !isHost
-                        ? 'Only the host can start the game!'
-                        : null
-                  }
-                  aria-disabled={invalidGame || !isHost}
-                  onClick={startGame}
-               >
-                  Start Game
-               </HoverButton>
-            ) : (
-               gameId && (
-                  <HoverButton
-                     tooltip={gameId ? null : 'Game has not started!'}
-                     aria-disabled={!gameId}
-                     onClick={() => {
-                        if (!gameId) audioManager.playSfx(lockedSfx);
-                        else joinGame(gameId);
+               <div className="input-wrapper">
+                  <label htmlFor="name">{t('hud.lobby.name')}</label>
+                  <input
+                     id="name"
+                     name="name"
+                     value={playerName}
+                     onChange={(evt) => setPlayerName(evt.target.value.trim())}
+                     onFocus={() => {
+                        setIsTyping(true);
+                        audioManager.playSfx(selectSfx);
+                     }}
+                     onBlur={() => {
+                        saveName(playerName);
+                        setIsTyping(false);
+                     }}
+                  />
+               </div>
+               <div className="input-wrapper">
+                  <label htmlFor="character-select">
+                     {t('hud.lobby.character_select')}
+                  </label>
+                  <select
+                     name="character"
+                     id="character-select"
+                     value={character ?? ''}
+                     onChange={(evt) => {
+                        saveCharacter(evt.target.value as Character);
+                        audioManager.playSfx(selectSfx);
                      }}
                   >
-                     Join Game
-                  </HoverButton>
-               )
+                     {CARDS.suspects.map((suspect) => (
+                        <option
+                           key={suspect}
+                           value={suspect}
+                           disabled={takenCharacters.includes(suspect)}
+                        >
+                           {t(`suspect.${suspect}`)}
+                        </option>
+                     ))}
+                  </select>
+                  <i>
+                     <ChevronDown size={20} />
+                  </i>
+               </div>
+            </div>
+
+            {isHost && (
+               <ul className="rules">
+                  <li>
+                     <input
+                        type="checkbox"
+                        id="rule-1"
+                        name="rule-1"
+                        checked={rules.returnPlayersAfterSuggestion}
+                        onChange={() => {
+                           audioManager.playSfx(selectSfx);
+                           setRules((prev) => ({
+                              ...prev,
+                              returnPlayersAfterSuggestion:
+                                 !prev.returnPlayersAfterSuggestion,
+                           }));
+                        }}
+                     />
+                     <label htmlFor="rule-1">{t('hud.lobby.return_players')}</label>
+                  </li>
+                  <li>
+                     <input
+                        type="checkbox"
+                        id="rule-2"
+                        name="rule-2"
+                        checked={rules.spectatorsCanShowCards}
+                        onChange={() => {
+                           audioManager.playSfx(selectSfx);
+                           setRules((prev) => ({
+                              ...prev,
+                              spectatorsCanShowCards: !prev.spectatorsCanShowCards,
+                           }));
+                        }}
+                     />
+                     <label htmlFor="rule-1">{t('hud.lobby.spectators_show')}</label>
+                  </li>
+               </ul>
             )}
-            {countdown && <span>{countdown}</span>}
-            <AnimatePresence>
-               {openSettings && <SettingsScreen onClose={() => setOpenSettings(false)} />}
-            </AnimatePresence>
+
+            <div className="lobby-list">
+               <h2>{t('hud.lobby.player_list', { num: readyPlayers.length })}</h2>
+               <ol>
+                  {readyPlayers.map((p, i) => (
+                     <li key={p.id}>
+                        {i + 1 + ')'} {p.name} "{t(`suspect.${p.data.character}`)}"
+                     </li>
+                  ))}
+               </ol>
+            </div>
+
+            {isHost && <h1 className="port">{t('hud.lobby.port', { port })}</h1>}
+
+            <div className="start-button">
+               {isHost ? (
+                  <HoverButton
+                     tooltip={
+                        invalidGame
+                           ? t('error.start.num_players')
+                           : !isHost
+                           ? t('error.start.auth')
+                           : null
+                     }
+                     aria-disabled={invalidGame || !isHost || countdown !== null}
+                     onClick={startGame}
+                  >
+                     {t('hud.lobby.start_game')}
+                  </HoverButton>
+               ) : (
+                  gameId && (
+                     <HoverButton
+                        tooltip={gameId ? null : 'Game has not started!'}
+                        aria-disabled={!gameId}
+                        onClick={() => {
+                           if (!gameId) audioManager.playSfx(lockedSfx);
+                           else joinGame(gameId);
+                        }}
+                     >
+                        {t('hud.lobby.join_game')}
+                     </HoverButton>
+                  )
+               )}
+            </div>
+            {countdown && <span className="countdown">{countdown}</span>}
          </motion.div>
       </div>
    );

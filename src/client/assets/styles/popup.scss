@@ -1,5 +1,5 @@
-@use './variables' as *;
-@use './mixins' as *;
+@use "./variables" as *;
+@use "./mixins" as *;
 
 .hud .backdrop {
     @include overlay(0.7, true, 2px);

@@ -7,7 +7,7 @@ import type { GameState, SetupData } from '../types/game';
 function makeSetupData(players: SetupData['players']): SetupData {
     return {
         started: true,
-        rules: { returnPlayersAfterSuggestion: true },
+        rules: { returnPlayersAfterSuggestion: true, spectatorsCanShowCards: true },
         players,
     };
 }

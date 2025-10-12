@@ -56,6 +56,7 @@ function makeMockGame(): GameState {
         deck: [],
         rules: {
             returnPlayersAfterSuggestion: true,
+            spectatorsCanShowCards: true,
         },
     };
 }
@@ -676,34 +677,5 @@ describe('makeAccusation & suggestion turn order', () => {
 
         expect(G.players['1'].isEliminated).toBe(false);
         expect(events.endGame).toHaveBeenCalledWith({ winner: '1' });
-    });
-
-    it('skips eliminated players when resolving suggestion', () => {
-        // Simulate: player 1 is eliminated
-        G.players['1'].isEliminated = true;
-
-        // Player 0 makes a valid suggestion
-        G.players['0'].position = 'study';
-        G.pendingSuggestion = {
-            suggester: '0',
-            suspect: 'scarlett',
-            weapon: 'dagger',
-            room: 'study',
-            suspectOrigin: '6-4',
-        };
-
-        moves.makeSuggestion({
-            G,
-            playerID: '0',
-            ctx: { ...mockCtx, currentPlayer: '0' } as Ctx,
-            events,
-            random: mockRandom(),
-            log: null as any,
-        });
-
-        // Should skip player 2 (eliminated) and set active players to 1
-        expect(events.setActivePlayers).toHaveBeenCalledWith({
-            value: { '2': 'ResolveSuggestion' },
-        });
     });
 });

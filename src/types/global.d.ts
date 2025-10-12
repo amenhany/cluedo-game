@@ -22,6 +22,7 @@ declare global {
                     port: number;
                 }): Promise<{ ok: boolean; port?: number; message?: string }>;
                 closeServer(): void;
+                wipeMatch(matchID: string): void;
             };
         };
     }

@@ -14,6 +14,7 @@ export default function HoverButton({
 
    return (
       <div
+         className="hover-button"
          style={{ position: 'relative' }}
          onMouseEnter={() => setPos({ x: 0, y: 0 })}
          onMouseLeave={() => setPos(null)}

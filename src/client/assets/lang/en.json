@@ -48,8 +48,31 @@
     "hud.tooltip.no_card": "No card to show?",
     "hud.tooltip.show_card": "Show a card to {suggester}",
 
+    "hud.tooltip.notes": "Open your notes",
+    "hud.tooltip.lose": "Everybody loses!",
+    "hud.tooltip.elimination": "{player} is eliminated!",
+    "hud.tooltip.winner": "{player} wins the game!",
+
     "hud.popup.deck": "The deck has {card}!",
     "hud.popup.has": "{player} has {card}!",
+
+    "hud.sidebar.title": "Pause",
+    "hud.sidebar.player_list": "Player List",
+    "hud.sidebar.settings": "Settings",
+    "hud.sidebar.main_menu": "Exit to Main Menu",
+    "hud.sidebar.exit": "Exit Game",
+
+    "hud.lobby.name": "Name",
+    "hud.lobby.character_select": "Character",
+    "hud.lobby.start_game": "Start Game",
+    "hud.lobby.join_game": "Join Game",
+    "hud.lobby.player_list": "Player List ({num}/6)",
+    "hud.lobby.port": "Serving on port {port}",
+    "hud.lobby.return_players": "Return players after a suggestion",
+    "hud.lobby.spectators_show": "Spectators can show cards",
+
+    "error.start.num_players": "You need at least 3 players!",
+    "error.start.auth": "Only the host can start the game!",
 
     "menu.main.title": "CLUEDO",
     "menu.main.host": "Host Game",

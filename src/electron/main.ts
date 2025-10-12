@@ -76,6 +76,12 @@ app.on('ready', () => {
         return { ok: true, port };
     });
 
+    ipcMainOn('game:wipe-match', async (matchID: string) => {
+        if (serverInstance) {
+            await serverInstance.db.wipe(matchID);
+        }
+    });
+
     ipcMainOn('game:close-server', async () => {
         if (serverInstance && servers) {
             await serverInstance.kill(servers);

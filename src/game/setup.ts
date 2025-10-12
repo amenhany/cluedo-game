@@ -28,6 +28,7 @@ export const setup = (
 
     const rules = setupData?.rules || {
         returnPlayersAfterSuggestion: false,
+        spectatorsCanShowCards: true,
     };
 
     const players: GameState['players'] = {};

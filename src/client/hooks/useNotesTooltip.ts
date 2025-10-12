@@ -1,3 +1,4 @@
+import { t } from '@/lib/lang';
 import type { TooltipConfig } from '@/types/client';
 import type { PlayerState, Stage } from '@/types/game';
 import type { PlayerID } from 'boardgame.io';
@@ -20,7 +21,7 @@ export function useNotesTooltip({
         winner === undefined
     ) {
         return {
-            label: 'Open your notes',
+            label: t('hud.tooltip.notes'),
         };
     }
 

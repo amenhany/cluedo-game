@@ -29,6 +29,9 @@ import GameOver from './GameOver';
 import ScrollTriggers from './ScrollTriggers';
 import Chatbox from './Chatbox';
 import TooltipManager from './TooltipManager';
+import Sidebar from '../lobby/Sidebar';
+import { useMatch } from '@/contexts/MatchProvider';
+import { useSceneTransition } from '@/contexts/SceneTransitionContext';
 
 type HudProps = {
    players: Record<PlayerID, PlayerState>;
@@ -65,6 +68,8 @@ export default function CluedoHud(props: HudProps) {
    const seenCards = (playerID && players[playerID].seenCards) || [];
    const prevSeenCards = useRef<TCard[]>([]);
    const prevResolver = useRef<PlayerState | null>(null);
+   const { leaveGame } = useMatch();
+   const { triggerTransition } = useSceneTransition();
 
    useEffect(() => {
       if (prevSeenCards.current.length !== seenCards.length && seenCards.length) {
@@ -90,6 +95,15 @@ export default function CluedoHud(props: HudProps) {
 
       if (resolver) prevResolver.current = resolver;
    }, [resolver, seenCards]);
+
+   useEffect(() => {
+      window.addEventListener('beforeunload', leaveGame);
+      return () => window.removeEventListener('beforeunload', leaveGame);
+   }, [leaveGame]);
+
+   function disconnect() {
+      triggerTransition(leaveGame, 'iris');
+   }
 
    return (
       <div
@@ -162,6 +176,15 @@ export default function CluedoHud(props: HudProps) {
                ctx={ctx}
             />
 
+            <Sidebar
+               exitFn={disconnect}
+               playerID={playerID}
+               players={Object.values(players).map((p) => ({
+                  id: Number(p.id),
+                  name: p.name,
+               }))}
+            />
+
             <GameOver
                playerID={playerID}
                winner={ctx.gameover?.winner}
@@ -180,7 +203,7 @@ export default function CluedoHud(props: HudProps) {
             </AnimatePresence>
             {/* <Popup
                onClick={() => {}}
-               bottomText={t('hud.tooltip.wait', {
+               bottomText={t('hud.tooltip.elimination', {
                   player: 'resolver',
                   suggester: 'suggester',
                })}

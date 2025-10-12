@@ -56,7 +56,7 @@ export default function JoinModal({
       triggerTransition(() => {
          onJoin(options).catch((e) => {
             if (e.message.slice(-3) === '409') setError('Server is full! (6)');
-            else setError(e.details);
+            else setError(e.message);
             setIsDisabled(false);
          });
       }, 'iris');

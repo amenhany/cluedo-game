@@ -1,4 +1,5 @@
 import { SUSPENSE_DELAY_MS } from '@/game/constants';
+import { t } from '@/lib/lang';
 import type { TooltipConfig } from '@/types/client';
 import type { PlayerState } from '@/types/game';
 import type { PlayerID } from 'boardgame.io';
@@ -41,17 +42,17 @@ export function useGameOverTooltip({
 
     if (localWinner === null) {
         return {
-            label: 'Everybody loses!',
+            label: t('hud.tooltip.lose'),
         };
     } else if (localWinner && localWinner.id !== playerID) {
         return {
-            label: `${localWinner.name} wins the game!`,
+            label: t('hud.tooltip.winner', { player: localWinner.name }),
         };
     }
 
     if (eliminatedPlayer && eliminatedPlayer.id !== playerID) {
         return {
-            label: `${eliminatedPlayer.name} is eliminated!`,
+            label: t('hud.tooltip.elimination', { player: eliminatedPlayer.name }),
         };
     }
 

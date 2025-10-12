@@ -51,7 +51,7 @@ export const SceneTransitionProvider: React.FC<{ children: React.ReactNode }> = 
       });
       callbackQueue.current = callback;
       AudioManager.getInstance().stopMusic();
-      AudioManager.getInstance().playSfx(startSfx);
+      if (type === 'iris') AudioManager.getInstance().playSfx(startSfx);
    };
 
    return (
@@ -69,11 +69,11 @@ export const SceneTransitionProvider: React.FC<{ children: React.ReactNode }> = 
             variants={{
                close: {
                   opacity: 1,
-                  transition: { duration: 2 },
+                  transition: { duration: transitionType === 'fade' ? 4 : 2 },
                },
                open: {
                   opacity: 0,
-                  transition: { duration: 1 },
+                  transition: { duration: transitionType === 'fade' ? 1.5 : 1 },
                },
             }}
             initial="close"

@@ -19,6 +19,8 @@ import wallopImage1 from '@/assets/textures/text/wallop1.png';
 import wallopImage2 from '@/assets/textures/text/wallop2.png';
 import { motion } from 'motion/react';
 import { SUSPENSE_DELAY_MS } from '@/game/constants';
+import { useMatch } from '@/contexts/MatchProvider';
+import { useSceneTransition } from '@/contexts/SceneTransitionContext';
 
 export default function GameOver({
    winner,
@@ -35,6 +37,8 @@ export default function GameOver({
    const audioManager = AudioManager.getInstance();
    const [wallop, setWallop] = useState<string | null>(null);
    const countRef = useRef(0);
+   const { playAgain } = useMatch();
+   const { triggerTransition } = useSceneTransition();
 
    useEffect(() => {
       countRef.current = 0;
@@ -64,11 +68,22 @@ export default function GameOver({
 
    useEffect(() => {
       if (winner === undefined) return;
-      const timeout = setTimeout(
+      const suspense = setTimeout(
          () => handleWin(winner ? players[winner] : null),
          SUSPENSE_DELAY_MS
       );
-      return () => clearTimeout(timeout);
+      const newGame = setTimeout(
+         () =>
+            triggerTransition(
+               () => playAgain(players[playerID].name, players[playerID].character),
+               'fade'
+            ),
+         SUSPENSE_DELAY_MS + 7000
+      );
+      return () => {
+         clearTimeout(suspense);
+         clearTimeout(newGame);
+      };
    }, [winner]);
 
    function handleWin(winner: PlayerState | null) {

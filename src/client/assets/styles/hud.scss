@@ -1,8 +1,8 @@
-@use './variables' as *;
-@use './mixins' as *;
-@use './dice.scss';
-@use './hand.scss';
-@use './notes.scss';
+@use "./variables" as *;
+@use "./mixins" as *;
+@use "./dice.scss";
+@use "./hand.scss";
+@use "./notes.scss";
 
 .hud {
     position: fixed;
@@ -168,7 +168,7 @@ html:lang(ar) .card-label {
     position: absolute;
     right: 0;
     padding: 1rem 1.8rem;
-    margin: 1.5rem 2rem;
+    margin: 1.5rem 4rem;
     border-radius: 10px;
     z-index: 300;
     pointer-events: all;

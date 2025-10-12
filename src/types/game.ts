@@ -108,6 +108,7 @@ export type Stage =
 
 export type Rules = {
     returnPlayersAfterSuggestion: boolean;
+    spectatorsCanShowCards: boolean;
 };
 
 export type SetupData = {

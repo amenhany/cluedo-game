@@ -2,7 +2,8 @@ import type { PlayerState, Node, TileNode, RoomNode, Weapon } from '@/types/game
 import Piece from './Piece';
 import type { PlayerID } from 'boardgame.io';
 import { AudioManager } from '@/lib/AudioManager';
-import appear from '@/assets/audio/sfx/appear.wav';
+import appearSfx from '@/assets/audio/sfx/appear.wav';
+import moneySfx from '@/assets/audio/sfx/money.wav';
 import { useDndContext, useDroppable } from '@dnd-kit/core';
 import { t } from '@/lib/lang';
 import { useEffect } from 'react';
@@ -58,7 +59,7 @@ export default function Node({
 
    useEffect(() => {
       if (isRoom && isOver) {
-         AudioManager.getInstance().playSfx(appear);
+         AudioManager.getInstance().playSfx(appearSfx);
       }
    }, [isOver]);
 
@@ -71,8 +72,8 @@ export default function Node({
          id={node.id}
          style={style}
          onMouseEnter={
-            isRoom && isDroppable && !isOver && !suggestion
-               ? () => AudioManager.getInstance().playSfx(appear)
+            (isRoom || node.type === 'end') && isDroppable && !isOver && !suggestion
+               ? () => AudioManager.getInstance().playSfx(isRoom ? appearSfx : moneySfx)
                : () => {}
          }
       >

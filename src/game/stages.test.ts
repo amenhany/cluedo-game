@@ -45,6 +45,7 @@ function makeMockGame(): GameState {
         deck: [],
         rules: {
             returnPlayersAfterSuggestion: true,
+            spectatorsCanShowCards: true,
         },
     };
 }

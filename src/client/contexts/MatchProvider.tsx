@@ -1,27 +1,28 @@
-import Tooltip from '../game/hud/Tooltip';
-import type { TooltipConfig } from '@/types/client';
-import { AnimatePresence } from 'motion/react';
-import { createContext, useContext, useState, type ReactNode } from 'react';
+import type { ClientOptions } from '@/types/client';
+import type { Character } from '@/types/game';
+import { createContext, useContext, type ReactNode } from 'react';
 
-type TooltipContextType = {
-   setTooltip: (config: TooltipConfig | null) => void;
-   tooltip: TooltipConfig | null;
+type MatchContextType = Partial<ClientOptions> & {
+   playAgain: (playerName: string, character: Character) => void;
+   leaveGame: () => void;
+   isHost: boolean;
 };
 
-const TooltipContext = createContext<TooltipContextType>({
-   setTooltip: () => {},
-   tooltip: null,
+const MatchContext = createContext<MatchContextType>({
+   server: '',
+   playerID: '',
+   credentials: '',
+   matchID: '',
+   playAgain: () => {},
+   leaveGame: () => {},
+   isHost: false,
 });
 
-export function TooltipProvider({ children }: { children: ReactNode }) {
-   const [tooltip, setTooltip] = useState<TooltipConfig | null>(null);
-
-   return (
-      <TooltipContext.Provider value={{ setTooltip, tooltip }}>
-         {children}
-         <AnimatePresence>{tooltip && <Tooltip {...tooltip} />}</AnimatePresence>
-      </TooltipContext.Provider>
-   );
+export function MatchProvider({
+   children,
+   ...props
+}: MatchContextType & { children: ReactNode }) {
+   return <MatchContext.Provider value={props}>{children}</MatchContext.Provider>;
 }
 
-export const useTooltip = () => useContext(TooltipContext);
+export const useMatch = () => useContext(MatchContext);

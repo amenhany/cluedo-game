@@ -19,4 +19,5 @@ export type EventPayloadMapping = {
     'game:start-server': { port: number };
     'game:is-port-available': number;
     'game:close-server': undefined;
+    'game:wipe-match': string;
 };

@@ -74,11 +74,12 @@ function nextPlayer(
     ctx: Ctx,
     events: DefaultPluginAPIs['events'],
     stageName: Stage,
-    players: Record<PlayerID, PlayerState>
+    players: Record<PlayerID, PlayerState>,
+    rule: boolean
 ) {
     const next = ((Number(currentPlayer) + 1) % ctx.numPlayers).toString();
-    if (players[next].isEliminated)
-        return nextPlayer(next, ctx, events, stageName, players);
+    if (players[next].isEliminated && (!rule || players[next].hand.length === 0))
+        return nextPlayer(next, ctx, events, stageName, players, rule);
     if (next === ctx.currentPlayer) return true;
     events.setActivePlayers({
         value: {
@@ -164,7 +165,14 @@ export const makeSuggestion: MoveFn<GameState> = ({ G, playerID, ctx, events }) 
     if (!suggestion || room.type !== 'room' || suggester.position !== suggestion.room)
         return INVALID_MOVE;
     if (Object.values(suggestion).some((value) => value === null)) return INVALID_MOVE;
-    nextPlayer(playerID, ctx, events, 'ResolveSuggestion', G.players);
+    nextPlayer(
+        playerID,
+        ctx,
+        events,
+        'ResolveSuggestion',
+        G.players,
+        G.rules.spectatorsCanShowCards
+    );
 };
 
 export const showCard: MoveFn<GameState> = ({ G, playerID, events }, card: Card) => {
@@ -215,7 +223,14 @@ export const noCard: MoveFn<GameState> = ({ G, playerID, ctx, events }) => {
     );
     if (hasUnseenCard) return INVALID_MOVE;
 
-    const loop = nextPlayer(playerID, ctx, events, 'ResolveSuggestion', G.players);
+    const loop = nextPlayer(
+        playerID,
+        ctx,
+        events,
+        'ResolveSuggestion',
+        G.players,
+        G.rules.spectatorsCanShowCards
+    );
     if (loop) {
         G.prevSuggestion = {
             suggester: suggestion.suggester,
