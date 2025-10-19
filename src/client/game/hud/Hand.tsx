@@ -25,8 +25,8 @@ export default function Hand({
 
          <motion.div
             className={`hand no-scroll-zone ${isHandExpanded ? 'expanded' : ''}`}
-            initial={{ bottom: '-34vh' }}
-            animate={{ bottom: isHandExpanded ? '3vh' : '-31vh' }}
+            initial={{ bottom: '-30%' }}
+            animate={{ bottom: isHandExpanded ? '4%' : '-30%' }}
             transition={{ type: 'spring', stiffness: 200, damping: 20 }}
          >
             {hand.map((card) => (

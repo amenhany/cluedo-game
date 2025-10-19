@@ -1,16 +1,16 @@
 import { motion, spring } from 'framer-motion';
 import type { GameState, Room } from '@/types/game';
 
-const ROOM_COORDS: Record<Room, { x: number; y: number; r: number }> = {
-   kitchen: { x: 1008, y: 990, r: 160 },
-   lounge: { x: 980, y: 170, r: 175 },
-   study: { x: 200, y: 125, r: 150 },
-   ballroom: { x: 596, y: 966, r: 190 },
-   diningRoom: { x: 962, y: 600, r: 190 },
-   hall: { x: 598, y: 200, r: 170 },
-   library: { x: 200, y: 418, r: 150 },
-   billiardRoom: { x: 190, y: 688, r: 150 },
-   conservatory: { x: 188, y: 1015, r: 150 },
+const ROOM_COORDS: Record<Room, { x: string | number; y: string | number; r: number }> = {
+   kitchen: { x: '84.6%', y: '82.5%', r: 160 },
+   lounge: { x: '82.8%', y: '14.5%', r: 175 },
+   study: { x: '17.5%', y: '11%', r: 150 },
+   ballroom: { x: '50.3%', y: '80.3%', r: 190 },
+   diningRoom: { x: '80.85%', y: '50%', r: 190 },
+   hall: { x: '50.5%', y: '16.5%', r: 170 },
+   library: { x: '17%', y: '34.85%', r: 150 },
+   billiardRoom: { x: '15.85%', y: '57.3%', r: 150 },
+   conservatory: { x: '15.8%', y: '84.5%', r: 150 },
 };
 
 export default function SpotlightOverlay({

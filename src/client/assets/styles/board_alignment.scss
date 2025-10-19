@@ -5,9 +5,9 @@
 }
 
 #diningRoom .room-name {
-    margin-top: 43px;
-    margin-left: 55px;
-    font-size: 1.6rem;
+    margin-top: 40%;
+    margin-left: 50%;
+    font-size: clamp(1rem, 2.1vw, 1.6rem);
     rotate: 90deg;
 }
 
@@ -21,7 +21,7 @@
 }
 
 #conservatory .room-name {
-    font-size: 1.3rem;
+    font-size: clamp(0.6rem, 1.7vw, 1.3rem);
     margin-right: 12px;
 }
 

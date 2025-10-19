@@ -151,11 +151,17 @@ export default function CluedoLobby({
       if (invalidGame || !isHost) return audioManager.playSfx(lockedSfx);
 
       const { matchID: gameID } = await lobbyClient.createMatch('cluedo', {
-         numPlayers: readyPlayers.length,
+         numPlayers: isDev ? 3 : readyPlayers.length,
          setupData: {
             started: true,
             rules,
-            players: readyPlayers as SetupData['players'],
+            players: isDev
+               ? ([
+                    ...readyPlayers,
+                    { id: 1, name: 'amen', data: { character: 'mustard' } },
+                    { id: 2, name: 'ahmad', data: { character: 'white' } },
+                 ] as SetupData['players'])
+               : (readyPlayers as SetupData['players']),
          } satisfies SetupData,
       });
 

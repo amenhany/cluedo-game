@@ -131,18 +131,25 @@ export default function CluedoHud(props: HudProps) {
 
             {suggestion && (
                <div className="suggestion">
-                  <h2>Suggestion</h2>
+                  <h2>{t('hud.suggestion.title')}</h2>
                   <ul>
                      <li>
-                        Suspect :{' '}
-                        {suggestion.suspect ? t(`suspect.${suggestion.suspect}`) : 'NONE'}
+                        {t('hud.suggestion.suspect')} :{' '}
+                        {suggestion.suspect
+                           ? t(`suspect.${suggestion.suspect}`)
+                           : t('hud.suggestion.none')}
                      </li>
                      <li>
-                        Weapon :{' '}
-                        {suggestion.weapon ? t(`weapon.${suggestion.weapon}`) : 'NONE'}
+                        {t('hud.suggestion.weapon')} :{' '}
+                        {suggestion.weapon
+                           ? t(`weapon.${suggestion.weapon}`)
+                           : t('hud.suggestion.none')}
                      </li>
                      <li>
-                        Room : {suggestion.room ? t(`room.${suggestion.room}`) : 'NONE'}
+                        {t('hud.suggestion.room')} :{' '}
+                        {suggestion.room
+                           ? t(`room.${suggestion.room}`)
+                           : t('hud.suggestion.none')}
                      </li>
                   </ul>
                </div>

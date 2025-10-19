@@ -37,6 +37,12 @@
     "hud.turn.you": "Your Turn",
     "hud.turn.other": "{player}'s Turn",
 
+    "hud.suggestion.title": "Suggestion",
+    "hud.suggestion.none": "NONE",
+    "hud.suggestion.suspect": "Suspect",
+    "hud.suggestion.weapon": "Weapon",
+    "hud.suggestion.room": "Room",
+
     "hud.tooltip.no_resolution": "No card was shown",
     "hud.tooltip.shown_card": "{resolver} showed a card to {suggester}",
     "hud.tooltip.can_suggest": "Make a Suggestion",

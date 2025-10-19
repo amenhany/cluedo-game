@@ -37,10 +37,16 @@
     "hud.turn.you": "دورك",
     "hud.turn.other": "{player} دور",
 
+    "hud.suggestion.title": "الإقتراح",
+    "hud.suggestion.none": "غير موجود",
+    "hud.suggestion.suspect": "المشتبه به",
+    "hud.suggestion.weapon": "أداة القتل",
+    "hud.suggestion.room": "مكان الجريمة",
+
     "hud.tooltip.no_resolution": "لم يتم كشف أي كارت",
     "hud.tooltip.shown_card": "{resolver} كشف كارتاً إلى {suggester}",
     "hud.tooltip.can_suggest": "اقترح",
-    "hud.tooltip.suggest": "اقترح",
+    "hud.tooltip.suggest": "أشُك",
     "hud.tooltip.end_turn": "انهي دورك",
     "hud.tooltip.suspect": "اختر المشتبه به",
     "hud.tooltip.weapon": "اختر أداة القتل",

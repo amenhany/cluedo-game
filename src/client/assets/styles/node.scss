@@ -1,5 +1,5 @@
-@use './variables' as *;
-@use './mixins' as *;
+@use "./variables" as *;
+@use "./mixins" as *;
 
 .node {
     transform: none;
@@ -84,12 +84,12 @@
                 pointer-events: none;
                 text-transform: uppercase;
                 color: $board-text;
-                font-size: 1.5rem;
+                font-size: clamp(0.8rem, 2vw, 1.5rem);
                 transition: scale 0.8s ease;
                 user-select: none;
                 white-space: pre;
                 text-align: center;
-                line-height: 1.8rem;
+                line-height: clamp(1rem, 2vw, 1.8rem);
                 // text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.2);
             }
         }
