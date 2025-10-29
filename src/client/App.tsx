@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import MainMenu from './ui/MainMenu';
 import { CluedoClient } from './game/CluedoClient';
 import { SceneTransitionProvider } from './contexts/SceneTransitionContext';
-// import FilmFilter from './FilmFilter';
-// import { AudioManager } from '@/lib/AudioManager';
-// import opticalStart from '@/assets/audio/sfx/optical_start.wav';
-// import opticalLoop from '@/assets/audio/sfx/optical_loop.wav';
+import FilmFilter from './FilmFilter';
+import { AudioManager } from '@/lib/AudioManager';
+import opticalStart from '@/assets/audio/sfx/optical_start.wav';
+import opticalLoop from '@/assets/audio/sfx/optical_loop.wav';
 import { SettingsProvider } from './contexts/SettingsContext';
 import { LobbyClient } from 'boardgame.io/client';
 import type { ClientOptions, HostOptions, JoinOptions } from '@/types/client';
@@ -19,9 +19,9 @@ export default function App() {
    const [isHost, setIsHost] = useState(false);
 
    useEffect(() => {
-      // AudioManager.getInstance().playStatic(opticalStart, false, () =>
-      //    AudioManager.getInstance().playStatic(opticalLoop)
-      // );
+      AudioManager.getInstance().playStatic(opticalStart, false, () =>
+         AudioManager.getInstance().playStatic(opticalLoop)
+      );
    }, []);
 
    useEffect(() => {
@@ -188,7 +188,7 @@ export default function App() {
                   )}
                </MatchProvider>
             </SceneTransitionProvider>
-            {/* <FilmFilter /> */}
+            <FilmFilter />
          </SettingsProvider>
       </>
    );

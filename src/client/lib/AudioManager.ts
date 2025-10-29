@@ -5,7 +5,8 @@ export class AudioManager {
     private musicGain: GainNode;
     private sfxGain: GainNode;
     private staticGain: GainNode;
-    private STATIC_GAIN_MULTIPLIER = 10;
+    private STATIC_GAIN = 5;
+    private STATIC_GAIN_MUTED = 2;
     private currentMusic?: AudioBufferSourceNode;
     private currentStatic?: AudioBufferSourceNode;
     private cache = new Map<string, AudioBuffer>();
@@ -65,8 +66,10 @@ export class AudioManager {
         const source = this.ctx.createBufferSource();
         source.buffer = buffer;
         source.connect(this.staticGain);
-        if (!this.currentMusic) {
-            this.staticGain.gain.value = 5;
+        if (this.currentMusic) {
+            this.staticGain.gain.value = this.STATIC_GAIN_MUTED;
+        } else {
+            this.staticGain.gain.value = this.STATIC_GAIN;
         }
         source.loop = loop;
         source.start(0);
@@ -92,13 +95,11 @@ export class AudioManager {
         source.loop = loop;
         source.start(0);
 
-        this.staticGain.gain.value =
-            this.staticGain.gain.value / this.STATIC_GAIN_MULTIPLIER;
+        this.staticGain.gain.value = this.STATIC_GAIN_MUTED;
         this.currentMusic = source;
         source.onended = () => {
             if (this.currentMusic === source) {
-                this.staticGain.gain.value =
-                    this.staticGain.gain.value * this.STATIC_GAIN_MULTIPLIER;
+                this.staticGain.gain.value = this.STATIC_GAIN;
                 callback?.();
             }
         };
@@ -114,12 +115,7 @@ export class AudioManager {
         if (this.currentMusic) {
             this.currentMusic.stop();
             this.currentMusic = undefined;
-            setTimeout(
-                () =>
-                    (this.staticGain.gain.value =
-                        this.staticGain.gain.value * this.STATIC_GAIN_MULTIPLIER),
-                1500
-            );
+            setTimeout(() => (this.staticGain.gain.value = this.STATIC_GAIN), 1500);
         }
     }
 

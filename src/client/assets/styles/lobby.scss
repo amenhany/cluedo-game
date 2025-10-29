@@ -22,9 +22,41 @@
     font-size: 1.2rem;
     gap: 2rem;
 
-    .player-form {
+    .row {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .column {
         display: flex;
         flex-direction: column;
+    }
+
+    .form-wrapper {
+        gap: 5vw;
+    }
+
+    .character-form {
+        gap: 0.8rem;
+        img {
+            width: 120px;
+            height: auto;
+        }
+        .button-wrapper {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        button {
+            cursor: pointer;
+            transition: scale 0.3s ease-out;
+            &:active {
+                scale: 0.9;
+            }
+        }
+    }
+
+    .player-form {
         .input-wrapper {
             display: flex;
             gap: 1rem;
@@ -128,7 +160,7 @@
 }
 
 @media (max-height: 600px) {
-    .lobby-ui {
+    .lobby .box-wrapper {
         flex-direction: row;
     }
 }

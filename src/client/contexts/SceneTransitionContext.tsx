@@ -24,14 +24,27 @@ export const SceneTransitionProvider: React.FC<{ children: React.ReactNode }> = 
    const [transitionType, setTransitionType] = useState<TransitionType>('fade');
    const callbackQueue = useRef<(() => void) | null>(null);
    const radius = useRef(
-      (Math.sqrt(window.outerWidth ** 2 + window.outerHeight ** 2) / 2) *
-         (100 / Math.max(window.outerWidth, window.outerHeight))
+      (Math.sqrt(window.innerWidth ** 2 + window.innerHeight ** 2) / 2) *
+         (100 / Math.max(window.innerWidth, window.innerHeight)) *
+         1.05
    );
    const controls = useAnimationControls();
 
    useEffect(() => {
       controls.set('close');
       controls.start('open');
+
+      const updateRadius = () => {
+         radius.current =
+            (Math.sqrt(window.innerWidth ** 2 + window.innerHeight ** 2) / 2) *
+            (100 / Math.max(window.innerWidth, window.innerHeight)) *
+            1.05;
+      };
+
+      updateRadius();
+
+      window.addEventListener('resize', updateRadius);
+      return () => window.removeEventListener('resize', updateRadius);
    }, []);
 
    const triggerTransition = (
@@ -39,9 +52,6 @@ export const SceneTransitionProvider: React.FC<{ children: React.ReactNode }> = 
       type: TransitionType = 'fade'
    ) => {
       setTransitionType(type);
-      radius.current =
-         (Math.sqrt(window.innerWidth ** 2 + window.innerHeight ** 2) / 2) *
-         (100 / Math.max(window.innerWidth, window.innerHeight));
       controls.start('close').then(async () => {
          await callbackQueue.current?.();
          setTimeout(() => {

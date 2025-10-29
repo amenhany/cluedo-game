@@ -39,7 +39,7 @@ export const SUSPECT_COLORS: Record<Character, string> = {
 };
 
 export const SUSPECT_POSITIONS: Record<Character, NodeID> = {
-    scarlett: 'billiardRoom', // 16-0
+    scarlett: '16-0',
     mustard: '23-7', // 11-7 for End
     white: '14-24',
     green: '9-24',

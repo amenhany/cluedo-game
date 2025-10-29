@@ -38,7 +38,7 @@ export default function Sidebar({
       <>
          <button
             onClick={() => setSidebarVisible((prev) => !prev)}
-            className="sidebar-button"
+            className="sidebar-button no-scroll-zone"
          >
             <Menu size={30} />
          </button>
@@ -46,7 +46,7 @@ export default function Sidebar({
             {sidebarVisible && (
                <Backdrop onClick={() => setSidebarVisible(false)}>
                   <motion.div
-                     className="sidebar"
+                     className="sidebar no-scroll-zone"
                      onClick={(e) => e.stopPropagation()}
                      initial={{ right: '-200px' }}
                      animate={{ right: 0 }}
@@ -71,18 +71,21 @@ export default function Sidebar({
                                        className="player-list"
                                        onClick={(e) => e.stopPropagation()}
                                     >
-                                       {players.map((p) => (
-                                          <li
-                                             key={p.id}
-                                             className={
-                                                p.id.toString() === playerID
-                                                   ? 'highlighted'
-                                                   : ''
-                                             }
-                                          >
-                                             {p.name}
-                                          </li>
-                                       ))}
+                                       {players.map((p) => {
+                                          if (p.name)
+                                             return (
+                                                <li
+                                                   key={p.id}
+                                                   className={
+                                                      p.id.toString() === playerID
+                                                         ? 'highlighted'
+                                                         : ''
+                                                   }
+                                                >
+                                                   {p.name}
+                                                </li>
+                                             );
+                                       })}
                                     </ul>
                                  )}
                               </button>

@@ -1,3 +1,10 @@
+import scarlett from '@/assets/textures/suspects/scarlett.png';
+import mustard from '@/assets/textures/suspects/mustard.png';
+import white from '@/assets/textures/suspects/white.png';
+import green from '@/assets/textures/suspects/green.png';
+import peacock from '@/assets/textures/suspects/peacock.png';
+import plum from '@/assets/textures/suspects/plum.png';
+
 import type { ClientOptions } from '@/types/client';
 import { motion } from 'motion/react';
 import CluedoBoard from '../board/CluedoBoard';
@@ -20,7 +27,17 @@ import { t } from '@/lib/lang';
 import { isDev } from '@/lib/util';
 import { useSceneTransition } from '@/contexts/SceneTransitionContext';
 import Sidebar from './Sidebar';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useSettings } from '@/contexts/SettingsContext';
+
+const TEXTURE_MAPPING: Record<Character, string> = {
+   scarlett,
+   mustard,
+   white,
+   green,
+   peacock,
+   plum,
+};
 
 type LobbyProps = ClientOptions & {
    isHost: boolean;
@@ -52,6 +69,7 @@ export default function CluedoLobby({
    const [countdown, setCountdown] = useState<number | null>(null);
    const [gameId, setGameId] = useState<string | null>(null);
    const { triggerTransition } = useSceneTransition();
+   const { settings } = useSettings();
 
    useEffect(() => {
       const interval = setInterval(async () => {
@@ -129,6 +147,19 @@ export default function CluedoLobby({
       }, 2000);
       return () => clearTimeout(debounce);
    }, [playerName]);
+
+   function getNextAvailable(dir: 1 | -1): Character {
+      const len = CARDS.suspects.length;
+      let idx = CARDS.suspects.indexOf(character!);
+
+      for (let i = 0; i < len; i++) {
+         idx = (idx + dir + len) % len;
+         if (!takenCharacters.includes(CARDS.suspects[idx])) {
+            return CARDS.suspects[idx];
+         }
+      }
+      return character!;
+   }
 
    function saveName(newName: string) {
       lobbyClient.updatePlayer('cluedo', matchID, {
@@ -220,7 +251,10 @@ export default function CluedoLobby({
 
    return (
       <div className="lobby">
-         <div className={`alignment board-${character}`}>
+         <div
+            className={`alignment board-${character}`}
+            style={{ filter: settings?.filter === 'b&w' ? 'grayscale(100%)' : 'none' }}
+         >
             <CluedoBoard>
                {Object.values(cluedoGraph).map((node) => (
                   <Node
@@ -240,90 +274,123 @@ export default function CluedoLobby({
             transition={{ duration: 1, ease: 'easeIn', delay: 2 }}
          >
             <Sidebar exitFn={leaveGame} players={readyPlayers} playerID={playerID} />
-            <div className="player-form">
-               <div className="input-wrapper">
-                  <label htmlFor="name">{t('hud.lobby.name')}</label>
-                  <input
-                     id="name"
-                     name="name"
-                     value={playerName}
-                     onChange={(evt) => setPlayerName(evt.target.value.trim())}
-                     onFocus={() => {
-                        setIsTyping(true);
-                        audioManager.playSfx(selectSfx);
-                     }}
-                     onBlur={() => {
-                        saveName(playerName);
-                        setIsTyping(false);
-                     }}
-                  />
-               </div>
-               <div className="input-wrapper">
-                  <label htmlFor="character-select">
-                     {t('hud.lobby.character_select')}
-                  </label>
-                  <select
-                     name="character"
-                     id="character-select"
-                     value={character ?? ''}
-                     onChange={(evt) => {
-                        saveCharacter(evt.target.value as Character);
-                        audioManager.playSfx(selectSfx);
-                     }}
-                  >
-                     {CARDS.suspects.map((suspect) => (
-                        <option
-                           key={suspect}
-                           value={suspect}
-                           disabled={takenCharacters.includes(suspect)}
-                        >
-                           {t(`suspect.${suspect}`)}
-                        </option>
-                     ))}
-                  </select>
-                  <i>
-                     <ChevronDown size={20} />
-                  </i>
-               </div>
-            </div>
 
-            {isHost && (
-               <ul className="rules">
-                  <li>
-                     <input
-                        type="checkbox"
-                        id="rule-1"
-                        name="rule-1"
-                        checked={rules.returnPlayersAfterSuggestion}
-                        onChange={() => {
-                           audioManager.playSfx(selectSfx);
-                           setRules((prev) => ({
-                              ...prev,
-                              returnPlayersAfterSuggestion:
-                                 !prev.returnPlayersAfterSuggestion,
-                           }));
-                        }}
-                     />
-                     <label htmlFor="rule-1">{t('hud.lobby.return_players')}</label>
-                  </li>
-                  <li>
-                     <input
-                        type="checkbox"
-                        id="rule-2"
-                        name="rule-2"
-                        checked={rules.spectatorsCanShowCards}
-                        onChange={() => {
-                           audioManager.playSfx(selectSfx);
-                           setRules((prev) => ({
-                              ...prev,
-                              spectatorsCanShowCards: !prev.spectatorsCanShowCards,
-                           }));
-                        }}
-                     />
-                     <label htmlFor="rule-1">{t('hud.lobby.spectators_show')}</label>
-                  </li>
-               </ul>
-            )}
+            <div className="form-wrapper row">
+               <div className="box-wrapper column">
+                  <div className="player-form column">
+                     <div className="input-wrapper">
+                        <label htmlFor="name">{t('hud.lobby.name')}</label>
+                        <input
+                           id="name"
+                           name="name"
+                           value={playerName}
+                           onChange={(evt) => setPlayerName(evt.target.value.trim())}
+                           onFocus={() => {
+                              setIsTyping(true);
+                              audioManager.playSfx(selectSfx);
+                           }}
+                           onBlur={() => {
+                              saveName(playerName);
+                              setIsTyping(false);
+                           }}
+                        />
+                     </div>
+                     <div className="input-wrapper">
+                        <label htmlFor="character-select">
+                           {t('hud.lobby.character_select')}
+                        </label>
+                        <select
+                           name="character"
+                           id="character-select"
+                           value={character ?? ''}
+                           onChange={(evt) => {
+                              saveCharacter(evt.target.value as Character);
+                              audioManager.playSfx(selectSfx);
+                           }}
+                        >
+                           {CARDS.suspects.map((suspect) => (
+                              <option
+                                 key={suspect}
+                                 value={suspect}
+                                 disabled={takenCharacters.includes(suspect)}
+                              >
+                                 {t(`suspect.${suspect}`)}
+                              </option>
+                           ))}
+                        </select>
+                        <i>
+                           <ChevronDown size={20} />
+                        </i>
+                     </div>
+                  </div>
+
+                  {isHost && (
+                     <ul className="rules">
+                        <li>
+                           <input
+                              type="checkbox"
+                              id="rule-1"
+                              name="rule-1"
+                              checked={rules.returnPlayersAfterSuggestion}
+                              onChange={() => {
+                                 audioManager.playSfx(selectSfx);
+                                 setRules((prev) => ({
+                                    ...prev,
+                                    returnPlayersAfterSuggestion:
+                                       !prev.returnPlayersAfterSuggestion,
+                                 }));
+                              }}
+                           />
+                           <label htmlFor="rule-1">{t('hud.lobby.return_players')}</label>
+                        </li>
+                        <li>
+                           <input
+                              type="checkbox"
+                              id="rule-2"
+                              name="rule-2"
+                              checked={rules.spectatorsCanShowCards}
+                              onChange={() => {
+                                 audioManager.playSfx(selectSfx);
+                                 setRules((prev) => ({
+                                    ...prev,
+                                    spectatorsCanShowCards: !prev.spectatorsCanShowCards,
+                                 }));
+                              }}
+                           />
+                           <label htmlFor="rule-1">
+                              {t('hud.lobby.spectators_show')}
+                           </label>
+                        </li>
+                     </ul>
+                  )}
+               </div>
+
+               {character && (
+                  <div className="character-form column">
+                     <img src={TEXTURE_MAPPING[character]} alt={character} />
+                     <div className="button-wrapper">
+                        <button
+                           className="prev"
+                           onClick={() => {
+                              saveCharacter(getNextAvailable(-1));
+                              audioManager.playSfx(selectSfx);
+                           }}
+                        >
+                           <ChevronLeft size={30} />
+                        </button>
+                        <button
+                           className="next"
+                           onClick={() => {
+                              saveCharacter(getNextAvailable(1));
+                              audioManager.playSfx(selectSfx);
+                           }}
+                        >
+                           <ChevronRight size={30} />
+                        </button>
+                     </div>
+                  </div>
+               )}
+            </div>
 
             <div className="lobby-list">
                <h2>{t('hud.lobby.player_list', { num: readyPlayers.length })}</h2>

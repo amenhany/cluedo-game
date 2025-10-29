@@ -1,5 +1,12 @@
 import '@/assets/styles/game.scss';
 
+import game1 from '@/assets/audio/music/game/game1.mp3';
+import game2 from '@/assets/audio/music/game/game2.mp3';
+import game3 from '@/assets/audio/music/game/game3.mp3';
+import game4 from '@/assets/audio/music/game/game4.mp3';
+import game5 from '@/assets/audio/music/game/game5.mp3';
+import game6 from '@/assets/audio/music/game/game6.mp3';
+
 import CluedoBoard from './board/CluedoBoard';
 import Node from './board/Node';
 import { cluedoGraph, secretPassages } from '@/game/board/boardGraph';
@@ -38,6 +45,8 @@ import { useSettings } from '@/contexts/SettingsContext';
 import SecretPassage from './board/SecretPassage';
 import { SuggestionContextProvider } from '@/contexts/SuggestionContext';
 import SpotlightOverlay from './SpotlightOverlay';
+
+const JAZZ_PLAYLIST = [game1, game2, game3, game4, game5, game6];
 
 export default function CluedoGame({
    G,
@@ -127,6 +136,15 @@ export default function CluedoGame({
       moves.useSecretPassage();
       AudioManager.getInstance().playSfx(doorSound);
    }
+
+   useEffect(() => {
+      if (!G.pendingSuggestion) {
+         AudioManager.getInstance().playPlaylist(
+            JAZZ_PLAYLIST,
+            Math.floor(Math.random() * JAZZ_PLAYLIST.length)
+         );
+      }
+   }, [G.pendingSuggestion]);
 
    useEffect(() => {
       if (!playerID) return;

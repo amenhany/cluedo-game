@@ -1,4 +1,9 @@
-import piece from '@/assets/textures/ahmed.png';
+import scarlett from '@/assets/textures/suspects/scarlett.png';
+import mustard from '@/assets/textures/suspects/mustard.png';
+import white from '@/assets/textures/suspects/white.png';
+import green from '@/assets/textures/suspects/green.png';
+import peacock from '@/assets/textures/suspects/peacock.png';
+import plum from '@/assets/textures/suspects/plum.png';
 import revolver from '@/assets/textures/weapons/revolver.png';
 import leadPipe from '@/assets/textures/weapons/lead_pipe.png';
 import spanner from '@/assets/textures/weapons/spanner.png';
@@ -11,7 +16,7 @@ import type { Character, Weapon } from '@/types/game';
 import { useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
 import type { PlayerID } from 'boardgame.io';
-import { SUSPECT_COLORS } from '@/game/constants';
+// import { SUSPECT_COLORS } from '@/game/constants';
 // import { motion } from 'motion/react';
 
 type BasePieceProps = {
@@ -26,12 +31,12 @@ type PieceProps =
    | ({ type: 'weapon'; id: Weapon } & BasePieceProps);
 
 const TEXTURE_MAPPING: Record<Character | Weapon, string> = {
-   scarlett: piece,
-   mustard: piece,
-   white: piece,
-   green: piece,
-   peacock: revolver,
-   plum: piece,
+   scarlett,
+   mustard,
+   white,
+   green,
+   peacock,
+   plum,
 
    revolver,
    leadPipe,
@@ -69,7 +74,7 @@ export default function Piece({
          style={{
             ...style,
             opacity: isDragging ? 0 : 1,
-            backgroundColor: type === 'suspect' ? SUSPECT_COLORS[id] : 'transparent',
+            // backgroundColor: type === 'suspect' ? SUSPECT_COLORS[id] : 'transparent',
          }}
          onClick={
             playerID && suggestion?.suggester === playerID
