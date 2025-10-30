@@ -7,6 +7,9 @@ import game4 from '@/assets/audio/music/game/game4.mp3';
 import game5 from '@/assets/audio/music/game/game5.mp3';
 import game6 from '@/assets/audio/music/game/game6.mp3';
 
+import spotlightSfx from '@/assets/audio/sfx/spotlight.m4a';
+import suggestionMusic from '@/assets/audio/music/game/suggestion.wav';
+
 import CluedoBoard from './board/CluedoBoard';
 import Node from './board/Node';
 import { cluedoGraph, secretPassages } from '@/game/board/boardGraph';
@@ -143,8 +146,16 @@ export default function CluedoGame({
             JAZZ_PLAYLIST,
             Math.floor(Math.random() * JAZZ_PLAYLIST.length)
          );
+      } else if (G.pendingSuggestion.suggester !== playerID) {
+         AudioManager.getInstance().playSfx(spotlightSfx);
+         AudioManager.getInstance().stopMusic();
+         const timeout = setTimeout(
+            () => AudioManager.getInstance().playMusic(suggestionMusic),
+            1500
+         );
+         return () => clearTimeout(timeout);
       }
-   }, [G.pendingSuggestion]);
+   }, [G.pendingSuggestion?.suggester]);
 
    useEffect(() => {
       if (!playerID) return;

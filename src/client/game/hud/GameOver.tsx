@@ -21,6 +21,7 @@ import { motion } from 'motion/react';
 import { SUSPENSE_DELAY_MS } from '@/game/constants';
 import { useMatch } from '@/contexts/MatchProvider';
 import { useSceneTransition } from '@/contexts/SceneTransitionContext';
+import { useSettings } from '@/contexts/SettingsContext';
 
 export default function GameOver({
    winner,
@@ -39,6 +40,7 @@ export default function GameOver({
    const countRef = useRef(0);
    const { playAgain } = useMatch();
    const { triggerTransition } = useSceneTransition();
+   const { settings } = useSettings();
 
    useEffect(() => {
       countRef.current = 0;
@@ -64,6 +66,10 @@ export default function GameOver({
             () => audioManager.playRandomSfx(death1, death2),
             SUSPENSE_DELAY_MS + 100
          );
+      if (settings)
+         setTimeout(() => {
+            audioManager.setMusicVolume(settings.musicVolume);
+         }, SUSPENSE_DELAY_MS + 5000);
    }, [isEliminated]);
 
    useEffect(() => {
@@ -89,6 +95,7 @@ export default function GameOver({
    function handleWin(winner: PlayerState | null) {
       audioManager.stopMusic();
       if (winner?.id === playerID) {
+         if (settings) audioManager.setMusicVolume(settings.musicVolume);
          audioManager.playRandomSfx(bravo1, bravo2, bravo3, bravo4);
          setTimeout(() => audioManager.playMusic(victoryMusic), 700);
       } else if (winner !== null) {

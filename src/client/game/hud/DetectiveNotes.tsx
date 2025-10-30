@@ -68,6 +68,7 @@ export default function DetectiveNotes({
          return;
       }
       audioManager.playSfx(suspenseSfx);
+      audioManager.setMusicVolume(0);
       setAccusing(true);
       setIsOpen(false);
       makeAccusation(acccusation as Suggestion);

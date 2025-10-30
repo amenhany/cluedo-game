@@ -1,4 +1,6 @@
+import { useSettings } from '@/contexts/SettingsContext';
 import { SUSPENSE_DELAY_MS } from '@/game/constants';
+import { AudioManager } from '@/lib/AudioManager';
 import { t } from '@/lib/lang';
 import type { TooltipConfig } from '@/types/client';
 import type { PlayerState } from '@/types/game';
@@ -17,6 +19,7 @@ export function useGameOverTooltip({
     const eliminatedPlayers = useRef<PlayerID[]>([]);
     const [eliminatedPlayer, setEliminatedPlayer] = useState<PlayerState | null>(null);
     const [localWinner, setLocalWinner] = useState<PlayerState | null>();
+    const { settings } = useSettings();
 
     useEffect(() => {
         for (const player of Object.values(players)) {
@@ -25,9 +28,16 @@ export function useGameOverTooltip({
                 player.hand.length !== 0 &&
                 !eliminatedPlayers.current.includes(player.id)
             ) {
+                AudioManager.getInstance().setMusicVolume(0);
                 const timeout = setTimeout(() => {
                     setEliminatedPlayer(player);
-                    setTimeout(() => setEliminatedPlayer(null), 5000);
+                    setTimeout(() => {
+                        setEliminatedPlayer(null);
+                        if (settings)
+                            AudioManager.getInstance().setMusicVolume(
+                                settings.musicVolume
+                            );
+                    }, 5000);
                 }, SUSPENSE_DELAY_MS);
                 eliminatedPlayers.current.push(player.id);
 
@@ -37,6 +47,7 @@ export function useGameOverTooltip({
     }, [players, playerID]);
 
     useEffect(() => {
+        AudioManager.getInstance().stopMusic();
         setTimeout(() => setLocalWinner(winner), SUSPENSE_DELAY_MS);
     }, [winner]);
 

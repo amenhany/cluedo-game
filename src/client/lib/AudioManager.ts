@@ -107,8 +107,14 @@ export class AudioManager {
     }
 
     async playPlaylist(playlist: string[], idx = 0) {
-        if (idx >= playlist.length) return;
-        this.playMusic(playlist[idx], false, () => this.playPlaylist(playlist, idx + 1));
+        let random = Math.floor(Math.random() * playlist.length);
+        while (random === idx) random = Math.floor(Math.random() * playlist.length);
+        this.playMusic(playlist[idx], false, () =>
+            setTimeout(
+                () => this.playPlaylist(playlist, random),
+                4000 + Math.floor(Math.random() * 3000)
+            )
+        );
     }
 
     stopMusic() {

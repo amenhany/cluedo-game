@@ -155,7 +155,14 @@ export default function CluedoHud(props: HudProps) {
                </div>
             )}
 
-            <TooltipManager {...props} winner={ctx.gameover?.winner} />
+            <TooltipManager
+               {...props}
+               winner={
+                  ctx.gameover?.winner
+                     ? players[ctx.gameover.winner]
+                     : ctx.gameover?.winner
+               }
+            />
 
             {playerID && (
                <Hand
