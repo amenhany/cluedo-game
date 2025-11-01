@@ -23,6 +23,8 @@ app.on('ready', () => {
     const mainWindow = new BrowserWindow({
         fullscreen,
         fullscreenable: true,
+        minWidth: 800,
+        minHeight: 500,
         webPreferences: {
             preload: getPreloadPath(),
             contextIsolation: true,

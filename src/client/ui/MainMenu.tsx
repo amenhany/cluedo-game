@@ -11,6 +11,7 @@ import cover4 from '@/assets/textures/albums/menu4.jpeg';
 import cover5 from '@/assets/textures/albums/menu5.jpg';
 import cardUp from '@/assets/audio/sfx/card_up.wav';
 import cardDown from '@/assets/audio/sfx/card_down.wav';
+import glassSfx from '@/assets/audio/sfx/card_locked.wav';
 
 import '@/assets/styles/menu.scss';
 import AudioPlayer from './AudioPlayer';
@@ -103,6 +104,16 @@ export default function MainMenu({
             </button>
             <NavButtons setOpenSettings={setOpenSettings} />
          </div>
+
+         <div
+            className="glass-1"
+            onClick={() => AudioManager.getInstance().playSfx(glassSfx)}
+         />
+         <div
+            className="glass-2"
+            onClick={() => AudioManager.getInstance().playSfx(glassSfx)}
+         />
+
          <AudioPlayer tracks={tracks} />
          <AnimatePresence>
             {openSettings && <SettingsScreen onClose={() => setOpenSettings(false)} />}

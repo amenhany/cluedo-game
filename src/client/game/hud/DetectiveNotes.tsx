@@ -37,30 +37,80 @@ export default function DetectiveNotes({
    const accusationButtonDisabled =
       Object.values(acccusation).includes(null) || accusing || stage !== 'Endgame';
    const notesRef = useRef<HTMLDivElement>(null);
+   const triggerRef = useRef<HTMLDivElement>(null);
+   const wasInsideTrigger = useRef(false);
+   const isOpenRef = useRef(isOpen);
 
    useEffect(() => {
+      isOpenRef.current = isOpen;
+   }, [isOpen]);
+
+   useEffect(() => {
+      const handleMouseMove = (e: MouseEvent) => {
+         const trigger = triggerRef.current;
+         if (!trigger) return;
+
+         const rect = trigger.getBoundingClientRect();
+         const inside =
+            e.clientX >= rect.left &&
+            e.clientX <= rect.right &&
+            e.clientY >= rect.top &&
+            e.clientY <= rect.bottom;
+
+         // Toggle only when entering the trigger zone
+         if (inside && !wasInsideTrigger.current) {
+            setIsOpen((prev) => !prev);
+            isOpen ? audioManager.playSfx(closeSfx) : audioManager.playSfx(openSfx);
+         }
+
+         wasInsideTrigger.current = inside;
+      };
+
       function handleClickOutside(e: MouseEvent) {
-         if (isOpen && notesRef.current && !notesRef.current.contains(e.target as Node)) {
+         if (
+            isOpenRef.current &&
+            notesRef.current &&
+            !notesRef.current.contains(e.target as Node)
+         ) {
             setIsOpen(false);
             audioManager.playSfx(closeSfx);
          }
       }
 
       function handleKeyDown(e: KeyboardEvent) {
-         if (isOpen && e.key === 'Escape') {
+         if (isOpenRef.current && e.key === 'Escape') {
             setIsOpen(false);
             audioManager.playSfx(closeSfx);
+         }
+
+         if (e.code === 'KeyN') {
+            const active = document.activeElement;
+            const isTyping =
+               active &&
+               (active.tagName === 'INPUT' ||
+                  active.tagName === 'TEXTAREA' ||
+                  active.getAttribute('contenteditable') === 'true');
+
+            if (isTyping) return;
+
+            setIsOpen((prev) => {
+               const next = !prev;
+               audioManager.playSfx(next ? openSfx : closeSfx);
+               return next;
+            });
          }
       }
 
       document.addEventListener('mousedown', handleClickOutside);
       document.addEventListener('keydown', handleKeyDown);
+      window.addEventListener('mousemove', handleMouseMove);
 
       return () => {
          document.removeEventListener('mousedown', handleClickOutside);
          document.removeEventListener('keydown', handleKeyDown);
+         window.removeEventListener('mousemove', handleMouseMove);
       };
-   }, [isOpen]);
+   }, []);
 
    function handleAccusation() {
       if (accusationButtonDisabled) {
@@ -76,13 +126,7 @@ export default function DetectiveNotes({
 
    return (
       <>
-         <div
-            className="notes-trigger no-scroll-zone"
-            onMouseEnter={() => {
-               setIsOpen((prev) => !prev);
-               isOpen ? audioManager.playSfx(closeSfx) : audioManager.playSfx(openSfx);
-            }}
-         />
+         <div className="notes-trigger no-scroll-zone" ref={triggerRef} />
          <motion.div
             ref={notesRef}
             className={`notes no-scroll-zone ${isOpen ? 'expanded' : ''}`}

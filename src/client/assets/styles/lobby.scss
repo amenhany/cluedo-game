@@ -39,7 +39,7 @@
     .character-form {
         gap: 0.8rem;
         img {
-            width: 120px;
+            width: clamp(90px, 10vh, 120px);
             height: auto;
         }
         .button-wrapper {
@@ -53,10 +53,23 @@
             &:active {
                 scale: 0.9;
             }
+            &:focus-visible {
+                filter: drop-shadow(0px 0px 3px white);
+            }
         }
     }
 
+    input:focus-visible,
+    select:focus-visible {
+        box-shadow: 0px 0px 3px 2px $primary-text;
+    }
+
     .player-form {
+        input:focus-visible,
+        select:focus-visible {
+            box-shadow: 0px 0px 3px 2px $primary-text;
+        }
+
         .input-wrapper {
             display: flex;
             gap: 1rem;
@@ -68,6 +81,7 @@
         label {
             font-weight: 800;
         }
+
         input,
         select {
             box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.4);
@@ -76,12 +90,14 @@
             padding-right: 1ch;
             padding-bottom: 0.25ch;
             height: 3.3ch;
-            border-radius: 3px;
+            border-radius: 5px;
             width: 20ch;
             appearance: none;
         }
         i {
             margin: 0.4rem -2.5rem;
+            display: flex;
+            align-items: center;
             pointer-events: none;
         }
     }
@@ -152,7 +168,8 @@
                 cursor: default;
             }
 
-            &[aria-disabled="false"]:hover {
+            &[aria-disabled="false"]:hover,
+            &[aria-disabled="false"]:focus-visible {
                 scale: 1.05;
             }
         }
@@ -169,6 +186,9 @@ html:lang(ar) .lobby-ui {
     direction: rtl;
     .settings {
         direction: ltr;
+    }
+    .button-wrapper button {
+        rotate: 180deg;
     }
 
     #character-select {

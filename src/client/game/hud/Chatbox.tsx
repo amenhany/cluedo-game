@@ -21,6 +21,7 @@ export default function Chatbox({
    const [expanded, setExpanded] = useState(false);
    const [message, setMessage] = useState('');
    const chatListRef = useRef<HTMLUListElement>(null);
+   const inputRef = useRef<HTMLInputElement>(null);
 
    // auto-scroll when messages change
    useEffect(() => {
@@ -29,6 +30,20 @@ export default function Chatbox({
          ul.scrollTop = ul.scrollHeight;
       }
    }, [chat.messages]);
+
+   useEffect(() => {
+      const handleKey = (e: KeyboardEvent) => {
+         if (e.code === 'KeyT' && document.activeElement !== inputRef.current) {
+            e.preventDefault();
+            inputRef.current?.focus();
+         }
+         if (e.key === 'Escape') {
+            inputRef.current?.blur();
+         }
+      };
+      window.addEventListener('keydown', handleKey);
+      return () => window.removeEventListener('keydown', handleKey);
+   }, []);
 
    return (
       <label
@@ -67,12 +82,13 @@ export default function Chatbox({
             <input
                name="chat"
                id="chat"
+               ref={inputRef}
                onFocus={() => {
                   AudioManager.getInstance().playSfx(cardSelectSfx);
                }}
                value={message}
                onChange={(evt) => setMessage(evt.target.value)}
-               placeholder="Type in the chat..."
+               placeholder="Type in the chat... (T)"
             />
             <button type="submit">
                <SendHorizonal />

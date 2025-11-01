@@ -15,6 +15,26 @@ export default function Dice(props: {
    const [dieFace, setDieFace] = useState(1);
 
    useEffect(() => {
+      function handleKeyDown(e: KeyboardEvent) {
+         if (e.code === 'KeyD') {
+            const active = document.activeElement;
+            const isTyping =
+               active &&
+               (active.tagName === 'INPUT' ||
+                  active.tagName === 'TEXTAREA' ||
+                  active.getAttribute('contenteditable') === 'true');
+
+            if (isTyping) return;
+
+            handleRoll();
+         }
+      }
+
+      document.addEventListener('keydown', handleKeyDown);
+      return () => document.removeEventListener('keydown', handleKeyDown);
+   }, []);
+
+   useEffect(() => {
       if (props.face === 0) return;
 
       if (props.face === dieFace) {

@@ -1,5 +1,5 @@
-@use './variables' as *;
-@use './mixins' as *;
+@use "./variables" as *;
+@use "./mixins" as *;
 
 .notes-trigger {
     position: absolute;
@@ -74,7 +74,7 @@
             text-indent: 0.7rem;
         }
 
-        th[scope='row'],
+        th[scope="row"],
         td {
             border-top: 1px solid rgba(0, 0, 0, 0.4);
             border-bottom: 1px solid rgba(0, 0, 0, 0.4);
@@ -83,7 +83,7 @@
         tbody tr {
             height: 4ch;
             &:hover .tick:empty::after {
-                content: '✓';
+                content: "✓";
                 color: rgba(0, 0, 0, 0.2);
             }
         }
@@ -112,7 +112,7 @@
                 font-size: 1.1rem;
                 border: 1px solid $card-label-color;
                 &:empty:hover::after {
-                    content: 'O';
+                    content: "O";
                     color: $highlight-translucent;
                 }
             }
@@ -142,11 +142,11 @@
         font-size: 2rem;
         cursor: pointer;
         transition: font-size 0.8s ease, padding 0.8s ease;
-        &[aria-disabled='true'] {
+        &[aria-disabled="true"] {
             color: rgba(0, 0, 0, 0.4);
             cursor: default;
         }
-        &[aria-disabled='false']:hover {
+        &[aria-disabled="false"]:hover {
             font-size: 2.1rem;
         }
     }
@@ -174,8 +174,8 @@ html:lang(ar) .notes {
         direction: rtl;
     }
 
-    th[scope='row'],
-    th[scope='col'] {
+    th[scope="row"],
+    th[scope="col"] {
         text-align: right;
         position: relative;
         top: 2px;

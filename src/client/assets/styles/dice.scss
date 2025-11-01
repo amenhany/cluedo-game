@@ -1,4 +1,4 @@
-@use './variables' as *;
+@use "./variables" as *;
 
 .dice-button.active {
     cursor: pointer;
@@ -31,6 +31,25 @@
     }
     50% {
         scale: 1.02;
+    }
+}
+
+@media (max-height: 600px) {
+    .dice-button {
+        scale: 0.8;
+        &.active {
+            animation: click-me-small 0.9s linear infinite;
+        }
+    }
+}
+
+@keyframes click-me-small {
+    0%,
+    100% {
+        scale: 0.79;
+    }
+    50% {
+        scale: 0.81;
     }
 }
 

@@ -57,52 +57,53 @@ select {
 /* ===== Actual Styles ===== */
 
 @font-face {
-    font-family: 'CupheadFelix';
-    src: url('/fonts/CupheadFelix-Regular-merged.ttf') format('truetype');
+    font-family: "CupheadFelix";
+    src: url("/fonts/CupheadFelix-Regular-merged.ttf") format("truetype");
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
-    font-family: 'CupheadVogue';
-    src: url('/fonts/CupheadVogue-Bold-merged.ttf') format('truetype');
+    font-family: "CupheadVogue";
+    src: url("/fonts/CupheadVogue-Bold-merged.ttf") format("truetype");
     font-weight: bold;
     font-style: normal;
 }
 
 @font-face {
-    font-family: 'CupheadVogue';
-    src: url('/fonts/CupheadVogue-ExtraBold-merged.ttf') format('truetype');
+    font-family: "CupheadVogue";
+    src: url("/fonts/CupheadVogue-ExtraBold-merged.ttf") format("truetype");
     font-weight: 800;
     font-style: normal;
 }
 
 @font-face {
-    font-family: 'CupheadHenriette';
-    src: url('/fonts/CupheadHenriette-A-merged.ttf') format('truetype');
+    font-family: "CupheadHenriette";
+    src: url("/fonts/CupheadHenriette-A-merged.ttf") format("truetype");
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
-    font-family: 'CupheadMemphis';
-    src: url('/fonts/CupheadMemphis-Medium-merged.ttf') format('truetype');
+    font-family: "CupheadMemphis";
+    src: url("/fonts/CupheadMemphis-Medium-merged.ttf") format("truetype");
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
-    font-family: 'CupheadPoster';
-    src: url('/fonts/CupheadPoster-Regular(Cyr_Lat_English).ttf') format('truetype');
+    font-family: "CupheadPoster";
+    src: url("/fonts/CupheadPoster-Regular(Cyr_Lat_English).ttf") format("truetype");
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
-    font-family: 'SultanRuqah';
-    src: url('/fonts/Sultan-Ruqah-Bold.ttf') format('truetype');
+    font-family: "SultanRuqah";
+    src: url("/fonts/Sultan-Ruqah-Bold.ttf") format("truetype");
     font-weight: bold;
     font-style: normal;
+    unicode-range: U+0600-06FF; /* Arabic */
 }
 
 :root {
@@ -115,19 +116,19 @@ select {
     -moz-osx-font-smoothing: grayscale;
 
     /* Font variables for lang */
-    --font-body: 'CupheadFelix', sans-serif;
-    --font-serif: 'CupheadMemphis', serif;
-    --font-heading: 'CupheadPoster';
-    --font-sans-serif: 'CupheadVogue';
-    --font-title: 'CupheadHenriette';
+    --font-body: "SultanRuqah", "CupheadFelix", sans-serif;
+    --font-serif: "SultanRuqah", "CupheadMemphis", serif;
+    --font-heading: "CupheadPoster";
+    --font-sans-serif: "SultanRuqah", "CupheadVogue";
+    --font-title: "SultanRuqah", "CupheadHenriette";
 }
 
-html:lang(ar) {
-    --font-body: 'SultanRuqah';
-    --font-serif: 'SultanRuqah';
-    --font-sans-serif: 'SultanRuqah';
-    --font-title: 'SultanRuqah';
-}
+// html:lang(ar) {
+//     --font-body: 'SultanRuqah';
+//     --font-serif: 'SultanRuqah';
+//     --font-sans-serif: 'SultanRuqah';
+//     --font-title: 'SultanRuqah';
+// }
 
 html,
 body {

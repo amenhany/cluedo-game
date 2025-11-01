@@ -17,6 +17,10 @@
     &:has(.notes.expanded) {
         @include overlay(0.2, true, 2px);
     }
+
+    .sidebar-button {
+        pointer-events: all;
+    }
 }
 
 .turn-container {
@@ -56,6 +60,7 @@
         text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.8);
         text-wrap: nowrap;
         font-size: clamp(1rem, 2vw, 2rem);
+        text-shadow: 0px 0px 2px white;
 
         &:hover {
             scale: 1.05;
@@ -251,17 +256,18 @@ html:lang(ar) .card-label {
     }
 
     .sidebar-button {
-        width: 20px;
+        margin: 1.2rem 1rem !important;
+        width: clamp(20px, 2.5vw, 40px);
     }
 
     .chat-box {
         width: 140px;
         margin: 1rem 3.5rem;
         transition: width 0.3s ease, background-color 0.3s ease;
-        font-size: clamp(0.8rem, 2vw, 1rem);
+        font-size: clamp(0.8rem, 1vw, 1rem);
         padding: 0.5rem 0.8rem;
         .chat-input {
-            padding-left: 4.5rem;
+            padding-left: 2.5rem;
         }
         &.expanded {
             width: 300px;

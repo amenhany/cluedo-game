@@ -82,6 +82,7 @@ export default function AudioPlayer({ tracks }: { tracks: Track[] }) {
             type: 'tween',
             ease: backInOut,
          }}
+         tabIndex={isShown ? 0 : -1}
       >
          <div
             className={'show-arrow' + (isShown ? ' down' : ' up')}
@@ -98,7 +99,7 @@ export default function AudioPlayer({ tracks }: { tracks: Track[] }) {
                <h2>{t(currentTrack.name)}</h2>
                <h3>{t(currentTrack.author)}</h3>
                {tracks.length && (
-                  <button onClick={playTrack}>
+                  <button onClick={playTrack} tabIndex={isShown ? 0 : -1}>
                      <SkipForward />
                   </button>
                )}

@@ -11,6 +11,8 @@ export class AudioManager {
     private currentStatic?: AudioBufferSourceNode;
     private cache = new Map<string, AudioBuffer>();
 
+    private currentPlayId = 0;
+
     private constructor() {
         this.ctx = new AudioContext();
         this.masterGain = this.ctx.createGain();
@@ -84,11 +86,15 @@ export class AudioManager {
     }
 
     async playMusic(url: string, loop = false, callback?: () => void) {
+        const playId = ++this.currentPlayId;
+
         if (this.currentMusic) {
             this.currentMusic.stop();
         }
 
         const buffer = await this.load(url);
+        if (playId !== this.currentPlayId) return;
+
         const source = this.ctx.createBufferSource();
         source.buffer = buffer;
         source.connect(this.musicGain);
