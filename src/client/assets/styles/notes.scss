@@ -45,11 +45,12 @@
 
     .notes-body {
         overflow: auto;
-        height: 38vw;
+        height: clamp(40vw, 350px, 80rem);
         padding-bottom: 1.5rem;
     }
 
     table {
+        margin-top: 0.9rem;
         width: 100%;
         margin-bottom: 2rem;
         border-collapse: collapse;

@@ -156,11 +156,7 @@ html:lang(ar) .card-label {
     font-size: 1.15rem;
     text-indent: 20%;
     transform: scaleX(1.1);
-    &.card-label-top {
-        margin-top: 1px;
-    }
     &.card-label-bottom {
-        margin-bottom: 2px;
         transform: scale(-1.1, -1);
     }
 }

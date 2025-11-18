@@ -90,3 +90,14 @@
         }
     }
 }
+
+html:lang(ar) .hand.expanded .card:hover {
+    .card-label-top {
+        // top: calc($card-label-margin-top - 7%);
+        transform: translateY(-7%) scaleX(1.1);
+    }
+    .card-label-bottom {
+        // bottom: calc($card-label-margin-top + 7%);
+        transform: translateY(-7%) scale(-1.1, -1);
+    }
+}
