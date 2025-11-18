@@ -2,7 +2,7 @@
     "name": "cluedo",
     "productName": "Cluedo",
     "private": true,
-    "version": "1.0.0-beta.1",
+    "version": "1.0.0-beta.2",
     "type": "module",
     "main": "dist-electron/electron/main.js",
     "scripts": {
