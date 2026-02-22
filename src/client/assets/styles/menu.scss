@@ -22,7 +22,9 @@
         font-size: 5.8vw;
         /* letter-spacing: 0.15rem; */
         color: $primary-text;
-        text-shadow: 4px 2px 0px black, 5px 3px 0px $primary-text;
+        text-shadow:
+            4px 2px 0px black,
+            5px 3px 0px $primary-text;
         pointer-events: none;
         height: 5.8vw;
     }
@@ -86,6 +88,7 @@
         margin-top: 2%;
         margin-right: 8%;
         filter: drop-shadow(4px 2px 0px black);
+        width: clamp(25px, 3.2vw, 40px);
     }
 
     p {
@@ -117,6 +120,10 @@
         border-bottom-right-radius: 0;
         cursor: pointer;
         transition: color 0.1s ease-in-out;
+
+        svg {
+            width: clamp(20px, 2vw, 40px);
+        }
 
         &.down {
             svg {
@@ -172,15 +179,24 @@
 
     .audio-info {
         font-family: var(--font-sans-serif);
-        margin-top: clamp(0.8rem, 1vw, 1rem);
+        // margin-top: clamp(0.8rem, 1vw, 1rem);
+        margin-top: 1rem;
+        margin-bottom: 0.8rem;
         min-width: clamp(60px, 500px, 100px);
+        font-size: clamp(0.7rem, 1vw, 1rem);
 
         button {
             margin-top: clamp(0.8rem, 1vw, 1rem);
             padding: 5%;
             padding-left: 0;
             cursor: pointer !important;
-            transition: padding 0.3s ease-out, color 0.1s ease-in-out;
+
+            svg {
+                width: clamp(20px, 2.5vw, 40px);
+            }
+            transition:
+                padding 0.3s ease-out,
+                color 0.1s ease-in-out;
             &:hover,
             &:focus-visible {
                 padding-left: 0.5rem;
