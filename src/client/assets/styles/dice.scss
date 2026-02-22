@@ -34,38 +34,29 @@
     }
 }
 
-@media (max-height: 600px) {
-    .dice-button {
-        scale: 0.8;
-        &.active {
-            animation: click-me-small 0.9s linear infinite;
-        }
-    }
-}
-
-@keyframes click-me-small {
-    0%,
-    100% {
-        scale: 0.79;
-    }
-    50% {
-        scale: 0.81;
-    }
-}
-
 .dice {
+    --dice-size: clamp(25px, 10vw, 100px);
+    --half-depth: calc(var(--dice-size) / 2);
+    --dot-size: calc((var(--dice-size) / 5));
+
     position: relative;
-    width: 100px;
-    height: 100px;
+    width: var(--dice-size);
+    height: var(--dice-size);
     transform-style: preserve-3d;
-    transition: transform 1s, scale 0.2s ease-out;
+    transition:
+        transform 1s,
+        scale 0.2s ease-out;
 }
 
 .dot {
     position: absolute;
-    width: 20px;
-    height: 20px;
-    margin: -10px 5px 5px -10px;
+    width: var(--dot-size);
+    height: var(--dot-size);
+    // margin: -10px 5px 5px -10px;
+    margin-top: calc(var(--dot-size) / -2);
+    margin-left: calc(var(--dot-size) / -2);
+    margin-right: calc(var(--dot-size) / -4);
+    margin-bottom: calc(var(--dot-size) / -4);
     border-radius: 20px;
     background-color: $highlight;
     box-shadow: inset 2px 2px $highlight-emphasis;
@@ -75,36 +66,37 @@
     position: absolute;
     background-color: #fff;
     border-radius: 5px;
-    width: 100px;
-    height: 100px;
+    width: clamp(25px, 10vw, 100px);
+    height: clamp(25px, 10vw, 100px);
     border: 1px solid #e5e5e5;
     text-align: center;
     line-height: 2em;
     transition: box-shadow 0.2s ease-out;
+    box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, 0.1);
 }
 
 .side:nth-child(1) {
-    transform: translateZ(3.1em);
+    transform: translateZ(var(--half-depth));
 }
 
 .side:nth-child(6) {
-    transform: rotateY(90deg) translateZ(3.1em);
+    transform: rotateY(90deg) translateZ(var(--half-depth));
 }
 
 .side:nth-child(3) {
-    transform: rotateY(-90deg) translateZ(3.1em);
+    transform: rotateY(-90deg) translateZ(var(--half-depth));
 }
 
 .side:nth-child(4) {
-    transform: rotateX(90deg) translateZ(3.1em);
+    transform: rotateX(90deg) translateZ(var(--half-depth));
 }
 
 .side:nth-child(5) {
-    transform: rotateX(-90deg) translateZ(3.1em);
+    transform: rotateX(-90deg) translateZ(var(--half-depth));
 }
 
 .side:nth-child(2) {
-    transform: rotateY(-180deg) translateZ(3.1em);
+    transform: rotateY(-180deg) translateZ(var(--half-depth));
 }
 
 .show-1 {

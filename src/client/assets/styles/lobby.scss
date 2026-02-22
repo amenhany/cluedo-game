@@ -20,7 +20,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    font-size: 1.2rem;
+    font-size: clamp(1rem, 3vh, 1.2rem);
     gap: 2rem;
 
     .row {
@@ -155,7 +155,7 @@
 
     .start-button {
         position: absolute;
-        bottom: clamp(10%, 20vh, 30%);
+        bottom: clamp(10%, 18vh, 30%);
         button {
             font-size: clamp(1rem, 3vh, 2rem);
             border-radius: 7px;
@@ -180,11 +180,11 @@
     }
 }
 
-@media (max-height: 600px) {
-    .lobby .box-wrapper {
-        flex-direction: row;
-    }
-}
+// @media (max-height: 600px) {
+//     .lobby .box-wrapper {
+//         flex-direction: row;
+//     }
+// }
 
 html:lang(ar) .lobby-ui {
     direction: rtl;

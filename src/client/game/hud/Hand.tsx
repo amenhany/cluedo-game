@@ -70,8 +70,8 @@ export default function Hand({
          <div className="hand-trigger no-scroll-zone" ref={triggerRef} />
          <motion.div
             className={`hand ${isHandExpanded ? 'expanded no-scroll-zone' : ''}`}
-            initial={{ bottom: '-30%' }}
-            animate={{ bottom: isHandExpanded ? '4%' : '-30%' }}
+            initial={{ bottom: '-19vw' }}
+            animate={{ bottom: isHandExpanded ? '4vw' : '-19vw' }}
             transition={{ type: 'spring', stiffness: 200, damping: 20 }}
          >
             {hand.map((card) => (

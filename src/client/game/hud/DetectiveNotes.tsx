@@ -130,8 +130,12 @@ export default function DetectiveNotes({
          <motion.div
             ref={notesRef}
             className={`notes no-scroll-zone ${isOpen ? 'expanded' : ''}`}
-            initial={{ bottom: '-50%', left: '25%' }}
-            animate={{ bottom: isOpen ? '48%' : '-42%', left: isOpen ? '50%' : '25%' }}
+            initial={{ x: '0%', y: 0, bottom: '-53.5vw' }}
+            animate={{
+               x: isOpen ? '50%' : '0%',
+               y: isOpen ? 'calc(-50vh + 50%)' : 0,
+               bottom: isOpen ? '0' : '-53.5vw',
+            }}
             transition={{ type: 'spring', stiffness: 250, damping: 28 }}
          >
             <img src={notesImage} alt="Detective Notes" className="notes-bg" />
@@ -176,16 +180,16 @@ export default function DetectiveNotes({
                         playerID && players[playerID]?.isEliminated
                            ? null
                            : stage !== 'Endgame'
-                           ? t('hud.notes.tooltip.clue')
-                           : Object.values(acccusation).includes(null)
-                           ? acccusation.suspect === null
-                              ? t('hud.notes.tooltip.suspect')
-                              : acccusation.weapon === null
-                              ? t('hud.notes.tooltip.weapon')
-                              : acccusation.room === null
-                              ? t('hud.notes.tooltip.room')
-                              : null
-                           : null
+                             ? t('hud.notes.tooltip.clue')
+                             : Object.values(acccusation).includes(null)
+                               ? acccusation.suspect === null
+                                  ? t('hud.notes.tooltip.suspect')
+                                  : acccusation.weapon === null
+                                    ? t('hud.notes.tooltip.weapon')
+                                    : acccusation.room === null
+                                      ? t('hud.notes.tooltip.room')
+                                      : null
+                               : null
                      }
                   >
                      {t('hud.notes.accusation')}

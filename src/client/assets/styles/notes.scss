@@ -13,21 +13,25 @@
 
 .notes {
     position: absolute;
-    transform: translate(-50%, 50%);
+    // transform: translate(-50%, 50%);
+    bottom: -53.5vw;
+    left: 0;
+    transform-origin: center;
     color: $card-label-color;
     pointer-events: all;
     user-select: none;
-    padding: 2rem;
+    // padding: 2rem;
     font-family: var(--font-sans-serif);
     z-index: 6;
-    width: clamp(50%, 500px, 90%);
-    padding: 10vw 55px 0;
+    aspect-ratio: 580 / 660;
+    width: clamp(50vw, 50vw, 50vw);
+    // padding: 13vw 55px 0;
 
     .notes-bg {
         position: absolute;
         width: 100%;
-        top: 50%;
         left: 50%;
+        top: 50%;
         transform: translate(-50%, -50%);
         object-fit: cover;
         z-index: -1;
@@ -45,18 +49,23 @@
 
     .notes-body {
         overflow: auto;
-        height: clamp(40vw, 350px, 80rem);
+        // height: clamp(30vw, 65vh, 50vw);
+        // width: 100%;
+        height: 70%;
+        margin-top: 13.75vw;
+        margin-left: clamp(0.8rem, 4vw, 3rem);
+        margin-right: clamp(0.8rem, 4vw, 3rem);
         padding-bottom: 1.5rem;
     }
 
     table {
-        margin-top: 0.9rem;
+        margin-top: clamp(0.2rem, 0.9vw, 0.9rem);
         width: 100%;
         margin-bottom: 2rem;
         border-collapse: collapse;
 
         thead th {
-            font-size: 1.5rem;
+            font-size: clamp(0.8rem, 3vw, 1.5rem);
             font-weight: 800;
             // width: 10%;
         }
@@ -72,6 +81,7 @@
         }
 
         tbody th {
+            font-size: clamp(0.7rem, 2vw, 1rem);
             text-indent: 0.7rem;
         }
 
@@ -82,7 +92,7 @@
         }
 
         tbody tr {
-            height: 4ch;
+            height: clamp(2ch, 3vw, 4ch);
             &:hover .tick:empty::after {
                 content: "✓";
                 color: rgba(0, 0, 0, 0.2);
@@ -96,9 +106,10 @@
         }
 
         td button {
-            width: 2.5ch;
-            height: 2.5ch;
-            line-height: 2.5ch;
+            width: clamp(1ch, 2vw, 2.5ch);
+            height: clamp(1ch, 2vw, 2.5ch);
+            line-height: clamp(1ch, 2vw, 2.5ch);
+            font-size: clamp(0.7rem, 2vw, 1.1rem);
             cursor: pointer;
             &::after {
                 transition: color 0.2s ease-out;
@@ -110,7 +121,7 @@
 
             &.accusor {
                 color: $highlight;
-                font-size: 1.1rem;
+                font-size: clamp(0.6rem, 1.5vw, 1.3rem);
                 border: 1px solid $card-label-color;
                 &:empty:hover::after {
                     content: "O";
@@ -128,7 +139,7 @@
         div {
             border: 1px solid rgba(0, 0, 0, 0.4);
             width: 90%;
-            height: 5rem;
+            height: clamp(2rem, 10vw, 5rem);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -140,9 +151,11 @@
         width: 100%;
         height: 100%;
         pointer-events: all;
-        font-size: 2rem;
+        font-size: clamp(1rem, 3vw, 2rem);
         cursor: pointer;
-        transition: font-size 0.8s ease, padding 0.8s ease;
+        transition:
+            font-size 0.8s ease,
+            padding 0.8s ease;
         &[aria-disabled="true"] {
             color: rgba(0, 0, 0, 0.4);
             cursor: default;

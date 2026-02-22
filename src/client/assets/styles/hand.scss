@@ -2,7 +2,7 @@
 
 .hand-trigger {
     position: absolute;
-    right: 5%;
+    right: 4vw;
     bottom: 0;
     width: 40%;
     height: 2%;
@@ -12,7 +12,7 @@
 
 .hand {
     position: absolute;
-    right: 5%;
+    right: 4vw;
     display: flex;
     justify-content: flex-end;
     pointer-events: all;
@@ -23,14 +23,17 @@
         margin-left: -11%;
         transition: margin 0.5s ease;
         &.playable img {
-            box-shadow: 0px 0px 10px 10px rgba(173, 216, 230, 1),
+            box-shadow:
+                0px 0px 10px 10px rgba(173, 216, 230, 1),
                 0px 0px 5px 5px rgba(0, 0, 0, 0.3);
         }
 
         img {
             will-change: transform;
             border-radius: 16px;
-            transition: transform 0.3s ease-out, box-shadow 0.5s ease;
+            transition:
+                transform 0.3s ease-out,
+                box-shadow 0.5s ease;
             box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.3);
         }
 
@@ -80,7 +83,8 @@
             &.playable {
                 cursor: pointer;
                 img {
-                    box-shadow: 0px 0px 10px 10px rgba(255, 215, 0, 0.5),
+                    box-shadow:
+                        0px 0px 10px 10px rgba(255, 215, 0, 0.5),
                         0px 0px 5px 5px rgba(0, 0, 0, 0.3);
                 }
             }
