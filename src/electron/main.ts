@@ -54,8 +54,8 @@ app.on('ready', () => {
 
     ipcMainHandle('game:is-port-available', async (port) => {
         const results = await Promise.allSettled([
-            canListen('127.0.0.1', port),
-            canListen('::1', port),
+            canListen('0.0.0.0', port),
+            canListen('::', port),
         ]);
 
         return results.every((r) => r.status === 'fulfilled' && r.value === true);
@@ -72,8 +72,12 @@ app.on('ready', () => {
                 origins: Origins.LOCALHOST_IN_DEVELOPMENT,
             });
         }
-
-        servers = await serverInstance.run({ port });
+        try {
+            servers = await serverInstance.run({ port });
+        } catch (e) {
+            const message = e instanceof Error ? e.message : 'Unknown error';
+            return { ok: false, message };
+        }
 
         return { ok: true, port };
     });
