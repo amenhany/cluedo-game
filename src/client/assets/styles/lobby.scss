@@ -96,7 +96,7 @@
             appearance: none;
         }
         select option {
-            @include overlay(0.2);
+            background-color: #75a97b;
         }
         i {
             margin: 0.4rem -2.5rem;
