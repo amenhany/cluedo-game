@@ -51,6 +51,14 @@
         width: 8%;
         height: 13%;
     }
+
+    .version-number {
+        font-family: var(--font-sans-serif);
+        position: absolute;
+        bottom: 4px;
+        right: 8px;
+        opacity: 0.5;
+    }
 }
 
 .button-container {

@@ -33,6 +33,7 @@ export default function MainMenu({
    onHost: (options: HostOptions) => void;
    onJoin: (options: JoinOptions) => Promise<void>;
 }) {
+   const appVersion = __APP_VERSION__;
    const [openSettings, setOpenSettings] = useState(false);
    const [hostModal, setHostModal] = useState(false);
    const [joinModal, setJoinModal] = useState(false);
@@ -104,6 +105,8 @@ export default function MainMenu({
             </button>
             <NavButtons setOpenSettings={setOpenSettings} />
          </div>
+
+         <span className="version-number">v{appVersion}</span>
 
          <div
             className="glass-1"
